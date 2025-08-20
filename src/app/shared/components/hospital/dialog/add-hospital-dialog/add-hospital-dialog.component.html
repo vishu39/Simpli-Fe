@@ -1,0 +1,477 @@
+<div>
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 msl-3 font-17">
+            {{ title }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form
+      class="register-form m-4"
+      [formGroup]="hospitalForm"
+      (ngSubmit)="formSubmit()"
+    >
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <div class="mt-4">
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Name</mat-label>
+                  <input matInput type="text" formControlName="name" />
+                  <mat-error
+                    *ngIf="hospitalForm.controls['name'].hasError('required')"
+                  >
+                    Name is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Slug</mat-label>
+                  <input matInput type="text" formControlName="slug" />
+                  <mat-error
+                    *ngIf="hospitalForm.controls['slug'].hasError('required')"
+                  >
+                    Slug is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Beds</mat-label>
+                  <input matInput type="number" formControlName="beds" />
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Established</mat-label>
+                  <input matInput type="number" formControlName="established" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Speciality</mat-label>
+                  <input matInput type="text" formControlName="speciality" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <h5 class="mb-3">Awards</h5>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                <ckeditor [editor]="Editor" formControlName="awards"></ckeditor>
+              </div>
+            </div>
+            <div class="row">
+              <h5 class="mb-3">Infrastructure</h5>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                <ckeditor
+                  [editor]="Editor"
+                  formControlName="infrastructure"
+                ></ckeditor>
+              </div>
+            </div>
+            <div class="row">
+              <h5 class="mb-3">Description</h5>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                <ckeditor
+                  [editor]="Editor"
+                  formControlName="description"
+                ></ckeditor>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Distance</mat-label>
+                  <textarea
+                    matInput
+                    rows="5"
+                    type="text"
+                    formControlName="distance"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Address</mat-label>
+                  <textarea
+                    matInput
+                    rows="5"
+                    type="text"
+                    formControlName="address"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Money Matters</mat-label>
+                  <textarea
+                    matInput
+                    rows="5"
+                    type="text"
+                    formControlName="moneyMatters"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Food Dining</mat-label>
+                  <input matInput type="text" formControlName="foodDining" />
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Transportation</mat-label>
+                  <textarea
+                    matInput
+                    rows="5"
+                    type="text"
+                    formControlName="transportation"
+                  ></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Language</mat-label>
+                  <input matInput type="text" formControlName="language" />
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Rank</mat-label>
+                  <input matInput type="number" formControlName="rank" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Zone</mat-label>
+                  <input matInput type="text" formControlName="zone" />
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Hospital Code</mat-label>
+                  <input matInput type="text" formControlName="hospitalCode" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Phone Number</mat-label>
+                  <ngx-mat-intl-tel-input
+                    formControlName="phoneNumber"
+                    [enablePlaceholder]="true"
+                    [enableSearch]="true"
+                  ></ngx-mat-intl-tel-input>
+                  <!-- <mat-error
+                    *ngIf="
+                      patientItineraryForm.controls['contact']?.errors
+                        ?.validatePhoneNumber
+                    "
+                    >Invalid contact</mat-error
+                  > -->
+                </mat-form-field>
+                <!-- <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Phone Number</mat-label>
+                  <input matInput type="number" formControlName="phoneNumber" />
+                </mat-form-field> -->
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2">
+                <mat-slide-toggle class="mb-4" formControlName="featured"
+                  >Featured
+                </mat-slide-toggle>
+              </div>
+            </div>
+
+            <!-- upload logo-->
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Logo</mat-label>
+                  <ngx-mat-file-input
+                    style="display: none"
+                    accept=".png, .jpg, .jpeg"
+                    name="image"
+                    (change)="selectLogo($event)"
+                  >
+                  </ngx-mat-file-input>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <div>
+                      <span *ngFor="let file of logoFile; let i = index">
+                        <span
+                          >{{ file?.name
+                          }}<span *ngIf="i < logoFile?.length - 1">, </span>
+                        </span>
+                      </span>
+                    </div>
+                    <mat-icon style="transform: translateY(-5px)"
+                      >upload</mat-icon
+                    >
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- /preview -->
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2"
+                *ngIf="logoFile?.length"
+              >
+                <div class="mb-2">
+                  <h6>Logo Image</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="logoFile"
+                      [filePreviewList]="logoFileForPreview"
+                      [type]="'fileUploader'"
+                      [remove]="true"
+                      [className]="'col-12'"
+                      (onDelete)="deleteLogoImage($event, 'upload')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2"
+                *ngIf="!!logo"
+              >
+                <div class="mb-2">
+                  <h6>Uploaded Logo Image</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="[logo]"
+                      [filePreviewList]="[logo]"
+                      [type]="'fileUploaded'"
+                      [remove]="true"
+                      [className]="'col-12'"
+                      (onDelete)="deleteLogoImage($event, 'uploaded')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- upload main image-->
+            <div class="row mt-2">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Main Image</mat-label>
+                  <ngx-mat-file-input
+                    style="display: none"
+                    accept=".png, .jpg, .jpeg"
+                    name="mainImage"
+                    formControlName="mainImage"
+                    (change)="selectMainImage($event)"
+                  >
+                  </ngx-mat-file-input>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <div>
+                      <span *ngFor="let file of mainImageFile; let i = index">
+                        <span
+                          >{{ file?.name
+                          }}<span *ngIf="i < mainImageFile?.length - 1"
+                            >,
+                          </span>
+                        </span>
+                      </span>
+                    </div>
+                    <mat-icon style="transform: translateY(-5px)"
+                      >upload</mat-icon
+                    >
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- /preview -->
+            <div class="row mt-2">
+              <div
+                class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2"
+                *ngIf="mainImageFile?.length"
+              >
+                <div class="mb-2">
+                  <h6>Main Image</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="mainImageFile"
+                      [filePreviewList]="mainImagePreviewUrls"
+                      [type]="'fileUploader'"
+                      [remove]="true"
+                      [className]="'col-12'"
+                      (onDelete)="deleteMainImage($event, 'upload')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2"
+                *ngIf="!!mainImage"
+              >
+                <div class="mb-2">
+                  <h6>Uploaded Main Image</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="[mainImage]"
+                      [filePreviewList]="[mainImage]"
+                      [type]="'fileUploaded'"
+                      [remove]="true"
+                      [className]="'col-12'"
+                      (onDelete)="deleteMainImage($event, 'uploaded')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- upload main image end-->
+
+            <!-- upload images-->
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Images</mat-label>
+                  <ngx-mat-file-input
+                    style="display: none"
+                    multiple
+                    accept=".png, .jpg, .jpeg"
+                    name="image"
+                    (change)="selectImages($event)"
+                  >
+                  </ngx-mat-file-input>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <div>
+                      <span *ngFor="let file of imagesUpload; let i = index">
+                        <span
+                          >{{ file?.name
+                          }}<span *ngIf="i < imagesUpload?.length - 1">, </span>
+                        </span>
+                      </span>
+                    </div>
+                    <mat-icon style="transform: translateY(-5px)"
+                      >upload</mat-icon
+                    >
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- /preview -->
+            <div class="row mt-2">
+              <div
+                class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2"
+                *ngIf="imagesUpload?.length"
+              >
+                <div class="mb-2">
+                  <h6>Images</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="imagesUpload"
+                      [filePreviewList]="imagesUploadPreviewUrl"
+                      [type]="'fileUploader'"
+                      [remove]="true"
+                      [className]="'col-4 mb-2'"
+                      (onDelete)="deleteUploaderImages($event, 'upload')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2"
+                *ngIf="imagesForPreview?.length"
+              >
+                <div class="mb-2">
+                  <h6>Uploaded Images</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="imagesForPreview"
+                      [filePreviewList]="imagesForPreview"
+                      [type]="'fileUploaded'"
+                      [remove]="true"
+                      [className]="'col-4 mb-2'"
+                      (onDelete)="deleteUploadedImages($event)"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="row upload_image" *ngIf="images.length">
+                <h5 class="mt-2 mb-3">Images</h5>
+                <div class="d-flex flex-wrap">
+                  <span class="mb-4" *ngFor="let item of images; let i = index"
+                    ><img src="{{ bucketUrl + item.key }}" />
+                    <button
+                      mat-icon-button
+                      class="tbl-action-btn"
+                      type="button"
+                      (click)="deleteImages(i)"
+                    >
+                      <app-feather-icons
+                        [icon]="'trash-2'"
+                        [class]="'tbl-fav-delete'"
+                      >
+                      </app-feather-icons></button
+                  ></span>
+                </div>
+              </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

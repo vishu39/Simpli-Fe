@@ -1,0 +1,129 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Report'"
+        [active_item]="'All Report'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="dropdown">
+                        <h2>
+                          <strong>Reports</strong>
+                        </h2>
+                      </li>
+                      <li class="dropdown m-l-20">
+                        <label for="search-input"
+                          ><i class="material-icons search-icon"
+                            >search</i
+                          ></label
+                        >
+                        <input
+                          placeholder="Search"
+                          type="text"
+                          (keyup)="search($event.target.value)"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                        />
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-4">
+                    <ul class="header-buttons">
+                      <li>
+                        <div class="m-l-10" matTooltip="Download">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="downloadReport('Download Report')"
+                          >
+                            <mat-icon class="col-white">download</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <mat-table
+                #table
+                [dataSource]="patientExcelReportData"
+                class="mat-cell"
+              >
+                <ng-container matColumnDef="createdAt">
+                  <mat-header-cell *matHeaderCellDef
+                    >Created At</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.createdAt | date : "medium" }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="userName">
+                  <mat-header-cell *matHeaderCellDef>User Name</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row.userName }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="userType">
+                  <mat-header-cell *matHeaderCellDef>User Type</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row.userType | titlecase }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="report">
+                  <mat-header-cell *matHeaderCellDef>Report</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <a
+                      class="cursor_pointer"
+                      (click)="fetchFile(row.report?.key)"
+                      >Report</a
+                    ></mat-cell
+                  >
+                </ng-container>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
+                </mat-row>
+              </mat-table>
+
+              <div
+                *ngIf="
+                  !isDataLoading && patientExcelReportData.data?.length === 0
+                "
+                class="no-results"
+              >
+                No results
+              </div>
+
+              <div class="table_loader" *ngIf="isDataLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <mat-paginator
+                (page)="onPaginateChange($event)"
+                [length]="totalElement"
+                [pageSize]="patientExcelReportParams.limit"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

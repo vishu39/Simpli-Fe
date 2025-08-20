@@ -1,0 +1,59 @@
+<mat-expansion-panel  [hideToggle]=" data.prop.headerFields !== 'OPD' ? false : true">
+    <mat-expansion-panel-header displayMode="flat" expandedHeight="auto" collapsedHeight="auto" #exPanel>
+        <mat-panel-title>
+            <div class="expansion-header" (click)="!exPanel._toggle()">
+                <mat-radio-button *ngIf="data.prop.expansionType === 'radio'">
+                    <p class="checkbox-label">Aster Medcity</p>
+                </mat-radio-button>
+                <mat-checkbox *ngIf="data.prop.expansionType === 'checkbox'" >
+                    <p class="checkbox-label">Aster Medcity</p>
+                </mat-checkbox>
+                <button (click)="emitExpansionEvent(data.prop.name,'EXPANSION-EDIT',$event)" *ngIf="data.prop?.edit" type="button" class="edit-button" mat-icon-button>
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <div class="header-content hide-scrollbar" *ngIf="data.prop.headerFields !== 'OPD'">
+                    <div class="hide-scrollbar content">
+                        <p>Stay in country</p>
+                        <span>3 Months</span>
+                    </div>
+                    <div class="hide-scrollbar content">
+                        <p>Stay in hospital</p>
+                        <span>30 Days</span>
+                    </div>
+                    <div class="hide-scrollbar content">
+                        <p>Initial Evaluation</p>
+                        <span>500 USD - 800 USD</span>
+                    </div>
+                    <div class="hide-scrollbar diagnosis">
+                        <p>Diagnosis</p>
+                        <span matTooltip="'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum rem facere aut eveniet'" matTooltipPosition="above">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum rem facere aut eveniet deleniti ipsam earum in illo deserunt facilis unde harum hic, sequi dolores consequatur suscipit, delectus natus ipsa?</span>
+                    </div>
+                </div>
+
+                <div class="header-content hide-scrollbar" *ngIf="data.prop.headerFields === 'OPD'">
+                    <div class="content">
+                        <p>Date and Time</p>
+                        <span>{{ today | date }}</span>
+                    </div>
+                    <div class="content">
+                        <p>Dr.Name</p>
+                        <span>John Doe</span>
+                    </div>
+                    <div class="content">
+                        <p>Meeting Link</p>
+                        <span>abc@google.com.test </span>
+                    </div>
+                    <div class="content">
+                        <p>Payment Link</p>
+                        <span> vw56@axis.com.test </span>
+                    </div>
+                </div>
+            </div>
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="expansion-wrapper" *ngIf="data.prop.headerFields !== 'OPD'">
+        <div class="expansion-content">
+         <h4>{{data.data.text}}</h4>
+        </div>
+    </div>
+</mat-expansion-panel>

@@ -1,0 +1,457 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="'Account'"
+        [active_item]="'Account Details'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <mat-spinner
+            *ngIf="isLoading"
+            class="mx-auto mb-2 mt-2"
+            [diameter]="30"
+          >
+          </mat-spinner>
+          <div class="body" *ngIf="!isLoading">
+            <form
+              class="m-4"
+              [formGroup]="accountDetailsForm"
+              (ngSubmit)="formSubmit()"
+            >
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Brand Name</mat-label>
+                    <input matInput type="text" formControlName="brandName" />
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['brandName'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Brand name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>GST No</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="gstNo"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['gstNo'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      GST no is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Registration No</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="registrationNo"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['registrationNo'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Registration no is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Upload GST Certificate</mat-label>
+                    <ngx-mat-file-input
+                      accept=".pdf"
+                      formControlName="gstCertificate"
+                      (change)="onFileSelected($event, 'first')"
+                    >
+                    </ngx-mat-file-input>
+                    <mat-icon matSuffix>upload</mat-icon>
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['gstCertificate'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      GST certificate is required
+                    </mat-error>
+                  </mat-form-field>
+                  <div class="row">
+                    <div
+                      class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+                      *ngIf="!!accountDetailsData?.gstCertificate"
+                    >
+                      <h6>Uploaded Gst Certificate</h6>
+                      <div class="mt-4">
+                        <app-global-image-preview
+                          [fileList]="[accountDetailsData?.gstCertificate]"
+                          [filePreviewList]="[
+                            accountDetailsData?.gstCertificate
+                          ]"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'img_width_100'"
+                        ></app-global-image-preview>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="fileFirstList?.length"
+                      class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+                    >
+                      <h6 class="mb-4">New Gst Certificate</h6>
+                      <app-global-image-preview
+                        [fileList]="fileFirstList"
+                        [filePreviewList]="fileFirstPreviewUrls"
+                        [type]="'fileUploader'"
+                        [remove]="false"
+                        [className]="'img_width_100'"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+
+                  <!-- <a class="image_upload_link cursor_pointer" *ngIf="accountDetailsData"
+                                        (click)="fetchFile(accountDetailsData.gstCertificate?.key)">{{accountDetailsData.gstCertificate?.originalname}}</a> -->
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Upload Registration Certificate</mat-label>
+                    <ngx-mat-file-input
+                      accept=".pdf"
+                      formControlName="registrationCertificate"
+                      (change)="onFileSelected($event, 'second')"
+                    >
+                    </ngx-mat-file-input>
+                    <mat-icon matSuffix>upload</mat-icon>
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls[
+                          'registrationCertificate'
+                        ].hasError('required')
+                      "
+                    >
+                      Registration certificate is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div class="row">
+                    <div
+                      class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+                      *ngIf="!!accountDetailsData?.registrationCertificate"
+                    >
+                      <h6>Uploaded Registration Certificate</h6>
+                      <div class="mt-4">
+                        <app-global-image-preview
+                          [fileList]="[
+                            accountDetailsData?.registrationCertificate
+                          ]"
+                          [filePreviewList]="[
+                            accountDetailsData?.registrationCertificate
+                          ]"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'img_width_100'"
+                        ></app-global-image-preview>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="fileSecondList.length"
+                      class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+                    >
+                      <h6 class="mb-4">New Registration Certificate</h6>
+                      <app-global-image-preview
+                        [fileList]="fileSecondList"
+                        [filePreviewList]="fileSecondPreviewUrls"
+                        [type]="'fileUploader'"
+                        [remove]="false"
+                        [className]="'img_width_100'"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+
+                  <!-- <a class="image_upload_link cursor_pointer" *ngIf="accountDetailsData"
+                                        (click)="fetchFile(accountDetailsData.registrationCertificate?.key)">{{accountDetailsData.registrationCertificate?.originalname}}</a> -->
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Upload Brand Logo</mat-label>
+                    <ngx-mat-file-input
+                      accept=".png, .jpg, .jpeg"
+                      formControlName="brandLogo"
+                      (change)="onFileSelected($event, 'third')"
+                    >
+                    </ngx-mat-file-input>
+                    <mat-icon matSuffix>upload</mat-icon>
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['brandLogo'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Brand logo is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div class="row">
+                    <div
+                      class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+                      *ngIf="!!accountDetailsData?.brandLogo"
+                    >
+                      <h6>Uploaded Brand Logo</h6>
+
+                      <div class="mt-4">
+                        <app-global-image-preview
+                          [fileList]="[accountDetailsData?.brandLogo]"
+                          [filePreviewList]="[accountDetailsData?.brandLogo]"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'img_width_100'"
+                        ></app-global-image-preview>
+                      </div>
+                    </div>
+                    <div
+                      class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+                      *ngIf="fileThirdList?.length"
+                    >
+                      <h6 class="mb-4">New Brand Logo</h6>
+                      <app-global-image-preview
+                        [fileList]="fileThirdList"
+                        [filePreviewList]="fileThirdPreviewUrls"
+                        [type]="'fileUploader'"
+                        [remove]="false"
+                        [className]="'img_width_100'"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+
+                  <!-- <a class="image_upload_link cursor_pointer" *ngIf="accountDetailsData"
+                                        (click)="fetchFile(accountDetailsData.brandLogo?.key)">{{accountDetailsData.brandLogo?.originalname}}</a> -->
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Upload Brand Logo Symbol</mat-label>
+                    <ngx-mat-file-input
+                      accept=".png, .jpg, .jpeg"
+                      formControlName="brandLogoSymbol"
+                      (change)="onFileSelected($event, 'fourth')"
+                    >
+                    </ngx-mat-file-input>
+                    <mat-icon matSuffix>upload</mat-icon>
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['brandLogoSymbol'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Brand logo symbol is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div class="row">
+                    <div
+                      class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+                      *ngIf="!!accountDetailsData?.brandLogoSymbol"
+                    >
+                      <h6>Uploaded Brand Logo Symbol</h6>
+                      <div class="mt-4">
+                        <app-global-image-preview
+                          [fileList]="[accountDetailsData?.brandLogoSymbol]"
+                          [filePreviewList]="[
+                            accountDetailsData?.brandLogoSymbol
+                          ]"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'img_width_100'"
+                        ></app-global-image-preview>
+                      </div>
+                    </div>
+                    <div
+                      class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+                      *ngIf="fileFourthList.length"
+                    >
+                      <h6 class="mb-4">New Brand Logo Symbol</h6>
+                      <app-global-image-preview
+                        [fileList]="fileFourthList"
+                        [filePreviewList]="fileFourthPreviewUrls"
+                        [type]="'fileUploader'"
+                        [remove]="false"
+                        [className]="'img_width_100'"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+
+                  <!-- <a class="image_upload_link cursor_pointer" *ngIf="accountDetailsData"
+                                        (click)="fetchFile(accountDetailsData.brandLogoSymbol?.key)">{{accountDetailsData.brandLogoSymbol?.key}}</a> -->
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Brand Email</mat-label>
+                    <input
+                      matInput
+                      type="email"
+                      formControlName="brandEmail"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['brandEmail'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Brand email is required
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['brandEmail'].hasError(
+                          'pattern'
+                        )
+                      "
+                    >
+                      Invalid email address</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>UHID Code</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="uhidCode"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        accountDetailsForm.controls['uhidCode'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      UHID code is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row" formArrayName="address" class="mb-0">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <div
+                    class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-0"
+                    *ngFor="
+                      let item of accountDetailsForm.get('address')['controls'];
+                      let i = index
+                    "
+                  >
+                    <div [formGroupName]="i">
+                      <h6>
+                        Address Line {{ i + 1 }}
+                        <button
+                          *ngIf="i > 0"
+                          type="button"
+                          mat-icon-button
+                          (click)="removeAddress(i)"
+                          class="tbl-action-btn form_array_delete_icon"
+                        >
+                          <app-feather-icons
+                            [icon]="'trash-2'"
+                            [class]="'tbl-fav-delete'"
+                          >
+                          </app-feather-icons>
+                        </button>
+                      </h6>
+
+                      <mat-form-field
+                        class="example-full-width"
+                        appearance="outline"
+                      >
+                        <mat-label>Address</mat-label>
+                        <input matInput type="text" formControlName="line" />
+
+                        <mat-error
+                          *ngIf="item.controls['line'].hasError('required')"
+                        >
+                          Address line is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <button
+                    (click)="addAddress()"
+                    type="button"
+                    lass="btn-space"
+                    mat-raised-button
+                    color="primary"
+                  >
+                    Add Address Line
+                  </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <button class="btn-space" mat-raised-button color="primary">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

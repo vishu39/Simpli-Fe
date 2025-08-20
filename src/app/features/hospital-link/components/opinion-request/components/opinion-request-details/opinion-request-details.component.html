@@ -1,0 +1,16 @@
+<div *ngIf="request?.length" class="row mt-4">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2" *ngFor="let item of request">
+        <div class="card p-3">
+            <div class="mb-4" style="display:flex; align-items: center; justify-content: space-between; gap: 12px;">
+                <span class="text mb-0 fs-16"><b>{{item?.hospitalName}}</b></span>
+            </div>
+            <div>
+                <span><b>Created At: </b></span> <span>{{item?.createdAt| date:'medium'}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card m-4 p-3" *ngIf="!request?.length">
+    <div style="text-align: center;">--No Data Found--</div>
+</div>

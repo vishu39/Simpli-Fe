@@ -1,0 +1,71 @@
+.tag {
+  width: 100px;
+  padding: 3px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.overrideColor {
+  background-color: red;
+  color: white;
+}
+
+.sentColor {
+  background-color: green;
+  color: white;
+}
+
+.mat-column-srNo {
+  min-width: 50px !important;
+}
+.mat-column-hospital {
+  min-width: 200px !important;
+}
+.mat-column-createdAt {
+  min-width: 120px !important;
+}
+.mat-column-userName {
+  min-width: 200px !important;
+}
+
+.mat-column-referenceNo {
+  min-width: 150px !important;
+}
+.mat-column-patientName {
+  min-width: 150px !important;
+}
+.mat-column-userType {
+  min-width: 120px !important;
+}
+.mat-column-sendTo {
+  min-width: 160px !important;
+}
+.mat-column-passportNumber {
+  min-width: 120px !important;
+}
+.mat-column-country {
+  min-width: 120px !important;
+}
+.mat-column-treatment {
+  min-width: 120px !important;
+}
+
+.hospital {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  width: 100%;
+  line-clamp: 3;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
+.filter_active {
+  background: #6cb5f9;
+  color: black;
+  outline: none;
+}
+
+::ng-deep .mat-button-focus-overlay {
+  display: none;
+}

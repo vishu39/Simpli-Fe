@@ -1,0 +1,6 @@
+// Made the loop for generate font-size from 9 to 100
+@for $i from 9 through 100 {
+  .fs-#{$i} {
+    font-size: #{$i}px;
+  }
+}

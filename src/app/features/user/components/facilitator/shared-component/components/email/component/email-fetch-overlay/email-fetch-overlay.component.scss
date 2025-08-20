@@ -1,0 +1,191 @@
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}
+
+#email_fetch_overlay {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: white;
+  z-index: 999;
+
+  .topDiv {
+    padding: 0.5rem 2rem 0.5rem 2rem;
+    display: flex;
+    justify-content: end;
+    .close_button {
+      cursor: pointer;
+    }
+  }
+
+  .mainDiv {
+    perspective: 1000px;
+
+    .stepperHeight {
+      overflow-y: scroll;
+      height: calc(100vh - 130px);
+    }
+
+    .chooseCardBtn {
+      width: 300px;
+      height: 200px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.5s ease;
+      transform-style: preserve-3d;
+      background-color: #1560bd;
+      color: white;
+      border-radius: 10px;
+      &:hover {
+        transform: translateY(5px);
+      }
+
+      .icon {
+        font-size: 65px;
+        width: 25%;
+        height: 80px;
+      }
+    }
+
+    .thirdStepGrid {
+      display: flex;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+      gap: 40px;
+      .chooseAssignMethodCard {
+        width: 250px;
+        height: 120px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.5s ease;
+        transform-style: preserve-3d;
+        background-color: #1560bd;
+        color: white;
+        border-radius: 10px;
+        &:hover {
+          transform: translateY(5px);
+        }
+
+        .icon {
+          font-size: 65px;
+          width: 25%;
+          height: 80px;
+        }
+      }
+    }
+
+    .selected {
+      background-color: #1561bd79 !important;
+      color: rgba(255, 255, 255, 0.639) !important;
+    }
+
+    .actionDiv {
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+      padding: 1rem;
+    }
+  }
+}
+
+.finalStepGrid {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid lightgrey;
+
+  .leftFormDiv {
+    width: 100%;
+  }
+
+  .maildiv {
+    width: 100%;
+    border-top: 1px solid lightgrey;
+  }
+}
+
+@media only screen and (min-width: 900px) {
+  .finalStepGrid {
+    overflow: scroll;
+    flex-direction: row;
+    .leftFormDiv {
+      width: 65%;
+    }
+    .maildiv {
+      width: 35%;
+      border-left: 1px solid lightgrey;
+    }
+  }
+}
+
+:host ::ng-deep .mat-radio-button.mat-radio-checked {
+  padding: 8px 10px;
+  background: #1126c9df;
+  box-shadow: 0 8px 10px 0 #050b6117;
+  border-radius: 25px;
+  border: 1px solid #3c2f2f2e;
+  transition: none !important;
+  outline: 1px solid #ccc;
+}
+
+:host ::ng-deep ._radio {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0.8rem;
+}
+
+:host ::ng-deep .mat-radio-button {
+  padding: 8px 10px;
+  border-radius: 25px;
+  border: 1px solid rgb(236, 236, 236);
+  margin: 0;
+  transition: none !important;
+}
+
+:host ::ng-deep .mat-radio-button.mat-radio-checked .mat-radio-label {
+  color: rgb(255, 255, 255) !important;
+}
+
+:host ::ng-deep .mat-radio-button .mat-radio-outer-circle {
+  border-color: rgb(232, 232, 232) !important;
+}
+
+::ng-deep .mat-radio-label {
+  color: rgb(133, 116, 116) !important;
+}
+
+:host
+  ::ng-deep
+  .mat-radio-button.mat-accent.mat-radio-checked
+  .mat-radio-outer-circle,
+.mat-radio-outer-circle {
+  border-color: rgb(255, 255, 255) !important;
+}
+
+:host
+  ::ng-deep
+  .mat-radio-button.mat-accent.mat-radio-checked
+  .mat-radio-inner-circle,
+.mat-radio-inner-circle {
+  border-color: #fff !important;
+  background-color: #fff;
+}
+
+:host ::ng-deep .mat-radio-button.mat-radio-disabled {
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: "460px") {
+  #assign-hospital-modal {
+    height: 300px;
+  }
+}

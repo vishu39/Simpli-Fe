@@ -1,0 +1,10 @@
+<mat-form-field class="example-full-width drop-mat" [ngClass]="[validation ? 'mat-form-field-invalid' : '']" appearance="outline">
+<mat-label>{{label}}</mat-label>
+<mat-select (infiniteScroll)="getHospital()" [complete]="offset === totalHospital" msInfiniteScroll multiple>
+    <input class="searchInput" placeholder="search..." matInput [(ngModel)]="hospitalSearch" [ngModelOptions]="{ standalone: true }" (input)="searchHospital(hospitalSearch)"/>
+    <mat-checkbox [(ngModel)]="allSelecteds" [ngModelOptions]="{standalone: true}" color="primary" (change)="toggleAllSelection()">Select All</mat-checkbox>
+    <mat-option [value]="item._id" *ngFor=" let item of dropDownItems" (click)="optionClick()" >{{ item.name }}</mat-option>
+    <mat-spinner *ngIf="isLoader" class="mx-auto" [diameter]="30"></mat-spinner>
+</mat-select>
+</mat-form-field>
+<mat-error  *ngIf="validation" class="drop-errors"> Hospital is required </mat-error>

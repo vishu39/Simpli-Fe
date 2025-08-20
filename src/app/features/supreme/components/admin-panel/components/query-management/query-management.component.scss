@@ -1,0 +1,89 @@
+
+.query-management-container {
+    margin:15px 0 0 0;
+    position: relative;
+    width: 100%;
+
+    .main-section {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 75vh;
+        width: 100%;
+        flex-wrap: wrap
+    }
+
+    %box {
+        height: 100%;
+        overflow-y: hidden;
+        flex: 1 0 auto;
+        background: #fffffff6;
+        box-shadow: 10px 8px 32px 0 #b8b8ba44;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(2.5px);
+        -webkit-backdrop-filter: blur(13.5px);
+        border-radius: 10px;
+        padding: 1rem;
+    }
+
+    .left {
+        @extend %box;
+        width: 28.99%;
+        padding:10px;
+        .list-toolbar{
+            margin-top:-10px;
+            .action{
+                mat-icon{
+                    font-size:1.3rem;
+                }
+            }
+        }
+        .list-wrapper{
+            background-color: #d3d3db1a;
+            border-radius:10px;
+            height:95%;
+            overflow-y:auto;
+            padding:10px 5px;
+            &::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(232, 229, 229, 0.3);
+                background-color: #e3e3e3;
+                border-radius:8px;
+            }
+            &::-webkit-scrollbar {
+                width: 10px;
+                background-color: #F5F5F5;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: #d9d9d9;
+                border-radius:8px;
+                &:hover{
+                    background-color: #b7b1b1;
+                }
+            }
+        }
+    }
+    .right {
+        @extend %box;
+        width: 68.99%;
+        .query-wrapper{
+            background-color: #d3d3db1a;
+            border-radius:10px;
+            height:100%;
+            overflow-y:auto;
+            padding:10px;
+            outline:1px solid #e2f0fb;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

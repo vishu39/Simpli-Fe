@@ -1,0 +1,342 @@
+<div id="email_fetch_overlay">
+  <div class="topDiv">
+    <app-feather-icons
+      [icon]="'x-circle'"
+      class="close_button"
+      (click)="closeOverlay()"
+    >
+    </app-feather-icons>
+  </div>
+
+  <div class="mainDiv">
+    <div class="stepperDiv">
+      <mat-stepper [linear]="true" #stepper>
+        <!-- step first start -->
+        <mat-step
+          [stepControl]="chooseOptionSelectedControl"
+          [completed]="false"
+          [editable]="false"
+        >
+          <ng-template matStepLabel>
+            <div (click)="$event.stopImmediatePropagation()">
+              Step 1
+            </div></ng-template
+          >
+
+          <div class="stepperHeight hide-scrollbar">
+            <!-- <div class="actionDiv mb-5">
+              <button
+                [disabled]="!chooseOptionSelectedControl?.valid"
+                mat-raised-button
+                color="primary"
+                (click)="navigateStepperToNext(stepper)"
+              >
+                Next
+              </button>
+            </div> -->
+
+            <h2 style="text-align: center; margin-top: 80px" class="mb-5">
+              Choose any one option
+            </h2>
+
+            <div
+              style="
+                display: flex;
+                justify-content: space-evenly;
+                flex-wrap: wrap;
+                gap: 40px;
+                margin-top: 20px;
+              "
+            >
+              <div
+                *ngFor="let method of selectMethodArray"
+                [ngClass]="
+                  chooseOptionSelectedControl?.value === method?.value
+                    ? 'p-3 chooseCardBtn selected'
+                    : 'p-3 chooseCardBtn'
+                "
+                (click)="onOptionSelect(method?.value)"
+              >
+                <mat-icon class="icon">{{ method?.iconName }}</mat-icon>
+                <p>{{ method?.title }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+        <!-- step first end -->
+
+        <!-- step second start -->
+        <mat-step
+          [completed]="false"
+          [editable]="false"
+          [stepControl]="
+            chooseOptionSelectedControl?.value === 'add'
+              ? addPatientForm
+              : choosedPatientFormControl
+          "
+        >
+          <ng-template matStepLabel>
+            <div (click)="$event.stopImmediatePropagation()">
+              Step 2
+            </div></ng-template
+          >
+
+          <div
+            class="stepperHeight hide-scrollbar"
+            *ngIf="currentStepIndex === 1"
+          >
+            <!-- If select add patient -->
+            <div *ngIf="chooseOptionSelectedControl?.value === 'add'">
+              <div class="actionDiv mb-1" *ngIf="!isDuplicateFound">
+                <button
+                  type="button"
+                  mat-raised-button
+                  color="secondary"
+                  (click)="navigateStepperToPrevious(stepper)"
+                >
+                  Back
+                </button>
+                <button
+                  type="button"
+                  mat-raised-button
+                  color="primary"
+                  (click)="navigateStepperToNext(stepper)"
+                >
+                  Next
+                </button>
+              </div>
+
+              <app-add-patient-email-fetch
+                [addPatientForm]="addPatientForm"
+                [emailData]="emailData"
+                (modeChange)="onChangeMode($event)"
+                (addPatientFormSubmit)="addPatientFormSubmit()"
+                (patientFormBack)="patientFormBack()"
+                (recheckFormSubmit)="recheckFormSubmit()"
+                (checkDuplicate)="checkDuplicatePatient()"
+              ></app-add-patient-email-fetch>
+            </div>
+
+            <!-- If select choose  patient -->
+            <div
+              *ngIf="
+                chooseOptionSelectedControl?.value === 'choose' ||
+                chooseOptionSelectedControl?.value === 'details'
+              "
+            >
+              <div class="actionDiv mb-2">
+                <button
+                  type="button"
+                  mat-raised-button
+                  color="secondary"
+                  (click)="navigateStepperToPrevious(stepper)"
+                >
+                  Back
+                </button>
+                <button
+                  type="button"
+                  [disabled]="!choosedPatientFormControl?.valid"
+                  mat-raised-button
+                  color="primary"
+                  (click)="navigateStepperToNext(stepper)"
+                >
+                  Next
+                </button>
+              </div>
+
+              <app-email-fetch-choose-patient
+                [choosedPatientFormControl]="choosedPatientFormControl"
+                [choosedPatientIdFormControl]="choosedPatientIdFormControl"
+                [emailData]="emailData"
+              ></app-email-fetch-choose-patient>
+            </div>
+          </div>
+        </mat-step>
+        <!-- step second end -->
+
+        <!-- step third start -->
+        <mat-step #stepTwo [completed]="false" [editable]="false">
+          <ng-template matStepLabel>
+            <div (click)="$event.stopImmediatePropagation()">
+              Final Step
+            </div></ng-template
+          >
+
+          <div
+            *ngIf="currentStepIndex === 2"
+            class="stepperHeight hide-scrollbar"
+          >
+            <div class="actionDiv mt-1 mb-1">
+              <button
+                mat-raised-button
+                type="button"
+                color="secondary"
+                (click)="navigateStepperToPrevious(stepper)"
+              >
+                Back
+              </button>
+              <button
+                mat-raised-button
+                type="button"
+                color="primary"
+                (click)="navigateStepperToNext(stepper)"
+              >
+                Submit
+              </button>
+            </div>
+
+            <div class="finalStepGrid">
+              <div
+                class="leftFormDiv hide-scrollbar"
+                *ngIf="
+                  chooseOptionSelectedControl?.value === 'choose' ||
+                  chooseOptionSelectedControl?.value === 'add'
+                "
+              >
+                <div class="topButtonDiv">
+                  <mat-radio-group
+                    [formControl]="selectedTask"
+                    class="_radio hide-scrollbar"
+                    style="width: 100%"
+                  >
+                    <mat-radio-button
+                      style="margin-right: 10px"
+                      *ngFor="let option of radioGroup"
+                      (click)="selectChange(option?.value)"
+                      [value]="option?.value"
+                      >{{ option?.name }}</mat-radio-button
+                    >
+                  </mat-radio-group>
+                </div>
+                <mat-divider></mat-divider>
+
+                <div>
+                  <!-- opinionRequest  -->
+                  <div *ngIf="selectedTask?.value === 'opinionRequest'">
+                    <app-assign-opinion-email-fetch
+                      [patientId]="
+                        chooseOptionSelectedControl?.value === 'add'
+                          ? patientDataFromResponse?.patientId
+                          : choosedPatientFormControl?.value
+                      "
+                      [emailFetchData]="emailData"
+                    ></app-assign-opinion-email-fetch>
+                  </div>
+                  <!-- opdRequest  -->
+                  <div *ngIf="selectedTask?.value === 'opdRequest'">
+                    <app-assign-opd-email-fetch
+                      [patientId]="
+                        chooseOptionSelectedControl?.value === 'add'
+                          ? patientDataFromResponse?.patientId
+                          : choosedPatientFormControl?.value
+                      "
+                      [emailFetchData]="emailData"
+                    ></app-assign-opd-email-fetch>
+                  </div>
+                  <!-- preIntimation  -->
+                  <div *ngIf="selectedTask?.value === 'preIntimation'">
+                    <app-assign-preintimation-email-fetch
+                      [patientId]="
+                        chooseOptionSelectedControl?.value === 'add'
+                          ? patientDataFromResponse?.patientId
+                          : choosedPatientFormControl?.value
+                      "
+                      [emailFetchData]="emailData"
+                    ></app-assign-preintimation-email-fetch>
+                  </div>
+                  <!-- proformaInvoice  -->
+                  <div *ngIf="selectedTask?.value === 'proformaInvoice'">
+                    <app-assign-proforma-email-fetch
+                      [patientId]="
+                        chooseOptionSelectedControl?.value === 'add'
+                          ? patientDataFromResponse?.patientId
+                          : choosedPatientFormControl?.value
+                      "
+                      [emailFetchData]="emailData"
+                    ></app-assign-proforma-email-fetch>
+                  </div>
+                  <!-- confirmation  -->
+                  <div *ngIf="selectedTask?.value === 'confirmation'">
+                    <app-assign-confirmation-email-fetch
+                      [patientId]="
+                        chooseOptionSelectedControl?.value === 'add'
+                          ? patientDataFromResponse?.patientId
+                          : choosedPatientFormControl?.value
+                      "
+                      [emailFetchData]="emailData"
+                    ></app-assign-confirmation-email-fetch>
+                  </div>
+                  <!-- requestVil  -->
+                  <div *ngIf="selectedTask?.value === 'requestVil'">
+                    <app-assign-vil-email-fetch
+                      [patientId]="
+                        chooseOptionSelectedControl?.value === 'add'
+                          ? patientDataFromResponse?.patientId
+                          : choosedPatientFormControl?.value
+                      "
+                      [emailFetchData]="emailData"
+                    ></app-assign-vil-email-fetch>
+                  </div>
+                </div>
+              </div>
+
+              <!-- add details div -->
+              <div
+                class="leftFormDiv hide-scrollbar"
+                *ngIf="chooseOptionSelectedControl?.value === 'details'"
+              >
+                <div class="topButtonDiv">
+                  <mat-radio-group
+                    [formControl]="selectedTask"
+                    class="_radio hide-scrollbar"
+                    style="width: 100%"
+                  >
+                    <mat-radio-button
+                      style="margin-right: 10px"
+                      *ngFor="let option of radioGroupForDetails"
+                      (click)="selectChange(option?.value)"
+                      [value]="option?.value"
+                      >{{ option?.name }}</mat-radio-button
+                    >
+                  </mat-radio-group>
+                </div>
+                <mat-divider></mat-divider>
+
+                <div>
+                  <!-- addOpinion  -->
+                  <div *ngIf="selectedTask?.value === 'addOpinion'">
+                    <app-add-opinion-email-fetch
+                      [patientId]="choosedPatientFormControl?.value"
+                      [emailFetchData]="emailData"
+                    ></app-add-opinion-email-fetch>
+                  </div>
+                  <!-- addOpd  -->
+                  <div *ngIf="selectedTask?.value === 'addOpd'">
+                    <app-add-opd-email-fetch
+                      [patientId]="choosedPatientFormControl?.value"
+                      [emailFetchData]="emailData"
+                    ></app-add-opd-email-fetch>
+                  </div>
+                  <!-- addVil  -->
+                  <div *ngIf="selectedTask?.value === 'addVil'">
+                    <app-add-vil-email-fetch
+                      [patientId]="choosedPatientFormControl?.value"
+                      [emailFetchData]="emailData"
+                    ></app-add-vil-email-fetch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="maildiv hide-scrollbar">
+                <app-email-fetch-common-email
+                  [emailData]="emailData"
+                ></app-email-fetch-common-email>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+        <!-- step third end -->
+      </mat-stepper>
+    </div>
+  </div>
+</div>

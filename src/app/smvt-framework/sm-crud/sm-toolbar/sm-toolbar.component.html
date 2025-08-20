@@ -1,0 +1,63 @@
+<!-- MOBILE OR TABLET -->
+<div *ngIf="windowWidth <= 768">
+    <div class="header">
+        <h2  style="margin-top: 5px;" class="wrapped-text">{{config?.title}}</h2>
+        <button mat-button [matMenuTriggerFor]="menu" class="header-dropdown">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item [matTooltip]="prop.name.toUpperCase()" *ngFor="let prop of config?.button" (click)="toolbarButtonHandler(prop.mode,prop,$event,config?.title)"><mat-icon>{{prop.icon}}</mat-icon>{{prop.name}}&nbsp; &nbsp;</button>
+        </mat-menu>
+    </div>
+    <div class="header">
+        <div class="flex">
+            <input #search (input)="search.value ? this.isSearch = false : this.isSearch = true" class="m-search browser-default search-field" type="text" placeholder="Search">
+            <button (click)="toolbarButtonHandler('SEARCH','ENTER',$event,config.title,search.value)" class="sm-fi-btn sm-search" style="translate: 14px 0" [disabled]="isSearch" mat-icon-button>
+                <app-feather-icons icon="search" class="tbl-fav-search"></app-feather-icons>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- DESKTOP -->
+<div *ngIf="windowWidth >= 769">
+    <div class="header">
+        <div class="materialTableHeader col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                        <li class="dropdown">
+                            <h2>{{config.title}}</h2>
+                        </li>
+                        <li class="dropdown flex m-l-20">
+                            <input #search [ngStyle]="{padding:'16px'}" placeholder="Search" type="search" class="browser-default search-field" 
+                            (keypress)="validateInput($event)" 
+                            (input)="search.value ? this.isSearch = false : this.isSearch = true;toolbarButtonHandler('SEARCH','INPUT',$event,config.title,null)"
+                            (search)="toolbarButtonHandler('SEARCH','ENTER',$event,config.title)" aria-label="Search box">
+                            <button [disabled]="isSearch" class="sm-fi-btn sm-search" style="translate: 14px -6px;" (click)="toolbarButtonHandler('SEARCH','ENTER',$event,config.title,search.value,null)" [disabled]="isSearch" mat-icon-button color="primary">
+                                <app-feather-icons class="tbl-fav-search" icon="search"></app-feather-icons>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-4">
+                    <ul class="header-buttons">
+                        <li *ngFor="let prop of config.button">
+                            <div class="m-l-10" [matTooltip]="prop.name.toUpperCase()">
+                                <button mat-icon-button [color]="prop.color" [matMenuTriggerFor]="prop.name.toUpperCase() === 'SORT' ? sort:'' " (click)="toolbarButtonHandler(prop.mode,prop,$event,config.title,null)">
+                                    <mat-icon [ngStyle]="{color:prop.color}">{{prop.icon}}</mat-icon>
+                                </button>
+                                <mat-menu #sort="matMenu">
+                                    <mat-radio-group class="example-radio-group">
+                                        <!-- <mat-radio-button class="example-radio-button">Low to high</mat-radio-button> -->
+                                        <!-- <mat-radio-button class="example-radio-button">High to low</mat-radio-button> -->
+                                    </mat-radio-group>
+                                </mat-menu>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-content></ng-content>

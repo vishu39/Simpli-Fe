@@ -1,0 +1,28 @@
+.filter-wrapper {
+  margin: 5px 5px 0 5px;
+  mat-date-range-input {
+    width: 160px !important;
+  }
+  .picker-icon {
+    width: 10px !important;
+    height: 10px !important;
+    cursor: pointer;
+  }
+  .filter-select {
+    border: none;
+    width: auto;
+    cursor: pointer;
+    padding: 11px;
+    color: #5b626b;
+    background: transparent;
+  }
+}
+.title {
+  flex: 0 1 auto;
+  padding: 8px 8px;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  background-color: #ffb1b1;
+  color: #ffffff;
+  font-weight: 600;
+}

@@ -1,0 +1,67 @@
+.midDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  row-gap: 10px;
+  margin-bottom: 0px;
+  .name {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+  }
+
+  .date {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 12px;
+  }
+}
+
+@media only screen and (min-width: 700px) {
+  .midDiv {
+    flex-direction: row;
+    .name {
+      width: 70%;
+    }
+
+    .date {
+      width: 30%;
+    }
+  }
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: #0088d1;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+}
+
+.head {
+  display: flex;
+  margin-bottom: 24px;
+  justify-content: space-between;
+  .btnDiv {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.subject {
+  padding-left: 46px;
+}
+
+.downArrow {
+  cursor: pointer;
+
+  // &:hover {
+  //   background-color: rgb(235, 231, 231);
+  // }
+}

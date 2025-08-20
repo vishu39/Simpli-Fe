@@ -1,0 +1,56 @@
+<div>
+  <div *ngIf="recordingData?.recording?.length">
+    <div class="mb-2">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header
+            displayMode="flat"
+            expandedHeight="auto"
+            collapsedHeight="auto"
+            #exPanel
+          >
+            <mat-panel-title>
+              <div class="expansion-header">
+                <div class="d-flex justify-content-between">
+                  <p class="mt-3 mb-3">
+                    <b>{{ recordingData?.hospitalName }}</b>
+                  </p>
+                </div>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="p-3 expansion-wrapper">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <span><b>Doctor Name: </b></span
+                ><span>{{ recordingData?.doctorName }}</span>
+              </div>
+            </div>
+            <div>
+              <app-global-image-preview
+                [fileList]="recordingData?.recording"
+                [filePreviewList]="recordingData?.recording"
+                [type]="'fileUploaded'"
+                [remove]="false"
+              ></app-global-image-preview>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <div class="" *ngIf="isDataLoading">
+    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+  </div>
+
+  <div
+    class="card m-4 p-3"
+    *ngIf="!isDataLoading && !recordingData?.recording?.length"
+  >
+    <div style="text-align: center">--No Data Found--</div>
+  </div>
+</div>

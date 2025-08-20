@@ -1,0 +1,20 @@
+<div class="p-4" *ngIf="!requestData?.status && !isLoading">
+    <div class="row">
+        <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+            <app-request-details [patientData]="patientData" [requestData]="requestData" type="confirmation"></app-request-details>
+        </div>
+
+        <!-- right section -->
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12" *ngIf="!!requestData">
+            <app-add-details-confiramtion [patientData]="patientData" [requestData]="requestData"
+                (refetch)="getPatientConfirmationByHospitalOpenLink()"></app-add-details-confiramtion>
+        </div>
+    </div>
+</div>
+
+<mat-spinner *ngIf="isLoading" class="mx-auto mb-2 mt-2" [diameter]="30">
+</mat-spinner>
+
+<div *ngIf="requestData?.status && !isLoading">
+    <app-complete-page [message]="'Confirmation approved submitted successfully'"></app-complete-page>
+</div>

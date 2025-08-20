@@ -1,0 +1,6 @@
+<div *ngIf="decodedToken?.userType !== treatingDoctorUserType">
+  <shared-app-hospital-dashboard></shared-app-hospital-dashboard>
+</div>
+<div *ngIf="decodedToken?.userType === treatingDoctorUserType">
+  <app-treating-doc-dashboard></app-treating-doc-dashboard>
+</div>

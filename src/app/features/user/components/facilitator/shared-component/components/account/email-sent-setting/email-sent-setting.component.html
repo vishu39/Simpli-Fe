@@ -1,0 +1,165 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Account'"
+        [active_item]="'Email Send Setting'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <div class="card">
+          <div class="body">
+            <div id="mail-nav">
+              <mat-form-field
+                appearance="outline"
+                class="example-full-width mt-2"
+              >
+                <mat-label>Search</mat-label>
+                <input
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchInternalUser($event.target.value)"
+                />
+              </mat-form-field>
+              <div class="list-results" *ngIf="internalUserData.length">
+                <ul id="mail-folders">
+                  <li
+                    *ngFor="let item of internalUserData; let i = index"
+                    class="cursor_pointer"
+                    [ngClass]="{ active: item.active === true }"
+                  >
+                    <a (click)="onActive(item, i)">{{ item.name }} </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="isInternalUserLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <div
+                class="d-flex justify-content-center align-items-center"
+                *ngIf="!isInternalUserLoading && !internalUserData.length"
+                class="text-secondary text-center"
+              >
+                -- No Data Found --
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+        <div class="card p-3">
+          <div
+            *ngIf="internalUserData?.length"
+            class="d-flex justify-content-between mb-5"
+          >
+            <h2 class="mb-0">
+              {{internalUserData?.[navIndex]?.name | titlecase}}
+            </h2>
+            <div *ngIf="isEmailSendDataAvailable">
+              {{ emailSendData?.createdAt | date : "medium" }}
+            </div>
+          </div>
+
+          <!-- if data is present start -->
+          <div *ngIf="isEmailSendDataAvailable && !isEmailSendDataLoading">
+            <mat-checkbox
+              *ngIf="internalUserData?.length"
+              #selectAllCheckbox
+              (change)="onClickSelectAll($event, emailSendData?.modules)"
+              class="mb-3"
+              >Select All</mat-checkbox
+            >
+            <div class="row">
+              <div
+                class="col-lg-4 col-md-6 col-sm-6 col-xs-6"
+                *ngFor="let item of emailSendData?.modules; let i = index"
+              >
+                <mat-slide-toggle [(ngModel)]="item.permission">
+                  {{ item?.displayName }}
+                </mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isEmailSendDataLoading">
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+
+          <div
+            *ngIf="
+              !isEmailSendDataLoading &&
+              !emailSendData?.modules?.length &&
+              isEmailSendDataAvailable
+            "
+            class="text-secondary text-center"
+          >
+            -- No Data Found --
+          </div>
+          <!-- if data is present end -->
+
+          <!-- if data is not present start -->
+          <div *ngIf="!isEmailSendDataAvailable && !isEmailSendDataLoading">
+            <mat-checkbox
+              *ngIf="internalUserData?.length"
+              #selectAllCheckbox
+              (change)="onClickSelectAll($event, emailContentModuleData)"
+              class="mb-3"
+              >Select All</mat-checkbox
+            >
+            <div class="row">
+              <div
+                class="col-lg-4 col-md-6 col-sm-6 col-xs-6"
+                *ngFor="let item of emailContentModuleData; let i = index"
+              >
+                <mat-slide-toggle [(ngModel)]="item.permission">
+                  {{ item?.displayName }}
+                </mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div *ngIf="isContentLoading && !isEmailSendDataAvailable">
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div> -->
+
+          <div
+            *ngIf="
+              !isEmailSendDataLoading &&
+              !emailContentModuleData?.length &&
+              !isEmailSendDataAvailable
+            "
+            class="text-secondary text-center"
+          >
+            -- No Data Found --
+          </div>
+          <!-- if data is not present end -->
+          <div
+            *ngIf="internalUserData?.length && !isEmailSendDataLoading"
+            class="row mt-5"
+          >
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+              <div class="example-button-row">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="button"
+                  (click)="submit()"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,58 @@
+:host ::ng-deep .mat-radio-button.mat-radio-checked {
+    padding: 8px 10px;
+    background: #1126c9df;
+    box-shadow: 0 8px 10px 0 #050b6117;
+    border-radius: 25px;
+    border: 1px solid #3c2f2f2e;
+    transition: none !important;
+    outline: 1px solid #ccc;
+}
+
+:host ::ng-deep ._radio {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    padding: .8rem;
+}
+
+:host ::ng-deep .mat-radio-button {
+    padding: 8px 10px;
+    border-radius: 25px;
+    border: 1px solid rgb(236, 236, 236);
+    margin: 0;
+    transition: none !important;
+}
+
+:host ::ng-deep .mat-radio-button.mat-radio-checked .mat-radio-label {
+    color: rgb(255, 255, 255) !important;
+}
+
+:host ::ng-deep .mat-radio-button .mat-radio-outer-circle {
+    border-color: rgb(232, 232, 232) !important;
+}
+
+::ng-deep .mat-radio-label {
+    color: rgb(133, 116, 116) !important;
+}
+
+:host ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle,
+.mat-radio-outer-circle {
+    border-color: rgb(255, 255, 255) !important;
+}
+
+:host ::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-inner-circle,
+.mat-radio-inner-circle {
+    border-color: #fff !important;
+    background-color: #fff;
+}
+
+:host ::ng-deep .mat-radio-button.mat-radio-disabled {
+    cursor: not-allowed;
+}
+
+@media screen and (max-width:'460px') {
+    #assign-hospital-modal{
+        height: 300px;
+    }
+}

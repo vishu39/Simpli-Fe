@@ -1,0 +1,116 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content class="timelineContainer">
+    <div *ngIf="historyData?.length > 0 && !isPatientLoading">
+      <div class="timelineMain">
+        <div class="timeline-row" *ngFor="let history of historyData">
+          <div class="timeline-content">
+            <span class="status"
+              ><h4 class="mb-0">{{ history?.status }}</h4></span
+            >
+            <div style="font-size: 14px">
+              <span><b>User Name: </b></span>
+              {{ history?.userName }} - {{ history?.userType | titlecase }}
+            </div>
+
+            <div
+              style="font-size: 14px"
+              *ngIf="!!history?.sendTo || !!history?.emailTo || history?.contact?.length > 0"
+            >
+              <b>Sent To: </b>
+              <span
+                style="
+                  color: rgba(13, 110, 253, 1);
+                  cursor: pointer;
+                  text-decoration: underline;
+                "
+                #tooltipButtonSendToHistory
+                id="tooltipButtonSendToHistory"
+                (mouseenter)="
+                  showSendToDetailsOnHover(tooltipButtonSendToHistory, history)
+                "
+                (mouseleave)="hideDetails(tooltipButtonSendToHistory, history)"
+                >View
+              </span>
+            </div>
+
+            <div style="font-size: 14px" *ngIf="!!history?.comment">
+              <!-- <div class="d-flex gap-1">
+              <span class="text"> {{ history?.comment }}</span>
+            </div> -->
+              <b>Comment: </b>
+              <span
+                [matTooltip]="history?.comment"
+                matTooltipPosition="right"
+                style="
+                  color: rgba(13, 110, 253, 1);
+                  cursor: pointer;
+                  text-decoration: underline;
+                "
+                >View
+              </span>
+            </div>
+
+            <div style="font-size: 14px" *ngIf="!!history?.doctorOpinionName">
+              <span><b>Doctor Name: </b></span> {{ history?.doctorOpinionName }}
+            </div>
+
+            <div style="font-size: 14px" *ngIf="!!history?.doctorOpinionSource">
+              <span><b>Source: </b></span> {{ history?.doctorOpinionSource }}
+            </div>
+
+            <div style="font-size: 14px" *ngIf="!!history?.vilEmbassyName">
+              <span><b>Embassy Name: </b></span> {{ history?.vilEmbassyName }}
+            </div>
+
+            <div class="other-details" *ngIf="history?.hospital?.length > 0">
+              <div class="content">
+                <b>Hospital Sent: </b>
+                <span
+                  [matTooltip]="showHospitalList(history?.hospital)"
+                  matTooltipPosition="right"
+                  style="
+                    color: rgba(13, 110, 253, 1);
+                    cursor: pointer;
+                    text-decoration: underline;
+                  "
+                  >View
+                </span>
+              </div>
+            </div>
+            <div style="font-size: 14px">
+              <span><b>Brand Name: </b></span> {{ history?.brandName }}
+            </div>
+            <div style="font-size: 14px">
+              {{ history?.createdAt | date : "medium" }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="notFound" *ngIf="isPatientLoading">
+      <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+    </div>
+
+    <div class="notFound" *ngIf="!historyData?.length && !isPatientLoading">
+      --No Data Found--
+    </div>
+  </div>
+</div>

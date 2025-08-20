@@ -1,0 +1,1104 @@
+<section class="content">
+  <div>
+    <!-- <div
+      class="block-header d-flex justify-content-between align-items-baseline mt-3 mb-3"
+    ></div> -->
+
+    <div class="dashboardContainer" style="position: relative">
+      <div class="overlayButtonDiv">
+        <button
+          mat-icon-button
+          class="filterIcon"
+          [matTooltip]="'Download All Card Details'"
+          (click)="downloadCardDataCSV()"
+        >
+          <mat-icon>get_app</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          class="filterIcon"
+          [matTooltip]="'Show Filters'"
+          *ngIf="!isSidebarShrunk"
+          (click)="onClickFilterVisibilityIcon(true)"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          class="filterIcon"
+          [matTooltip]="'Hide Filters'"
+          *ngIf="isSidebarShrunk"
+          (click)="onClickFilterVisibilityIcon(false)"
+        >
+          <mat-icon>visibility_off</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          class="filterIcon"
+          [matTooltip]="'Show Applied Filters'"
+          *ngIf="isFilterSelected()"
+          (click)="openFiltersModal()"
+        >
+          <mat-icon>tune</mat-icon>
+        </button>
+      </div>
+
+      <div class="filterDiv card" *ngIf="isSidebarShrunk">
+        <div class="p-3 pb-0">
+          <h5 style="text-align: center">Filters</h5>
+        </div>
+        <form [formGroup]="filterSelectionForm">
+          <div>
+            <!-- <div class="filterBtnDiv">
+              <span
+                class="filterButton"
+                *ngFor="let uad of updatedDataArray"
+                [ngClass]="
+                  selectedUpdatedArray?.includes(uad?.value)
+                    ? 'filterButton selectedButton'
+                    : 'filterButton'
+                "
+                (click)="onClickBtnFilter(uad, 'uad')"
+                >{{ uad?.name }}</span
+              >
+            </div> -->
+
+            <div class="p-3 pb-0">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Select Date Range</mat-label>
+                <mat-date-range-input
+                  [rangePicker]="picker1"
+                  formGroupName="dateRange"
+                >
+                  <input
+                    matStartDate
+                    formControlName="startDate"
+                    placeholder="From Date"
+                    (focus)="picker1.open()"
+                  />
+                  <input
+                    matEndDate
+                    formControlName="endDate"
+                    placeholder="To Date"
+                    (focus)="picker1.open()"
+                  />
+                </mat-date-range-input>
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-date-range-picker #picker1>
+                  <mat-date-range-picker-actions>
+                    <button mat-button (click)="onRangeClear(picker1)">
+                      Clear
+                    </button>
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      (click)="onRangeSubmit(picker1)"
+                      matDateRangePickerApply
+                    >
+                      Submit
+                    </button>
+                  </mat-date-range-picker-actions>
+                </mat-date-range-picker>
+              </mat-form-field>
+            </div>
+
+            <div class="filterBtnDiv">
+              <span
+                class="filterButton"
+                *ngFor="let year of years"
+                [ngClass]="
+                  selectedYearArray?.includes(year?.value)
+                    ? 'filterButton selectedButton'
+                    : 'filterButton'
+                "
+                (click)="onClickBtnFilter(year, 'year')"
+                >{{ year?.name }}</span
+              >
+            </div>
+
+            <div class="filterBtnDiv">
+              <span
+                [ngClass]="
+                  selectedMonthArray?.includes(month?.value)
+                    ? 'filterButton selectedButton'
+                    : 'filterButton'
+                "
+                (click)="onClickBtnFilter(month, 'month')"
+                *ngFor="let month of months"
+                >{{ month?.name }}</span
+              >
+            </div>
+
+            <div class="filterBtnDiv">
+              <span
+                class="filterButton"
+                *ngFor="let quater of quarters"
+                [ngClass]="
+                  selectedQuaterArray?.includes(quater?.value)
+                    ? 'filterButton selectedButton'
+                    : 'filterButton'
+                "
+                (click)="onClickBtnFilter(quater, 'quater')"
+                >{{ quater?.name }}</span
+              >
+            </div>
+            <div class="filterBtnDiv">
+              <span
+                class="filterButton"
+                *ngFor="let gender of genderData"
+                [ngClass]="
+                  selectedGenderArray?.includes(gender?.value)
+                    ? 'filterButton selectedButton'
+                    : 'filterButton'
+                "
+                (click)="onClickBtnFilter(gender, 'gender')"
+                >{{ gender?.name }}</span
+              >
+            </div>
+          </div>
+
+          <div class="p-3 pb-0">
+            <h6 class="mt-0">Age Duration</h6>
+            <div class="row">
+              <div class="col-6">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Age From</mat-label>
+                  <input
+                    formControlName="ageFrom"
+                    matInput
+                    type="number"
+                    (input)="onTypeAgeFromValue()"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Age To</mat-label>
+                  <input formControlName="ageTo" matInput type="number" />
+                </mat-form-field>
+              </div>
+              <div class="col-12">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Age Duration</mat-label>
+                  <mat-select formControlName="ageDuration">
+                    <mat-option
+                      [value]="item"
+                      *ngFor="let item of ageDurationData"
+                      >{{ item | titlecase }}
+                    </mat-option>
+                  </mat-select>
+                  <button
+                    *ngIf="filterSelectionForm.get('ageDuration')?.value"
+                    matSuffix
+                    mat-icon-button
+                    type="button"
+                    aria-label="Clear"
+                    (click)="clearAgeFilter(); $event.stopPropagation()"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error
+                    *ngIf="
+                      filterSelectionForm.controls['ageDuration'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Age duration is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <!-- <div>
+                <span
+                  style="
+                    cursor: pointer;
+                    color: red;
+                    text-decoration: underline;
+                    font-size: 10px;
+                  "
+                  (click)="clearAgeFilter()"
+                  >Clear Age Filter</span
+                >
+              </div> -->
+            </div>
+          </div>
+
+          <div class="p-3 pb-0 pt-0">
+            <div class="col-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Country</mat-label>
+
+                  <mat-select
+                    multiple
+                    formControlName="country"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollCountry()"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchCountry($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!countryData?.length && !isLoadingCountry"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="countryData?.length">
+                      <mat-checkbox (change)="selectAllCountry($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingCountrySelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingCountrySelectAll">
+                      <mat-option
+                        (click)="onClickCountry(item.name)"
+                        *ngFor="let item of countryData"
+                        [value]="item.name"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingCountry && !isLoadingCountrySelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of filterSelectionForm?.get('country').value
+                        "
+                      >
+                        {{ item }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      filterSelectionForm?.controls['country'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Country is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Hospital</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="hospital"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollHospital()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchHospital($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!hospitalData?.length && !isLoadingHospital"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="hospitalData?.length">
+                      <mat-checkbox (change)="selectAllHospital($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingHospitalSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingHospitalSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickHospital({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of hospitalData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingHospital && !isLoadingHospitalSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of filterSelectionForm.get('hospital').value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>User</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="user"
+                    [compareWith]="compareObjectsForUser"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchInternalUser($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !internalUserData?.length && !isInternalUserLoading
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="internalUserData?.length">
+                      <mat-checkbox (change)="selectAllUser($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isInternalUserLoadingSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isInternalUserLoading">
+                      <mat-option
+                        (click)="
+                          onClickUser({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of internalUserData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isInternalUserLoading && !isInternalUserLoadingSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of filterSelectionForm.get('user').value
+                        "
+                      >
+                        {{ item?.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Treatment</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="treatment"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollTreatment()"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchTreatment($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!treatmentData?.length && !isLoadingTreatment"
+                    >
+                      No results
+                    </div>
+                    <div class="other_option" *ngIf="treatmentData?.length">
+                      <mat-checkbox (change)="selectAllTreatment($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+                    <mat-spinner
+                      *ngIf="isLoadingTreatmentSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingTreatmentSelectAll">
+                      <mat-option
+                        (click)="onClickTreatment(item.name)"
+                        *ngFor="let item of treatmentData"
+                        [value]="item.name"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingTreatment && !isLoadingTreatmentSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of filterSelectionForm?.get('treatment')
+                            .value
+                        "
+                      >
+                        {{ item }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      filterSelectionForm?.controls['treatment'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Treatment is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Doctor</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="doctor"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollDoctor()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchDoctor($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!doctorData?.length && !isLoadingDoctor"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="doctorData?.length">
+                      <mat-checkbox (change)="selectAllDoctor($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingDoctorSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingDoctorSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickDoctor({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of doctorData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingDoctor && !isLoadingDoctorSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of filterSelectionForm.get('doctor').value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Referral Partner</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="referralPartner"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchReferralPartner($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !referralPartnerData?.length &&
+                        !isLoadingReferralPartner
+                      "
+                    >
+                      No results
+                    </div>
+                    <div
+                      class="other_option"
+                      *ngIf="referralPartnerData?.length"
+                    >
+                      <mat-checkbox (change)="selectAllReferralPartner($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+                    <mat-spinner
+                      *ngIf="isLoadingReferralPartnerSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingReferralPartnerSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickReferralItem({
+                            _id: item._id,
+                            name: item.name,
+                            referralType: item?.referralType
+                          })
+                        "
+                        *ngFor="let item of referralPartnerData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name,
+                          referralType: item?.referralType
+                        }"
+                      >
+                        {{ item.name }} -
+                        {{ referralTypeName[item?.referralType] }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingReferralPartner &&
+                        !isLoadingReferralPartnerSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of filterSelectionForm?.get(
+                            'referralPartner'
+                          ).value
+                        "
+                      >
+                        {{ item?.name }} -
+                        {{ referralTypeName[item?.referralType] }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      filterSelectionForm?.controls['referralPartner'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Referral Partner is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="onClickFilterSubmit()"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="chartsDiv" #pdfContent id="pdfContent">
+        <div
+          class="topCards card mb-0"
+          style="padding: 12px 12px 4px 12px"
+          *ngIf="cardsData?.length"
+        >
+          <div
+            class="tCard card p-2 mb-1"
+            [ngStyle]="{ 'background-color': tCard.iconBg, color: '#fff' }"
+            *ngFor="let tCard of cardsData; let cardIndex = index"
+          >
+            <div class="d-flex align-items-center">
+              <i
+                class="material-icons align-middle"
+                [matTooltip]="tCard?.desc"
+                >{{ tCard?.icon }}</i
+              >
+              <span class="cardHeading" style="margin-left: 8px"
+                ><b>{{ tCard?.name }}</b></span
+              >
+            </div>
+            <span *ngIf="tCard?.isLoading"
+              ><mat-spinner
+                [diameter]="30"
+                class="white-spinner mt-1"
+              ></mat-spinner
+            ></span>
+            <span class="mt-2 mb-2" *ngIf="!tCard?.isLoading">{{
+              tCard?.value || 0
+            }}</span>
+
+            <mat-icon
+              class="hideIcon"
+              [matTooltip]="'Hide Card'"
+              (click)="onClickCardHide(cardIndex)"
+              >visibility_off</mat-icon
+            >
+          </div>
+        </div>
+
+        <div class="charts mt-1">
+          <!-- apex bar chart start -->
+          <div
+            *ngFor="let chart of apexBarChartDataArray; let ci = index"
+            [ngClass]="chart.fullWidth ? 'chartFullWidth' : ''"
+          >
+            <div
+              class="card mb-0"
+              [id]="'chart' + ci"
+              style="width: 100%"
+              [class.full-width]="true"
+            >
+              <div *ngIf="!chart?.isLoading && chart?.series[0]?.data?.length">
+                <!-- <div
+                  style="display: flex; justify-content: flex-end; gap: 10px"
+                >
+                  <mat-icon class="hideIconCharts" [matTooltip]="'Hide Chart'"
+                    >visibility_off</mat-icon
+                  >
+                </div> -->
+                <apx-chart
+                  [title]="chart.title"
+                  [series]="chart.series"
+                  [chart]="chart.chart"
+                  [dataLabels]="chart.dataLabels"
+                  [plotOptions]="chart.plotOptions"
+                  [xaxis]="chart.xaxis"
+                  [legend]="chart.legend"
+                  [colors]="chart.colors"
+                  [grid]="chart.grid"
+                ></apx-chart>
+              </div>
+
+              <div
+                *ngIf="chart?.isLoading"
+                style="
+                  height: 250px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <mat-spinner [diameter]="30"></mat-spinner>
+              </div>
+            </div>
+          </div>
+          <!-- apex bar chart end -->
+
+          <!-- apex pie chart start -->
+          <div
+            *ngFor="
+              let chart of apexGenderDiversityChartDataArray;
+              let ci = index
+            "
+            [ngClass]="chart.fullWidth ? 'chartFullWidth' : ''"
+          >
+            <div class="card mb-0" [id]="'chart' + ci" style="width: 100%">
+              <div *ngIf="!chart?.isLoading && chart?.series?.length">
+                <div
+                  style="display: flex; justify-content: flex-end; gap: 10px"
+                >
+                  <!-- <mat-icon class="hideIconCharts" [matTooltip]="'Hide Chart'"
+                    >visibility_off</mat-icon
+                  > -->
+                  <button
+                    *ngIf="chart?.isShowBackButton"
+                    class="btn btn-outline-secondary mb-2"
+                    (click)="backToOrginal(chart?.type)"
+                  >
+                    ← Back
+                  </button>
+                </div>
+                <apx-chart
+                  [series]="chart.series"
+                  [chart]="chart.chart"
+                  [labels]="chart.labels"
+                  [title]="chart.title"
+                  [plotOptions]="chart.plotOptions!"
+                  [legend]="chart.legend"
+                  [stroke]="chart.stroke!"
+                  [xaxis]="chart.xaxis"
+                  [colors]="chart.colors"
+                  [grid]="chart.grid"
+                  [dataLabels]="chart.dataLabels"
+                >
+                </apx-chart>
+              </div>
+
+              <div
+                *ngIf="chart?.isLoading"
+                style="
+                  height: 250px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <mat-spinner [diameter]="30"></mat-spinner>
+              </div>
+            </div>
+          </div>
+          <!-- apex pie chart end -->
+
+          <!-- Treemap Chart -->
+          <div
+            *ngFor="
+              let chart of apexDepartmentTreeChartDataArray;
+              let ci = index
+            "
+            [ngClass]="chart.fullWidth ? 'chartFullWidth' : ''"
+          >
+            <div class="card mb-0">
+              <div *ngIf="!chart?.isLoading && chart?.series?.length">
+                <div
+                  style="display: flex; justify-content: flex-end; gap: 10px"
+                >
+                  <!-- <mat-icon class="hideIconCharts" [matTooltip]="'Hide Chart'"
+                    >visibility_off</mat-icon
+                  > -->
+
+                  <button
+                    *ngIf="
+                      chart?.isShowBackButton &&
+                      chart?.chart?.type === 'treemap'
+                    "
+                    class="btn btn-outline-secondary mb-2"
+                    (click)="backToDepartments()"
+                  >
+                    ← Back to Departments
+                  </button>
+                </div>
+                <apx-chart
+                  [series]="chart.series"
+                  [chart]="chart.chart"
+                  [dataLabels]="chart.dataLabels"
+                  [plotOptions]="chart.plotOptions"
+                  [responsive]="chart.responsive"
+                  [xaxis]="chart.xaxis"
+                  [legend]="chart.legend"
+                  [fill]="chart.fill"
+                  [labels]="chart.labels"
+                  [dataLabels]="chart.dataLabels"
+                  [colors]="chart.colors"
+                  [title]="chart.title"
+                >
+                </apx-chart>
+              </div>
+
+              <div
+                *ngIf="chart?.isLoading"
+                style="
+                  height: 250px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <mat-spinner [diameter]="30"></mat-spinner>
+              </div>
+            </div>
+          </div>
+
+          <!-- apex funnel chart start -->
+          <div class="chartFullWidth">
+            <div class="grix1x3">
+              <div
+                *ngFor="let chart of apexFunnelChartDataArray; let ci = index"
+                [ngClass]="chart.fullWidth ? 'chartFullWidth ' : ''"
+              >
+                <div
+                  class="card mb-0"
+                  [id]="'chart' + ci"
+                  style="width: 100%"
+                  [class.full-width]="true"
+                >
+                  <div
+                    *ngIf="!chart?.isLoading && chart?.series[0]?.data?.length"
+                    style="width: 100%"
+                  >
+                    <!-- <div
+                  style="
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 10px;
+                    width: 100%;
+                  "
+                >
+                  <mat-icon class="hideIconCharts" [matTooltip]="'Hide Chart'"
+                    >visibility_off</mat-icon
+                  >
+                </div> -->
+                    <apx-chart
+                      [title]="chart.title"
+                      [series]="chart.series"
+                      [chart]="chart.chart"
+                      [dataLabels]="chart.dataLabels"
+                      [plotOptions]="chart.plotOptions"
+                      [xaxis]="chart.xaxis"
+                      [legend]="chart.legend"
+                      [colors]="chart.colors"
+                      [grid]="chart.grid"
+                    ></apx-chart>
+                  </div>
+
+                  <div
+                    *ngIf="chart?.isLoading"
+                    style="
+                      height: 250px;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                  >
+                    <mat-spinner [diameter]="30"></mat-spinner>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- apex funnel chart end -->
+
+          <!-- apex tat area chart start -->
+          <div
+            *ngFor="let chart of apexTatAreaChartDataArray; let ci = index"
+            [ngClass]="chart.fullWidth ? 'chartFullWidth ' : ''"
+          >
+            <div
+              class="card mb-0"
+              [id]="'chart' + ci"
+              style="width: 100%"
+              [class.full-width]="true"
+            >
+              <div *ngIf="!chart?.isLoading && chart?.series?.length">
+                <!-- <div
+                  style="display: flex; justify-content: flex-end; gap: 10px"
+                >
+                  <mat-icon class="hideIconCharts" [matTooltip]="'Hide Chart'"
+                    >visibility_off</mat-icon
+                  >
+                </div> -->
+                <apx-chart
+                  [title]="chart.title"
+                  [series]="chart.series"
+                  [chart]="chart.chart"
+                  [dataLabels]="chart.dataLabels"
+                  [plotOptions]="chart.plotOptions"
+                  [xaxis]="chart.xaxis"
+                  [yaxis]="chart.yaxis"
+                  [legend]="chart.legend"
+                  [colors]="chart.colors"
+                  [grid]="chart.grid"
+                ></apx-chart>
+              </div>
+
+              <div
+                *ngIf="chart?.isLoading"
+                style="
+                  height: 250px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <mat-spinner [diameter]="30"></mat-spinner>
+              </div>
+            </div>
+          </div>
+          <!-- apex tat area chart end -->
+
+          <!-- apex multiline chart start -->
+          <div
+            *ngFor="let chart of apexMultipleLineChartDataArray; let ci = index"
+            [ngClass]="chart.fullWidth ? 'chartFullWidth ' : ''"
+          >
+            <div
+              class="card mb-0"
+              [id]="'chart' + ci"
+              style="width: 100%"
+              [class.full-width]="true"
+            >
+              <div *ngIf="!chart?.isLoading && chart?.series[0]?.data?.length">
+                <!-- <div
+                  style="display: flex; justify-content: flex-end; gap: 10px"
+                >
+                  <mat-icon class="hideIconCharts" [matTooltip]="'Hide Chart'"
+                    >visibility_off</mat-icon
+                  >
+                </div> -->
+                <apx-chart
+                  [title]="chart.title"
+                  [series]="chart.series"
+                  [chart]="chart.chart"
+                  [dataLabels]="chart.dataLabels"
+                  [plotOptions]="chart.plotOptions"
+                  [xaxis]="chart.xaxis"
+                  [yaxis]="chart.yaxis"
+                  [legend]="chart.legend"
+                  [colors]="chart.colors"
+                  [grid]="chart.grid"
+                  [markers]="chart.markers!"
+                  [stroke]="chart.stroke!"
+                ></apx-chart>
+              </div>
+
+              <div
+                *ngIf="chart?.isLoading"
+                style="
+                  height: 250px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <mat-spinner [diameter]="30"></mat-spinner>
+              </div>
+            </div>
+          </div>
+          <!-- apex multiline chart end -->
+
+          <!-- <div
+            id="chartdiv"
+            style="width: 100%; height: 400px"
+            class="card p-2 chartFullWidth"
+          ></div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

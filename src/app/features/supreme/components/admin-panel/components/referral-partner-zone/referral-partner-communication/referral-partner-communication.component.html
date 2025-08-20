@@ -1,0 +1,92 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Referral Partner Zone'"
+        [active_item]="'All Referral Partner Zone'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <mat-card>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Select Referral Partner</mat-label>
+                <mat-select
+                  msInfiniteScroll
+                  (infiniteScroll)="onInfiniteScrollReferral()"
+                  (selectionChange)="onChangeHospital($event)"
+                  [(ngModel)]="selectReferral._id"
+                >
+                  <input
+                    class="searchInput"
+                    placeholder="search..."
+                    (keydown.space)="$event.stopPropagation()"
+                    matInput
+                    (keyup)="searchReferral($event.target.value)"
+                  />
+                  <div
+                    class="other_option"
+                    *ngIf="!referralData?.length && !isLoadingReferral"
+                  >
+                    No results
+                  </div>
+                  <mat-option
+                    *ngFor="let item of referralData"
+                    [value]="item._id"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                  <mat-spinner
+                    *ngIf="isLoadingReferral"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <mat-tab-group
+          (selectedTabChange)="changeTab($event)"
+          animationDuration="0ms"
+        >
+          <mat-tab label="Zone">
+            <div *ngIf="selectedTab === 'Zone'">
+              <app-referral-zone
+                [referralId]="selectedReferralId"
+              ></app-referral-zone>
+            </div>
+          </mat-tab>
+          <mat-tab label="Staff">
+            <div *ngIf="selectedTab === 'Staff'">
+              <app-referral-staff
+                [referralId]="selectedReferralId"
+              ></app-referral-staff></div
+          ></mat-tab>
+          <mat-tab label="Default Email">
+            <div *ngIf="selectedTab === 'Default Email'">
+              <app-referral-default-email
+                [referralId]="selectedReferralId"
+              ></app-referral-default-email>
+            </div>
+          </mat-tab>
+          <mat-tab label="Default Message">
+            <div *ngIf="selectedTab === 'Default Message'">
+              <app-referral-default-message
+                [referralId]="selectedReferralId"
+              ></app-referral-default-message>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</section>

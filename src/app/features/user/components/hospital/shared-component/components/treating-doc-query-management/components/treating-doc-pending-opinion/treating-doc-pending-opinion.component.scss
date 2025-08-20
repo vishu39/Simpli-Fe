@@ -1,0 +1,18 @@
+.redFlag {
+  cursor: pointer;
+  color: red;
+}
+.greenFlag {
+  cursor: pointer;
+  color: green;
+}
+
+.text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  width: 75%;
+  line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}

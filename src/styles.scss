@@ -1,0 +1,548 @@
+@import "../src/app/shared/styles/custom-checkbox-radio.scss";
+@import "../src/app/shared/styles/custom-file-uploader.scss";
+/* You can add global styles to this file, and also import other style files */
+body {
+  overflow-x: hidden !important;
+}
+
+.customBlueBadgeColor {
+  background-color: #1560bd !important;
+  border: 1px solid white !important;
+  color: white !important;
+}
+
+.snackBar-danger {
+  background: #ae0208;
+  color: #ffffff;
+  width: 100vw - 20vw;
+  button {
+    color: white;
+    background-color: #2d18189b;
+  }
+}
+
+.snackBar-success {
+  background: #007f00;
+  color: #ffffff;
+  width: auto;
+  button {
+    color: white;
+    background-color: #2d18189b;
+  }
+}
+// custom css
+.navbar-nav.navbar-right .user_profile .user_img {
+  border-radius: 0%;
+}
+.navbar-brand img {
+  width: 100%;
+  height: 129%;
+}
+.no-results {
+  text-align: center;
+  margin-top: 38px;
+}
+.mat-dialog-container {
+  background: #ffffff;
+}
+.upload_image img {
+  width: 150px;
+}
+.ck-editor__editable_inline {
+  min-height: 300px;
+}
+
+.chip_section {
+  height: 34px !important;
+  position: relative;
+}
+
+.mat-select-panel {
+  max-height: 161px !important;
+}
+
+.searchInput {
+  border-bottom: 1px solid grey !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  font-size: inherit !important;
+  padding: 16px !important;
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  background: white !important;
+}
+.theme-white .nav-active {
+  background-color: #f0f3fb;
+}
+.theme-black .nav-active {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.sidebar .menu .list .ml-menu li a.active {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.badge-success {
+  color: #fff;
+  background-color: #439946;
+}
+
+.form_array_delete_icon {
+  position: relative;
+  bottom: 4px;
+  right: 2px;
+}
+.image_upload_link {
+  position: relative;
+  bottom: 13px;
+}
+.copy_icon {
+  padding-left: 5px;
+  position: relative;
+  font-size: 18px;
+  top: 3px;
+}
+.cursor_pointer {
+  cursor: pointer;
+  color: #1560bd;
+}
+.tbl-action-btn {
+  position: relative;
+  bottom: 5px;
+}
+
+// VISHAL GLOBAL STYLES DO NOT TOUCH OR OVERRIDE ANY OF THIS ASK VISHAL IF ANY CHANGES HAS TO BE MADE
+
+.sm-fi-btn {
+  position: relative;
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed !important;
+    background-color: #c5c5c5 !important;
+  }
+  app-feather-icons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -105%);
+  }
+}
+.mat-table {
+  width: 100%;
+  &.resizing {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: e-resize;
+  }
+  .mat-header-cell,
+  .mat-cell {
+    padding: 5px 10px;
+    border-right: 1px solid rgb(180 180 180 / 41%);
+    &:nth-last-child(1) {
+      border-right: none;
+    }
+    position: relative;
+    &:not(:last-child) {
+      .resize-holder {
+        cursor: e-resize;
+        width: 20px;
+        height: 100%;
+        position: absolute;
+        right: -10px;
+        top: 0;
+        z-index: 1;
+      }
+    }
+  }
+}
+.sm-model-header {
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgb(236, 236, 236);
+  z-index: 10;
+}
+.sm-model-title {
+  margin-top: 8px;
+  font-size: 1.4rem;
+  text-transform: capitalize;
+}
+.sm-model-actions {
+  button {
+    margin-right: 10px;
+  }
+}
+.sm-custom-content {
+  margin-bottom: 10px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgb(236, 236, 236);
+}
+
+.wrapped-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 1.6rem;
+  width: calc(100% - 40px);
+}
+.hide-scrollbar {
+  overflow: auto;
+  scrollbar-width: none;
+  scroll-behavior: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.dialogBackdrop {
+  background-color: #27292792;
+}
+
+.cdk-text-field-autofill-monitored:not(:-webkit-autofill) {
+  animation: none !important;
+}
+
+button.mat-flat-button:focus {
+  outline: 1px solid #b2aeae !important;
+  outline-offset: 2px;
+}
+
+.sm-table-fi-button {
+  margin-right: 5px !important;
+  width: 30px;
+  app-feather-icons {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+.tbl-center {
+  text-align: center;
+}
+.mat-tooltip {
+  font-size: 14px !important;
+  white-space: pre-wrap;
+  background-color: #07142cd6 !important;
+}
+.mat-paginator-sticky {
+  width: 100%;
+  bottom: 0px;
+  position: sticky;
+  z-index: 10;
+}
+.list-wrapper {
+  margin-top: 1rem;
+}
+.table-wrapper {
+  max-height: 74vh;
+  overflow: auto;
+}
+mat-cell > span.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+@media screen and (max-width: 768px) {
+  .table-wrapper {
+    max-height: 70vh;
+    overflow: auto;
+  }
+  section.content .content-block {
+    padding: 25px 10px 0px 10px;
+  }
+}
+.fa-star,
+.fa-star-half-alt {
+  color: #1560bd !important;
+}
+
+.other_option {
+  line-height: 48px;
+  height: 48px;
+  padding: 0 16px;
+  max-width: 100%;
+}
+
+.multiple_select_custom .mat-select-min-line {
+  display: none !important;
+}
+.multiple_select_custom
+  .mat-form-field-can-float.mat-form-field-should-float
+  .mat-form-field-label,
+.mat-form-field-can-float
+  .mat-input-server:focus
+  + .mat-form-field-label-wrapper
+  .mat-form-field-label {
+  transform: unset !important;
+}
+.list-results {
+  position: relative;
+  height: 15rem;
+  overflow-x: hidden !important;
+}
+.detail-list {
+  overflow: auto;
+  height: 80px;
+}
+.scrollable-menu {
+  max-height: 123px !important;
+}
+.null {
+  position: absolute !important;
+  top: 50% !important;
+}
+.file_view {
+  width: 100%;
+  height: 150px;
+}
+
+._file {
+  .preview-item {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    mat-icon {
+      color: #f44336 !important;
+    }
+    img,
+    iframe {
+      border-radius: 10px;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+
+      &::-webkit-scrollbar {
+        display: none !important;
+      }
+    }
+  }
+}
+.badge-primary {
+  background-color: #1560bd;
+}
+.mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+  flex-grow: 6 !important;
+}
+.mat-tab-body-content {
+  height: 100%;
+  overflow-x: hidden !important;
+}
+
+// query management
+
+.query-management-container {
+  margin: 15px 0 0 0;
+  position: relative;
+  width: 100%;
+
+  .main-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 75vh;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  %box {
+    height: 100%;
+    overflow-y: hidden;
+    flex: 1 0 auto;
+    background: #fffffff6;
+    box-shadow: 10px 8px 32px 0 #b8b8ba44;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(13.5px);
+    border-radius: 10px;
+    padding: 1rem;
+  }
+
+  .left {
+    @extend %box;
+    width: 28.99%;
+    padding: 10px;
+
+    .list-toolbar {
+      margin-top: -10px;
+
+      .action {
+        mat-icon {
+          font-size: 1.3rem;
+        }
+      }
+    }
+
+    .list-wrapper {
+      background-color: #d3d3db1a;
+      border-radius: 10px;
+      height: 95%;
+      overflow-y: auto;
+      // padding: 10px 5px;
+
+      &::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(232, 229, 229, 0.3);
+        background-color: #e3e3e3;
+        border-radius: 8px;
+      }
+
+      &::-webkit-scrollbar {
+        width: 10px;
+        background-color: #f5f5f5;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: #d9d9d9;
+        border-radius: 8px;
+
+        &:hover {
+          background-color: #b7b1b1;
+        }
+      }
+    }
+  }
+
+  .right {
+    @extend %box;
+    width: 68.99%;
+
+    .query-wrapper {
+      background-color: #d3d3db1a;
+      border-radius: 10px;
+      height: 100%;
+      overflow-y: auto;
+      padding: 10px;
+      outline: 1px solid rgba(240, 215, 215, 0.567);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+::-webkit-scrollbar {
+  width: 5.8px;
+  height: 5.8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #659ed2 !important;
+  border-radius: 100px;
+}
+// .cdk-overlay-pane{ transform: translateX(-0px) !important;}
+// .mat-select-panel{min-width: 100% !important;}
+
+/* mat-primary Button*/
+
+.mat-flat-button.mat-primary,
+.mat-raised-button.mat-primary,
+.mat-fab.mat-primary,
+.mat-mini-fab.mat-primary {
+  background-color: #1560bd;
+  color: #fff;
+}
+
+/* mat-warn Button */
+.mat-flat-button.mat-warn,
+.mat-raised-button.mat-warn,
+.mat-fab.mat-warn,
+.mat-mini-fab.mat-warn {
+  background-color: #da012d;
+}
+
+/* Button Success */
+.btn-success {
+  --bs-btn-bg: rgb(67, 153, 70);
+  --bs-btn-border-color: #198754;
+}
+
+#mail-nav #mail-folders > li.active > a {
+  color: #fff;
+  background-color: #1560bd;
+}
+#mail-nav #mail-folders > li a:hover {
+  color: #fff;
+  background-color: #1560bd;
+}
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: #e2f0fb;
+}
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #1560bd;
+}
+.badge-primary {
+  background-color: #1560bd;
+}
+button.mat-flat-button:focus {
+  outline: 1px solid #1560bd;
+  outline-offset: 2px;
+}
+
+.badge-success {
+  color: #fff;
+  background-color: #439946;
+}
+
+.text-primary {
+  color: #1560bd;
+  font-size: 20px;
+}
+.mat-radio-button.mat-radio-checked {
+  background: #1560bd;
+}
+
+.mat-icon-button.mat-primary,
+.mat-stroked-button.mat-primary {
+  color: #1560bd;
+}
+.mat-flat-button {
+  color: #ffffff;
+  background-color: #1560bd;
+}
+
+.loader_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100% !important;
+}
+
+.table_loader {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  visibility: hidden;
+  height: 0;
+  pointer-events: none;
+}
+
+.matTableEmailIdWordBreak {
+  width: 100%;
+  word-break: break-all;
+}
+
+.mat-select-panel {
+  max-height: 350px !important;
+}

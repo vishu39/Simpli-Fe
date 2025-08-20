@@ -1,0 +1,37 @@
+<div class="modalHeader sm-model-header">
+    <h3 class="sm-model-title">Filter</h3>
+    <button mat-dialog-close="true" mat-icon-button>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <div class="sm-form _row" [formGroup]="form">
+        <ng-container *ngFor="let prop of fields">
+            <div class="_col" [ngClass]="prop.class" >
+                <mat-form-field *ngIf="prop.type === 'text'"  class="example-full-width" appearance="outline" >
+                    <mat-label>{{prop.label}}</mat-label>
+                      <input matInput [type]="prop.type" [formControlName]="prop.name"
+                        (input)="emitFormEvent(prop.name, 'input', $event)"
+                        (change)="emitFormEvent(prop.name, 'change', $event)">
+                    <span matPrefix *ngIf="prop.prefixText">
+                      <span style="margin-right: 5px">{{prop.prefixText}} |</span>
+                    </span>
+                    <span matSuffix *ngIf="prop?.prefixText">
+                      <span style="margin-left: 5px">{{prop.prefixText}}</span>
+                    </span>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="prop.type == 'custom-list'" class="example-full-width" appearance="outline">
+                    <mat-select [formControlName]="prop.name" [multiple]="prop.multiple" [placeholder]="prop.label"
+                      (selectionChange)="emitFormEvent(prop.name, 'change', $event)">
+                      <mat-option [value]="null" *ngIf="prop.optional && !prop.multiple"></mat-option>
+                      <!-- <mat-option *ngFor="let option of prop.list$ | async" [value]="option.value"> {{option.text}}</mat-option> -->
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+        </ng-container>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-flat-button>Clear</button>
+    <button mat-flat-button color="primary">Apply</button>
+</mat-dialog-actions>

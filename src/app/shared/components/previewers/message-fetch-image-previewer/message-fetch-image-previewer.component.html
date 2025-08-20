@@ -1,0 +1,220 @@
+<div class="row" *ngIf="type === 'fileUploader'">
+  <div
+    [ngClass]="
+      className
+        ? className
+        : 'col-xs-6 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4'
+    "
+    *ngFor="let file of fileList; let i = index"
+  >
+    <div class="imageBox">
+      <div class="imageHeader">
+        <a
+          *ngIf="
+            !file?.type?.includes('application') ||
+            file?.type === 'application/pdf'
+          "
+          class="m-0"
+          [matTooltip]="file?.name"
+          (click)="openLightBox($event, fileList, i)"
+        >
+          <b class="cursor_pointer">Open File</b>
+        </a>
+
+        <a
+          class="text"
+          *ngIf="
+            file?.type?.includes('application') &&
+            file?.type !== 'application/pdf'
+          "
+          [matTooltip]="file?.name"
+          >{{ file?.name }}</a
+        >
+
+        <mat-icon
+          *ngIf="
+            file?.type?.includes('application') &&
+            file?.type !== 'application/pdf'
+          "
+          style="cursor: pointer"
+          (click)="downloadImage(file?.url, file?.name)"
+        >
+          open_in_new
+        </mat-icon>
+      </div>
+      <div class="imageCenter">
+        <!-- for image -->
+        <img
+          [src]="file?.url"
+          *ngIf="file?.type?.includes('image')"
+          class="image"
+        />
+        <!-- for pdf -->
+        <iframe
+          *ngIf="file?.type === 'application/pdf'"
+          [src]="file?.url | safeUrl"
+          class="image"
+        ></iframe>
+        <!-- for applications -->
+        <img
+          *ngIf="
+            file?.type?.includes('application') &&
+            file?.type !== 'application/pdf'
+          "
+          class="iconImage"
+          [src]="getDocIcon(file)"
+        />
+        <!-- for random docs -->
+        <img
+          *ngIf="
+            !file?.type?.includes('application') &&
+            !file?.type.includes('image') &&
+            !file?.type?.includes('video') &&
+            !file?.type?.includes('audio')
+          "
+          class="iconImage"
+          [src]="getRandomDocImage()"
+        />
+        <!-- for video -->
+        <video
+          [src]="file?.url"
+          class="image"
+          *ngIf="file?.type?.includes('video')"
+          controls
+        ></video>
+        <!-- for audio -->
+        <audio
+          style="width: 100%"
+          *ngIf="file?.type?.includes('audio')"
+          controls
+          [src]="file?.url"
+          class="image"
+        ></audio>
+      </div>
+      <div class="action_div">
+        <span *ngIf="remove">
+          <mat-icon
+            style="cursor: pointer"
+            class="icon"
+            (click)="removeFile(i)"
+          >
+            delete</mat-icon
+          >
+        </span>
+      </div>
+    </div>
+  </div>
+  <app-message-fetch-light-box
+    [isLightbox]="isLightBox"
+    [lightBoxData]="lightBoxData"
+    *ngIf="isLightBox"
+    (lightBoxEvent)="closeLightBox($event)"
+  ></app-message-fetch-light-box>
+</div>
+
+<!-- if image is coming from signed url -->
+<div class="row" *ngIf="type === 'fileUploaded'">
+  <div
+    [ngClass]="
+      className
+        ? className
+        : 'col-xs-6 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4'
+    "
+    *ngFor="let file of fileList; let i = index"
+  >
+    <div class="imageBox">
+      <div class="imageHeader">
+        <a
+          *ngIf="
+            !file?.type?.includes('application') ||
+            file?.type === 'application/pdf'
+          "
+          class="m-0"
+          [matTooltip]="file?.originalname"
+          (click)="openLightBox($event, fileList, i)"
+        >
+          <b class="cursor_pointer">Open File</b>
+        </a>
+
+        <a
+          class="text"
+          *ngIf="
+            file?.type?.includes('application') &&
+            file?.type !== 'application/pdf'
+          "
+          [matTooltip]="file?.name"
+          >{{ file?.name }}</a
+        >
+
+        <mat-icon
+          style="cursor: pointer"
+          (click)="downloadImage(file?.url, file?.originalname)"
+        >
+          open_in_new
+        </mat-icon>
+      </div>
+      <div class="imageCenter">
+        <!-- for other images -->
+        <img
+          [src]="file?.url"
+          *ngIf="file?.type?.includes('image')"
+          class="image"
+        />
+        <!-- for other pdf -->
+        <iframe
+          [src]="file?.url | safeUrl"
+          *ngIf="file?.type === 'application/pdf'"
+          class="image"
+        ></iframe>
+        <!-- for random docs -->
+        <img
+          *ngIf="
+            !file?.type?.includes('application') &&
+            !file?.type.includes('image') &&
+            !file?.type?.includes('video') &&
+            !file?.type?.includes('audio')
+          "
+          class="iconImage"
+          [src]="getRandomDocImage()"
+        />
+        <!-- for other docs -->
+        <img
+          *ngIf="
+            file?.type?.includes('application') &&
+            file?.type !== 'application/pdf'
+          "
+          class="iconImage"
+          [src]="getDocIcon(file)"
+        />
+        <!-- for video -->
+        <video
+          [src]="file?.url"
+          class="image"
+          *ngIf="file?.type?.includes('video')"
+          controls
+        ></video>
+        <!-- for audio -->
+        <audio class="image" *ngIf="file?.type?.includes('audio')" controls>
+          <source [src]="file?.url" [type]="file?.type" />
+        </audio>
+      </div>
+      <div class="action_div">
+        <span *ngIf="remove">
+          <mat-icon
+            style="cursor: pointer"
+            class="icon"
+            (click)="removeFile(i)"
+          >
+            delete</mat-icon
+          >
+        </span>
+      </div>
+    </div>
+  </div>
+  <app-message-fetch-light-box
+    [isLightbox]="isLightBox"
+    [lightBoxData]="lightBoxData"
+    *ngIf="isLightBox"
+    (lightBoxEvent)="closeLightBox($event)"
+  ></app-message-fetch-light-box>
+</div>

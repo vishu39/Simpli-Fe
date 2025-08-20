@@ -1,0 +1,141 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Hospital Template'"
+        [active_item]="'All Hospital Template'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <div class="card">
+          <div class="body">
+            <div id="mail-nav">
+              <mat-form-field
+                appearance="outline"
+                class="example-full-width mt-2"
+              >
+                <mat-label>Search</mat-label>
+                <input
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchHospital($event.target.value)"
+                />
+              </mat-form-field>
+              <div
+                class="list-results"
+                infiniteScroll
+                [infiniteScrollDistance]="1"
+                (scrolled)="onInfiniteScrollHospital()"
+                [scrollWindow]="false"
+                *ngIf="hospitalData.length"
+              >
+                <ul id="mail-folders">
+                  <li
+                    *ngFor="let item of hospitalData; let i = index"
+                    class="cursor_pointer"
+                    [ngClass]="{ active: item.active === true }"
+                  >
+                    <a (click)="onActive(item, i)">{{ item.name }} </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="isLoadingHospital">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <div
+                class="d-flex justify-content-center align-items-center"
+                *ngIf="!isLoadingHospital && !hospitalData.length"
+                class="text-secondary text-center"
+              >
+                -- No Data Found --
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+        <div class="card p-3">
+          <div
+            *ngIf="hospitalData?.length && hospitalEvents?.length"
+            class="d-flex justify-content-between mb-5"
+          >
+            <h2 class="mb-0">
+              {{ hospitalData[navIndex]?.name | titlecase }}
+            </h2>
+            <div *ngIf="!!templateData">
+              {{ templateData?.createdAt | date : "medium" }}
+            </div>
+          </div>
+
+          <!-- hospital events -->
+          <div *ngIf="hospitalData?.length && hospitalEvents?.length">
+            <div *ngIf="!isTempateLoading">
+              <mat-checkbox
+                *ngIf="hospitalData?.length && hospitalEvents?.length"
+                #selectAllCheckbox
+                (change)="onClickSelectAll($event, hospitalEvents)"
+                class="mb-3"
+                >Select All</mat-checkbox
+              >
+            </div>
+            <div *ngIf="!isTempateLoading" class="row">
+              <div *ngFor="let he of hospitalEvents; let i = index">
+                <div *ngFor="let key of objectKeys(he)">
+                  <h4 class="mt-0 mb-3">{{ key }}</h4>
+
+                  <div class="row">
+                    <div
+                      class="col-lg-4 col-md-6 col-sm-6 col-xs-6 mb-2"
+                      *ngFor="let item of he[key]; let hi = index"
+                    >
+                      <mat-slide-toggle
+                        (click)="onClickEvent(he, i)"
+                        [(ngModel)]="item.selected"
+                      >
+                        {{ item?.displayName }}
+                      </mat-slide-toggle>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isEventLoading || isTempateLoading">
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+
+          <!-- if data is not present end -->
+          <div
+            *ngIf="
+              hospitalData?.length &&
+              hospitalEvents?.length &&
+              !isTempateLoading
+            "
+            class="row mt-5"
+          >
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+              <div class="example-button-row">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="button"
+                  (click)="submit()"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

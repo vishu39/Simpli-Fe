@@ -1,0 +1,22 @@
+<div class="p-4" *ngIf="!opdRequestData?.status && !isLoading">
+    <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+            <app-request-details [patientData]="patientData" [requestData]="opdRequestData" type="opd"></app-request-details>
+        </div>
+
+        <!-- right section -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+            <div *ngIf="!!opdRequestData">
+                <app-add-details-opd [patientData]="patientData" [opdRequestData]="opdRequestData"
+                    (refetch)="getOpdRequestByHospitalOpenLink()"></app-add-details-opd>
+            </div>
+        </div>
+    </div>
+</div>
+
+<mat-spinner *ngIf="isLoading" class="mx-auto mb-2 mt-2" [diameter]="30">
+</mat-spinner>
+
+<div *ngIf="opdRequestData?.status && !isLoading">
+    <app-complete-page [message]="'OPD submitted successfully'"></app-complete-page>
+</div>

@@ -1,0 +1,93 @@
+<div class="comment_main">
+  <!-- <div class="search_div">
+    <input
+      class="search_comment"
+      placeholder="search..."
+      (keydown.space)="$event.stopPropagation()"
+      matInput
+      (keyup)="searchComment($event.target.value)"
+    />
+  </div> -->
+
+  <mat-form-field appearance="outline" class="example-full-width mt-2">
+    <mat-label>Search</mat-label>
+    <input
+      placeholder="search..."
+      (keydown.space)="$event.stopPropagation()"
+      matInput
+      (keyup)="searchComment($event.target.value)"
+    />
+  </mat-form-field>
+
+  <!-- #scrollMe -->
+  <div
+    class="comment_div"
+    infiniteScroll
+    [infiniteScrollUpDistance]="0.5"
+    [scrollWindow]="false"
+    (scrolled)="onInfiniteScrollComment()"
+  >
+    <div *ngIf="chatArray?.length">
+      <div
+        (click)="openCommentModal(item)"
+        [ngClass]="
+          isDark()
+            ? 'comment comment_is_Dark mb-2'
+            : 'comment comment_is_Light mb-2'
+        "
+        style="cursor: pointer"
+        *ngFor="let item of chatArray"
+      >
+        <div class="title">
+          {{ item?.patient?.name | slice : 0 : 2 | uppercase }}
+        </div>
+        <div class="main">
+          <div class="heading_div">
+            <p class="name mb-1">
+              {{ item?.patient?.name | titlecase }}
+            </p>
+            <p class="comment-date mb-1">
+              {{ item?.createdAt | date : " h:mm a " }}
+            </p>
+          </div>
+          <div *ngIf="item?.mention?.length" class="mention mb-2">
+            <div *ngFor="let item1 of item?.mention; let i = index">
+              <span>
+                <span class="chip">
+                  {{ "@" + item1?.userName }}
+                  <span *ngIf="item1?.userType">-</span>
+                  {{ item1?.userType | titlecase }}</span
+                >
+              </span>
+            </div>
+          </div>
+          <p class="mt-1 mb-1 message">{{ item?.message }}</p>
+
+          <div class="d-flex">
+            <b style="margin-right: 4px">From: </b>
+            <span>{{ item?.userName | titlecase }}</span>
+          </div>
+          <div class="d-flex mt-2">
+            <b style="margin-right: 4px">Sent Date: </b>
+            <div class="text">
+              {{ item?.createdAt | date : "dd/MM/yyyy" }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <mat-spinner
+        *ngIf="isCommentLoading"
+        class="mx-auto mb-2 mt-2"
+        [diameter]="30"
+      ></mat-spinner>
+    </div>
+
+    <div *ngIf="isCommentLoading && !chatArray?.length" class="loader_center">
+      <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+    </div>
+
+    <div class="not_found" *ngIf="!isCommentLoading && !chatArray?.length">
+      No Comment
+    </div>
+  </div>
+</div>

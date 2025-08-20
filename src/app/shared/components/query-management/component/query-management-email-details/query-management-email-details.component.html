@@ -1,0 +1,177 @@
+<div class="card p-3" *ngFor="let email of emailData">
+  <h6 class="mb-2">
+    <b>{{ email?.hospitalName }}</b>
+  </h6>
+  <div class="row">
+    <!-- query to and query cc -->
+    <div class="col-md-6" *ngIf="queryArray?.includes(component)">
+      <div>
+        <p class="mt-3 h6">Query To:</p>
+      </div>
+      <div>
+        <ul class="detail-list w-100">
+          <ng-container *ngIf="email?.queryTo?.length">
+            <li
+              class="mb-2"
+              *ngFor="let query of email?.queryTo"
+              class="text-secondary"
+            >
+              {{ query?.name }} - {{ query.emailId }}
+            </li>
+          </ng-container>
+          <span *ngIf="!email?.queryTo?.length">-- No Data Found --</span>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-6" *ngIf="queryArray?.includes(component)">
+      <div>
+        <p class="mt-3 h6">Query CC:</p>
+      </div>
+      <div>
+        <ul class="detail-list w-100">
+          <ng-container *ngIf="email?.queryCc?.length">
+            <li
+              class="mb-2"
+              *ngFor="let query of email?.queryCc"
+              class="text-secondary"
+            >
+              {{ query?.name }} - {{ query.emailId }}
+            </li>
+          </ng-container>
+          <span *ngIf="!email?.queryCc?.length">-- No Data Found --</span>
+        </ul>
+      </div>
+    </div>
+
+    <!-- vil to and vil cc -->
+
+    <div class="col-md-6" *ngIf="component === 'vil'">
+      <div>
+        <p class="mt-3 h6">VIL To:</p>
+      </div>
+      <div>
+        <ul class="detail-list w-100">
+          <ng-container *ngIf="email?.vilTo?.length">
+            <li
+              class="mb-2"
+              *ngFor="let vil of email?.vilTo"
+              class="text-secondary"
+            >
+              {{ vil?.name }} - {{ vil.emailId }}
+            </li>
+          </ng-container>
+          <span *ngIf="!email?.vilTo?.length">-- No Data Found --</span>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-6" *ngIf="component === 'vil'">
+      <div>
+        <p class="mt-3 h6">VIL CC:</p>
+      </div>
+      <div>
+        <ul class="detail-list w-100">
+          <ng-container *ngIf="email?.vilCc?.length">
+            <li
+              class="mb-2"
+              *ngFor="let vil of email?.vilCc"
+              class="text-secondary"
+            >
+              {{ vil?.name }} - {{ vil.emailId }}
+            </li>
+          </ng-container>
+          <span *ngIf="!email?.vilCc?.length">-- No Data Found --</span>
+        </ul>
+      </div>
+    </div>
+
+    <!-- confirmation to and confirmation cc -->
+
+    <div class="col-md-6" *ngIf="component === 'confirmation'">
+      <div>
+        <p class="mt-3 h6">Confirmation To:</p>
+      </div>
+      <div>
+        <ul class="detail-list w-100">
+          <ng-container *ngIf="email?.confirmationTo?.length">
+            <li
+              class="mb-2"
+              *ngFor="let confirmation of email?.confirmationTo"
+              class="text-secondary"
+            >
+              {{ confirmation?.name }} - {{ confirmation.emailId }}
+            </li>
+          </ng-container>
+          <span *ngIf="!email?.confirmationTo?.length"
+            >-- No Data Found --</span
+          >
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-6" *ngIf="component === 'confirmation'">
+      <div>
+        <p class="mt-3 h6">Confirmation CC:</p>
+      </div>
+      <div>
+        <ul class="detail-list w-100">
+          <ng-container *ngIf="email?.confirmationCc?.length">
+            <li
+              class="mb-2"
+              *ngFor="let confirmation of email?.confirmationCc"
+              class="text-secondary"
+            >
+              {{ confirmation?.name }} - {{ confirmation.emailId }}
+            </li>
+          </ng-container>
+          <span *ngIf="!email?.confirmationCc?.length"
+            >-- No Data Found --</span
+          >
+        </ul>
+      </div>
+    </div>
+
+    <!-- doctor to and doctor cc -->
+
+    <div class="col-md-6">
+      <div>
+        <p class="mt-3 h6">Doctor To:</p>
+      </div>
+      <div>
+        <ul class="detail-list w-100">
+          <ng-container *ngIf="email?.doctorTo?.length">
+            <li
+              class="mb-2"
+              *ngFor="let query of email?.doctorTo"
+              class="text-secondary"
+            >
+              {{ query?.name }} - {{ query.emailId }}
+            </li>
+          </ng-container>
+          <span *ngIf="!email?.doctorTo?.length">-- No Data Found --</span>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div>
+        <p class="mt-3 h6">Doctor CC:</p>
+      </div>
+      <div>
+        <ul class="detail-list w-100">
+          <ng-container *ngIf="email?.doctorCc?.length">
+            <li
+              class="mb-2"
+              *ngFor="let query of email?.doctorCc"
+              class="text-secondary"
+            >
+              {{ query?.name }} - {{ query.emailId }}
+            </li>
+          </ng-container>
+          <span *ngIf="!email?.doctorCc?.length">-- No Data Found --</span>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

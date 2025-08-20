@@ -1,0 +1,404 @@
+<div class="row mt-4">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="body">
+        <form
+          class="m-4"
+          [formGroup]="defaultEmailForm"
+          (ngSubmit)="formSubmit()"
+        >
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Query Message</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="queryMessage"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollQueryMessage()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchQueryMessage($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !queryMessageData?.length && !isLoadingQueryMessage
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="queryMessageData?.length">
+                      <mat-checkbox (change)="selectAllQueryMessage($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingQueryMessageSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingQueryMessageSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickQueryMessage({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of queryMessageData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingQueryMessage && !isLoadingQueryMessageSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('queryMessage').value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      defaultEmailForm.controls['queryMessage'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Query Message is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>VIL Message</mat-label>
+
+                  <mat-select
+                    multiple
+                    formControlName="vilMessage"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollVilMessage()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchVilMessage($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!vilMessageData?.length && !isLoadingVilMessage"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="vilMessageData?.length">
+                      <mat-checkbox (change)="selectAllVilMessage($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingVilMessageSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingVilMessageSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickVilMessage({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of vilMessageData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingVilMessage && !isLoadingVilMessageSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('vilMessage').value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      defaultEmailForm.controls['vilMessage'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    VIL Message is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Daily Status Message</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="dailyStatusMessage"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollDailyStatusMessage()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchDailyStatusMessage($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !dailyStatusMessageData?.length &&
+                        !isLoadingDailyStatusMessage
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div
+                      class="other_option"
+                      *ngIf="dailyStatusMessageData?.length"
+                    >
+                      <mat-checkbox
+                        (change)="selectAllDailyStatusMessage($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingDailyStatusMessageSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingDailyStatusMessageSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickDailyStatusMessage({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of dailyStatusMessageData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingDailyStatusMessage &&
+                        !isLoadingDailyStatusMessageSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('dailyStatusMessage')
+                            .value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      defaultEmailForm.controls['dailyStatusMessage'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Daily Status Message is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Query Status Message</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="queryStatusMessage"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollQueryStatusMessage()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchQueryStatusMessage($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !queryStatusMessageData?.length &&
+                        !isLoadingQueryStatusMessage
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div
+                      class="other_option"
+                      *ngIf="queryStatusMessageData?.length"
+                    >
+                      <mat-checkbox
+                        (change)="selectAllQueryStatusMessage($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingQueryStatusMessageSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingQueryStatusMessageSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickQueryStatusMessage({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of queryStatusMessageData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingQueryStatusMessage &&
+                        !isLoadingQueryStatusMessageSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('queryStatusMessage')
+                            .value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      defaultEmailForm.controls['queryStatusMessage'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Query Status Message is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+              <button
+                class="btn-space"
+                [disabled]="!referralId"
+                mat-raised-button
+                color="primary"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

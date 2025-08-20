@@ -1,0 +1,194 @@
+<div>
+  <div class="card" style="min-height: 500px; border-radius: 0">
+    <div class="">
+      <div class="inbox-center table-responsive hide-scrollbar">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th colspan="6" [ngClass]="theme !== 'dark' ? 'newTh' : ''">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    row-gap: 10px;
+                  "
+                >
+                  <div class="first">
+                    <h5 class="mb-0">Inbox ({{ totalElement }})</h5>
+
+                    <form class="search-form" id="searchForm">
+                      <input
+                        (keyup)="serchValue($event.target.value)"
+                        placeholder="Search"
+                        type="text"
+                        class="browser-default search-field"
+                        aria-label="Search box"
+                      />
+                    </form>
+
+                    <!-- <button (click)="reload()" mat-icon-button>
+                      <mat-icon>refresh</mat-icon>
+                    </button> -->
+
+                    <span>
+                      <button
+                        [matTooltip]="'Filter Email'"
+                        [ngClass]="
+                          selectedEmailFetchList?.length > 0
+                            ? 'filter_active'
+                            : ''
+                        "
+                        (click)="openFilterModal()"
+                        mat-icon-button
+                      >
+                        <mat-icon>tune</mat-icon>
+                      </button>
+                    </span>
+                  </div>
+                  <div class="pagination m-0">
+                    <p class="mb-0">
+                      {{ emailFetchParams?.page }} - {{ totalNumberOfPages }} of
+                      {{ totalElement }}
+                    </p>
+                    <div>
+                      <div class="email-btn-group">
+                        <button
+                          [disabled]="emailFetchParams?.page <= 1"
+                          (click)="prev()"
+                          mat-icon-button
+                          aria-label="Example icon-button with a heart icon"
+                        >
+                          <mat-icon>navigate_before</mat-icon>
+                        </button>
+                        <button
+                          [disabled]="
+                            emailFetchParams?.page === totalNumberOfPages
+                          "
+                          (click)="next()"
+                          mat-icon-button
+                          aria-label="Example icon-button with a heart icon"
+                        >
+                          <mat-icon>navigate_next</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container
+              *ngIf="!isEmailLoading && allEmailFetchData?.length > 0"
+            >
+              <tr class="unread" *ngFor="let email of allEmailFetchData">
+                <td
+                  (click)="navigateToDetails(email?._id)"
+                  colspan="6"
+                  [ngClass]="email?.isRead ? 'readMsg' : ''"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      flex-wrap: wrap;
+                      row-gap: 12px;
+                      gap: 12px;
+                      cursor: pointer;
+                    "
+                  >
+                    <div style="width: 25%">
+                      <h5 class="text mb-0" style="font-size: 15px">
+                        {{ getNameFromMail(email?.from, email) }}
+                      </h5>
+                      <p class="mb-0"><b>Origin: </b>{{ email?.origin }}</p>
+                    </div>
+                    <div class="" style="width: 50%">
+                      <div class="avatarDiv">
+                        <div>
+                          <h6
+                            *ngIf="!!email?.subject"
+                            style="color: #5e5e5e"
+                            class="text mb-0"
+                          >
+                            {{ email?.subject }}
+                          </h6>
+                          <h6
+                            *ngIf="!email?.subject"
+                            style="color: #5e5e5e"
+                            class="text mb-0"
+                          >
+                            (no-subject)
+                          </h6>
+                        </div>
+                      </div>
+                      <div class="mt-2" *ngIf="email?.attachment?.length > 0">
+                        <div style="display: flex; gap: 10px">
+                          <div
+                            (click)="
+                              $event.stopPropagation(); fetchFile(file?.key)
+                            "
+                            [matTooltip]="
+                              file?.originalname
+                                ? file?.originalname
+                                : fetchFileNameFromKey(file?.key)
+                            "
+                            class="fileTag capsuleText"
+                            *ngFor="
+                              let file of getDisplayedFiles(email?.attachment)
+                            "
+                          >
+                            {{
+                              file?.originalname
+                                ? file?.originalname
+                                : fetchFileNameFromKey(file?.key)
+                            }}
+                          </div>
+                          <div
+                            class="restFiles"
+                            (click)="
+                              $event.stopPropagation();
+                              navigateToDetails(email?._id)
+                            "
+                            *ngIf="getRemainingCount(email?.attachment) > 0"
+                          >
+                            +{{ getRemainingCount(email?.attachment) }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="font-size: 13px">
+                      {{
+                        checkTodayDate(email?.date)
+                          ? (email?.date | date : "hh:mm a")
+                          : (email?.date | date : "MMMM d")
+                      }}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="isEmailLoading">
+              <tr>
+                <td class="tbBTM" colspan="6">
+                  <div class="loaderAndEmpty">
+                    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                    </mat-spinner>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="!isEmailLoading && !allEmailFetchData?.length">
+              <tr>
+                <td class="tbBTM" colspan="6">
+                  <div class="loaderAndEmpty">--No Data Found--</div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

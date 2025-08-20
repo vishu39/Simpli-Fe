@@ -1,0 +1,202 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form [formGroup]="vilSettingForm" class="m-4">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Signing Authority Name</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="signingAuthorityName"
+            />
+            <mat-error
+              *ngIf="
+                vilSettingForm.controls['signingAuthorityName'].hasError(
+                  'required'
+                )
+              "
+            >
+              Signing Authority Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Signing Authority Email</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="signingAuthorityEmailId"
+            />
+            <mat-error
+              *ngIf="
+                vilSettingForm.controls['signingAuthorityEmailId'].hasError(
+                  'required'
+                )
+              "
+            >
+              Signing Authority Email is required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                vilSettingForm.controls['signingAuthorityEmailId'].hasError(
+                  'pattern'
+                )
+              "
+            >
+              Please enter valid email
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Signing Authority Contact</mat-label>
+            <ngx-mat-intl-tel-input
+            formControlName="signingAuthorityContactNo"
+              [enablePlaceholder]="true"
+              [enableSearch]="true"
+              [preferredCountries]="['in']"
+            ></ngx-mat-intl-tel-input>
+
+            <mat-error
+            *ngIf="vilSettingForm.controls['signingAuthorityContactNo'].hasError('required')"
+            >
+            Signing Authority Contact is required
+          </mat-error>
+          <mat-error
+          *ngIf="vilSettingForm.controls['signingAuthorityContactNo']?.errors?.validatePhoneNumber"
+          >Invalid Signing Authority Contact</mat-error
+          >
+        </mat-form-field>
+
+          <!-- <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Signing Authority Contact</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="signingAuthorityContactNo"
+            />
+            <mat-error
+              *ngIf="
+                vilSettingForm.controls['signingAuthorityContactNo'].hasError(
+                  'required'
+                )
+              "
+            >
+              Signing Authority Contact is required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                vilSettingForm.controls['signingAuthorityContactNo'].hasError(
+                  'pattern'
+                )
+              "
+            >
+              Please enter valid contact number
+            </mat-error>
+          </mat-form-field> -->
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Signing Authority Designation</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="signingAuthorityDesignation"
+            />
+            <mat-error
+              *ngIf="
+                vilSettingForm.controls['signingAuthorityDesignation'].hasError(
+                  'required'
+                )
+              "
+            >
+              Signing Authority Designation is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Upload Signature</mat-label>
+              <ngx-mat-file-input
+                accept=".png, .jpg, .jpeg"
+                formControlName="signature"
+                (change)="onFileSelected($event)"
+              >
+              </ngx-mat-file-input>
+              <mat-icon matSuffix>upload</mat-icon>
+              <mat-error
+                *ngIf="
+                  vilSettingForm.controls['signature'].hasError('required')
+                "
+              >
+                Signature is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <div
+              class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+              *ngIf="!!signatoryData?.signature"
+            >
+              <h6>Uploaded Signature</h6>
+              <div class="mt-4">
+                <app-global-image-preview
+                  [fileList]="[signatoryData?.signature]"
+                  [filePreviewList]="[signatoryData?.signature]"
+                  [type]="'fileUploaded'"
+                  [remove]="false"
+                  [className]="'img_width_100'"
+                ></app-global-image-preview>
+              </div>
+            </div>
+            <div
+              class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+              *ngIf="fileList?.length"
+            >
+              <h6 class="mb-4">New Signature</h6>
+              <app-global-image-preview
+                [fileList]="fileList"
+                [filePreviewList]="filePreviewUrls"
+                [type]="'fileUploader'"
+                [remove]="false"
+                [className]="'img_width_100'"
+              ></app-global-image-preview>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button (click)="submit()" mat-raised-button color="primary">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

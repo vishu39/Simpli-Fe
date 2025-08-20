@@ -1,0 +1,368 @@
+<div class="modalHeader sm-model-header d-flex flex-wrap justify-content-between align-items-center" *ngIf="crudData['crudType'] !== 'page'">
+  <h3 class="sm-model-title">{{mode ? mode : ''}} {{title ? title : ''}}</h3>
+  <div class="sm-model-actions d-flex">
+    <button mat-flat-button color="warn" type="button" (click)="close()">CLOSE</button>
+    <button mat-flat-button color="primary" type="submit" (click)="emitFormSubmit()" [disabled]="makeSubmitDisable()">SUBMIT</button>
+  </div>
+</div>
+<ng-content class="custom-content" (radioEvent)="radioEventHandler($event)" select="[custom-fields]"></ng-content>
+<mat-dialog-content>
+  <div *ngIf="ready">
+    <form class="m-1 sm-form _row" [formGroup]="form">
+      <ng-container *ngFor="let prop of fields;let i = index">
+        <div *ngIf="prop.startNewRow" style="width: 100%;"></div>
+        <div class="_col" [ngClass]="prop.class" [class.hidden]="prop.hidden">
+          <!-- TEXT AND NUMBER INPUT -->
+          <ng-container *ngIf="isStdFormField(prop.type)">
+            <mat-form-field *ngIf="prop?.type == 'text' || prop?.type == 'number'|| prop?.type == 'email'"
+              appearance="outline" class="example-full-width" >
+              <mat-label>{{prop.label}}</mat-label>
+              <input matInput [type]="prop.type" [formControlName]="prop.name" [placeholder]="prop.placeholder"
+                (input)="emitFormEvent(prop.name, 'input', $event)"
+                (change)="emitFormEvent(prop.name, 'change', $event)">
+              <span matPrefix *ngIf="prop.prefixText">
+                <span style="margin-right: 5px">{{prop.prefixText}} |</span>
+              </span>
+              <span matSuffix style="margin-left: 5px" *ngIf="prop?.suffixText">{{prop.suffixText}}</span>
+              <mat-icon matSuffix>{{prop.iconPrefix}}</mat-icon>
+              <mat-error [id]="''">{{errorMessage(prop.name,'GROUP')}}</mat-error>
+              <mat-hint [id]="''">
+                <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+              </mat-hint>
+            </mat-form-field>
+
+            <!-- TEXTAREA -->
+            <mat-form-field *ngIf="prop?.type == 'textarea'" appearance="outline">
+              <mat-label>{{prop.label}}</mat-label>
+              <textarea matInput [type]="prop.type" [formControlName]="prop.name" [placeholder]="prop.placeholder"
+                (input)="emitFormEvent(prop.name, 'input', $event)"
+                (change)="emitFormEvent(prop.name, 'change', $event)">
+                      </textarea>
+              <span matPrefix *ngIf="prop.prefixText">
+                <span style="margin-right: 5px">{{prop.prefixText}} |</span>
+              </span>
+              <span matSuffix *ngIf="prop?.prefixText">
+                <span style="margin-left: 5px">{{prop.prefixText}}</span>
+              </span>
+              <mat-icon matSuffix>{{prop.iconPrefix}}</mat-icon>
+              <mat-error [id]="''">{{errorMessage(prop.name,'GROUP')}}</mat-error>
+              <mat-hint [id]="''">
+                <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+              </mat-hint>
+            </mat-form-field>
+
+            <!-- CUSTOM-LIST -->
+            <mat-form-field *ngIf="prop.type == 'custom-list'" appearance="outline">
+              <mat-label>{{prop.label}}</mat-label>
+              <mat-select [formControlName]="prop.name" [multiple]="prop.multiple"
+                (selectionChange)="emitFormEvent(prop.name, 'change', $event)">
+                <mat-option [value]="null" *ngIf="prop.optional && !prop.multiple"></mat-option>
+                <mat-option *ngFor="let option of demoArray" [value]="option.value"> {{option.text}}</mat-option>
+                <!-- <mat-option *ngFor="let option of prop.list$ | async" [value]="option.value"> {{option.text}}</mat-option> -->
+              </mat-select>
+              <span matPrefix *ngIf="prop.prefixText">
+                <span style="margin-right: 5px">{{prop.prefixText}} |</span>
+              </span>
+              <span matSuffix *ngIf="prop?.prefixText">
+                <span style="margin-left: 5px">{{prop.prefixText}}</span>
+              </span>
+              <mat-icon matSuffix>{{prop.iconPrefix}}</mat-icon>
+              <mat-error [id]="''">{{errorMessage(prop.name,'GROUP')}}</mat-error>
+              <mat-hint [id]="''">
+                <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+              </mat-hint>
+            </mat-form-field>
+
+          </ng-container>
+
+
+          <!-- DATE-TIME PICKER -->
+          <ng-container *ngIf="prop.type == 'date-time'">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ prop.label }}</mat-label>
+              <input matInput [owlDateTimeTrigger]="datetime" [min]="prop.min" [max]="prop.max" [owlDateTime]="datetime"
+                [formControlName]="prop.name">
+              <mat-icon matSuffix [owlDateTimeTrigger]="datetime" class="date-icon">today</mat-icon>
+              <owl-date-time hour12Timer="true" [pickerType]="prop.pickerType" #datetime></owl-date-time>
+              <mat-error [id]="''">{{errorMessage(prop.name,'GROUP')}}</mat-error>
+              <mat-hint [id]="''">
+                <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+              </mat-hint>
+            </mat-form-field>
+          </ng-container>
+
+          <!-- CHIPS -->
+          <ng-container *ngIf="prop.type == 'chips'">
+            <mat-form-field appearance="outline">
+              <mat-label>{{prop.label}}</mat-label>
+              <mat-chip-grid #chipGrid [aria-label]="prop.label">
+                <mat-chip-row *ngFor="let fruit of demoArray" (removed)="remove(fruit)">{{fruit}}
+                  <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              </mat-chip-grid>
+              <input [placeholder]="prop.type" #fruitInput 
+                [formControl]="prop.name" 
+                [matChipInputFor]="chipGrid"
+                [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="add($event)" />
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">{{fruit}}</mat-option>
+                <mat-option *ngFor="let option of demoArray" [value]="option.value"> {{option.text}}</mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </ng-container>
+
+          <!-- RADIO-GROUP -->
+          <ng-container>
+            <div *ngIf="prop.type == 'radio'" class="_radio-wrapper">
+              <div class="_radio-field-title"><span>{{prop.label}}</span></div>
+              <mat-radio-group class="_radio hide-scrollbar" style="width: 100%" [formControlName]="prop.name"
+                (change)="emitFormEvent(prop.name, 'change', $event)">
+                <!-- <mat-radio-button  *ngFor="let option of prop.list$ | async"  [value]="option.value">{{option.name}}</mat-radio-button> -->
+                <mat-radio-button *ngFor="let option of demoArray"
+                  [value]="option.value">{{option.text}}</mat-radio-button>
+              </mat-radio-group>
+              <mat-error [id]="''">{{errorMessage(prop.name,'GROUP')}}</mat-error>
+              <mat-hint [id]="''">
+                <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+              </mat-hint>
+            </div>
+          </ng-container>
+
+          <!-- COLOR INPUT -->
+          <mat-form-field *ngIf="prop.type == 'color'" appearance="outline">
+            <div class="_color">
+              <span>{{form?.get(prop.name)?.value || 'Click to select color'}}</span>&nbsp; &nbsp;
+              <input class="color-panel" matInput autocomplete="off" [type]="prop.type" [formControlName]="prop.name"
+                [placeholder]="prop.label" (input)="emitFormEvent(prop.name, 'input', $event)"
+                (change)="emitFormEvent(prop.name, 'change', $event)">
+              <span matSuffix>
+                <button type="button" mat-icon-button *ngIf="prop.type == 'color' && form?.get(prop.name)?.value"
+                  (click)="clearColor(prop.name, $event)">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </span>
+            </div>
+            <mat-error [id]="''">{{errorMessage(prop.name,'GROUP')}}</mat-error>
+            <mat-hint [id]="''">
+              <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+              <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+            </mat-hint>
+          </mat-form-field>
+
+          <!-- FILE UPLOADER -->
+          <ng-container>
+            <div class="_file" *ngIf="prop.type == 'files'">
+              <div class="preview">
+                <div *ngFor="let file of fileList; let i = index" class="preview-item">
+                  <img [src]="filePreviewUrls[i]" *ngIf="file.type.includes('image')" style="width:100%; height:150px;">
+                  <iframe [src]="filePreviewUrls[i] | safeUrl" *ngIf="file.type === 'application/pdf'"
+                    style="width:100%; height:150px;"></iframe>
+                  <p *ngIf="!file.type.includes('image') && file.type !== 'application/pdf'">{{file.name}}</p>
+                  <div class="d-flex justify-content-between">
+                    <button type="button" mat-icon-button color="warn" (click)="onDelete(file)">
+                      <mat-icon style="font-size:20px;">delete</mat-icon>
+                    </button>
+                    <button type="button" mat-icon-button color="warn" (click)="openLightBox($event,fileList,i)">
+                      <mat-icon style="font-size:20px;">fullscreen</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="file-uploader">
+                <label for="file-input">{{prop.label}}
+                  <app-feather-icons icon="file"></app-feather-icons>
+                </label>
+                <input id="file-input" type="file" [multiple]="prop.multiple"
+                  (change)="onFileSelected($event,prop.name)">
+              </div>
+              <mat-error [id]="''">{{errorMessage(prop.name,'GROUP')}}</mat-error>
+              <mat-hint [id]="''">
+                <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+              </mat-hint>
+              <app-sm-lightbox [isLightbox]="isLightBox" [lightBoxData]='lightBoxData' *ngIf="isLightBox" (lightBoxEvent)="closeLightBox($event)"></app-sm-lightbox>
+            </div>
+          </ng-container>
+
+          <!-- MULTI-CHECKBOX -->
+          <div class="_mc" *ngIf="prop.type == 'multi-checkbox'">
+            <div class="_field-title"><span>{{prop.label}}</span></div>
+            <div class="_mc-checkbox-wrapper">
+              <mat-checkbox class="_mc-checkbox" *ngFor="let item of demoArray"
+                [checked]="mcIsSelected(prop.name, item.value)" [disabled]="prop.disabled"
+                (click)="mcToggle(prop.name, item.value)">{{item.text}}</mat-checkbox>
+            </div>
+          </div>
+          <!-- CHECKBOX -->
+          <div class="_cb" *ngIf="prop.type == 'checkbox'">
+            <mat-checkbox [formControlName]="prop.name" (change)="emitFormEvent(prop.name, 'change', $event)">
+              {{prop.labelText}}
+            </mat-checkbox>
+          </div>
+          <!-- LABEL ONLY -->
+          <div *ngIf="prop.type == 'label-only'">
+            <h6>{{prop.label}}</h6>
+          </div>
+          <!-- BUTTONS -->
+          <div *ngIf="prop.type == 'button'">
+            <button mat-raised-button class="crud-button" type="button" [color]="prop.color" [disabled]="prop.disabled"
+              (click)="emitFormEvent(prop.name, 'click', $event)">{{prop.label}}</button>
+          </div>
+          <!-- EXPANSION -->
+          <ng-container>
+            <div *ngIf="prop.type === 'expansion'">
+              <mat-accordion class="example-headers-align" multi *ngIf="prop.type === 'expansion'" class="_expansion">
+                <app-sm-expansion-panel [panelConfig]="{data,prop}" (expansionEvent)="emitExpansionEvent($event)" *ngFor="let item of demoArray;let data"></app-sm-expansion-panel>
+                <mat-error [id]="''">{{errorMessage(prop.name,'GROUP')}}</mat-error>
+              </mat-accordion>
+            </div>
+          </ng-container>
+          
+          <!-- LIGHTBOX -->
+          <ng-container>
+            <div *ngIf="prop.type === 'lightbox'" class="_lightbox">
+              <!-- <div *ngFor="let option of prop.list$ | async"></div> -->
+              <button *ngIf="makeSubmitDisable()" type="button" class="d-btn" color="accent" mat-flat-button (click)="downloadDoc()"> <mat-icon>download</mat-icon> {{checkedList.length > 0 ?  'Download Selected' : 'Download All' }}</button>
+              <div class="lightbox-wrapper">
+                <div *ngFor="let item of imageArray;let i=index" class="lightbox-content">
+                  <div class="title d-flex justify-content-between align-items-baseline">
+                    <div class="d-flex">
+                      <mat-checkbox (change)="onCheckboxChange(item,$event)"></mat-checkbox>
+                      <p style="margin-left: 10px;">image {{i + 1}}</p> 
+                    </div>
+                    <app-feather-icons *ngIf="imageArray.length === 1" class="tbl-fav-edit" [icon]="'download'"></app-feather-icons>
+                  </div>
+                  <div (click)="openLightBox($event,imageArray,i)">
+                    <img [src]="item.url" *ngIf="item.type === 'image'" loading="lazy" [alt]="item.caption" width="100%" height="25%">
+                    <div *ngIf="item.type === 'pdf'">
+                      <iframe [src]="item.url | safeUrl"  width="100%" height="100%"></iframe>
+                      <app-feather-icons style="float: right;" *ngIf="item.type === 'pdf'" (click)="openLightBox($event,imageArray,i)" class="tbl-fav-edit" [icon]="'maximize'"></app-feather-icons>
+                    </div>
+                    <video *ngIf="item.type === 'video'" width="100%" height="100%" controls>
+                      <source src="assets/videos/sample.mp4" type="video/mp4">
+                      <source src="assets/videos/sample.ogg" type="video/ogg">
+                      <source src="assets/videos/sample.webm" type="video/webm">
+                      Your browser does not support the video tag.
+                  </video>
+                  </div>
+                </div>
+              </div>
+              <app-sm-lightbox [isLightbox]="isLightBox" [lightBoxData]='lightBoxData' *ngIf="isLightBox" (lightBoxEvent)="closeLightBox($event)"></app-sm-lightbox>
+            </div>
+          </ng-container>
+
+          <!-- FORM GROUP START -->
+          <div *ngIf="prop.type === 'group'">
+            <button class="mb-3" type="button" mat-flat-button
+              [ngStyle]="{'background-color':prop.btnColor,'display':inline}"
+              (click)="pushNewArray(prop.name,prop.groupConfig)">
+              <mat-icon>add</mat-icon>&nbsp;<span>{{prop.btnName}}</span>
+            </button>
+            <ng-container [formArrayName]="prop.name">
+              <ng-container *ngFor="let item of $any(form.get(prop.name)).controls ; let i=index" [formGroupName]="i">
+                <div class="sm-form _row _group mb-3">
+                  <div class="_close-btn">
+                    <p>{{prop.label | titlecase}} {{i + 1}}</p>
+                    <button type="button" class="" mat-mini-fab style="background-color: #b12323;"
+                      (click)="deleteArray(i,prop.name)"><mat-icon>delete</mat-icon></button>
+                  </div>
+                  <ng-container *ngFor="let prop of prop.groupConfig; let i=index;">
+                    <div *ngIf="prop.startNewRow" style="width: 100%;"></div>
+
+                    <div class="_col" [ngClass]="prop.class">
+
+                      <mat-form-field *ngIf="prop?.type == 'text' || prop?.type == 'number'|| prop?.type == 'email'"
+                        appearance="outline">
+                        <mat-label>{{prop.label}}</mat-label>
+                        <input [id]="prop.name+i" matInput [type]="prop.type" [formControlName]="prop.name"
+                          [placeholder]="prop.placeholder" (input)="emitFormEvent(prop.name, 'input', $event)"
+                          (change)="emitFormEvent(prop.name, 'change', $event)">
+                        <span matPrefix *ngIf="prop.prefixText">
+                          <span style="margin-right: 5px">{{prop.prefixText}} |</span>
+                        </span>
+                        <span matSuffix *ngIf="prop?.prefixText">
+                          <span style="margin-left: 5px">{{prop.prefixText}}</span>
+                        </span>
+                        <mat-icon matSuffix>{{prop.iconPrefix}}</mat-icon>
+                        <mat-error [id]="''">{{errorMessage(prop.name,'ARRAY')}}</mat-error>
+                        <mat-hint [id]="''">
+                          <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                          <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+                        </mat-hint>
+                      </mat-form-field>
+
+                      <div class="_file" *ngIf="prop.type == 'files'">
+                        <div class="preview">
+                          <div *ngFor="let file of prop.imageArray let i = index" class="preview-item">
+                            <img [src]="prop.filePreviewUrls[i]" *ngIf="file.type.includes('image')"
+                              style="width:100%; height:150px;">
+                            <iframe [src]="prop.filePreviewUrls[i] | safeUrl" *ngIf="file.type === 'application/pdf'"
+                              style="width:100%; height:150px;"></iframe>
+                            <p *ngIf="!file.type.includes('image') && file.type !== 'application/pdf'">{{file.name}}</p>
+                            <div class="d-flex justify-content-between">
+                              <button type="button" mat-icon-button color="warn" (click)="onDelete(file)">
+                                <mat-icon style="font-size:20px;">delete</mat-icon>
+                              </button>
+                              <button mat-icon-button color="warn" type="button" (click)="openLightBox($event,prop.imageArray,i)">
+                                <mat-icon style="font-size:20px;">fullscreen</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="file-uploader">
+                          <label [for]="prop.name+i">{{prop.label}}
+                            <app-feather-icons icon="file"></app-feather-icons>
+                          </label>
+                          <input [id]="prop.name+i" type="file" name="file-upload" [multiple]="prop.multiple"
+                            (change)="groupFileUpload(prop.imageArray,prop.filePreviewUrls,$event)">
+                        </div>
+                        <mat-error [id]="''">{{errorMessage(prop.name,'ARRAY')}}</mat-error>
+                        <mat-hint [id]="''">
+                          <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                          <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+                        </mat-hint>
+                        <app-sm-lightbox [isLightbox]="isLightBox" [lightBoxData]='lightBoxData' *ngIf="isLightBox" (lightBoxEvent)="closeLightBox($event)"></app-sm-lightbox>
+                      </div>
+
+                      <mat-form-field *ngIf="prop.type == 'custom-list'">
+                        <mat-label>{{prop.label}}</mat-label>
+                        <mat-select [formControlName]="prop.name" [multiple]="prop.multiple"
+                          [placeholder]="prop.placeholder"
+                          (selectionChange)="emitFormEvent(prop.name, 'change', $event)">
+                          <mat-option [value]="null" *ngIf="prop.optional && !prop.multiple"></mat-option>
+                          <!-- <mat-option *ngFor="let option of prop.list$ | async" [value]="option.value"> {{option.text}}</mat-option> -->
+                        </mat-select>
+                        <span matPrefix *ngIf="prop.prefixText">
+                          <span style="margin-right: 5px">{{prop.prefixText}} |</span>
+                        </span>
+                        <span matSuffix *ngIf="prop?.prefixText">
+                          <span style="margin-left: 5px">{{prop.prefixText}}</span>
+                        </span>
+                        <mat-icon matSuffix>{{prop.iconPrefix}}</mat-icon>
+                        <mat-error [id]="''">{{errorMessage(prop.name,'ARRAY')}}</mat-error>
+                        <mat-hint [id]="''">
+                          <span class="_optional" *ngIf="prop.optional && !prop.disabled">Optional</span>
+                          <span class="_hint" *ngIf="prop.hint">{{ 'Hint: '+ prop.hint}}</span>
+                        </mat-hint>
+                      </mat-form-field>
+
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+          <!-- FORM GROUP END -->
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</mat-dialog-content>

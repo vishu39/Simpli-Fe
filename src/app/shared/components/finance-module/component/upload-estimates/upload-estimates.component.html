@@ -1,0 +1,163 @@
+<div class="modalHeader">
+  <div class="editRowModal">
+    <div class="modalHeader clearfix">
+      <div class="modal-about">
+        <div class="font-weight-bold p-t-5 font-17">
+          {{ dialogTitle }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    mat-icon-button
+    (click)="closeDialog(false)"
+    aria-label="Close dialog"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <form class="p-3" [formGroup]="formGroup">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4">
+        <label class="mat-label mb-3">Estimate Given*</label>
+        <mat-radio-group
+          formControlName="estimateGiven"
+          class="d-block mb-1"
+          (change)="onRadioChange($event)"
+        >
+          <mat-radio-button value="yes" class="mr-3">Yes</mat-radio-button>
+          <mat-radio-button value="no">No</mat-radio-button>
+        </mat-radio-group>
+
+        <mat-error
+          *ngIf="
+            formGroup.controls['estimateGiven'].hasError('required') &&
+            formGroup.controls['estimateGiven'].touched
+          "
+        >
+          Estimate Given is required
+        </mat-error>
+      </div>
+    </div>
+    <div class="row">
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Estimate Date</mat-label>
+          <input
+            matInput
+            [owlDateTime]="estd"
+            [owlDateTimeTrigger]="estd"
+            formControlName="estimateDate"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="estd" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #estd
+            pickerType="both"
+          ></owl-date-time>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Select Hospital</mat-label>
+          <mat-select formControlName="hospitalName">
+            <mat-option
+              [value]="item?.hospitalName"
+              *ngFor="let item of freshPatientConfirmationDataForUHID"
+              (click)="onSelectHospitalForUHID(item)"
+              >{{ item?.hospitalName | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="formGroup?.controls['hospitalName']?.hasError('required')"
+          >
+            Hospital Name is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Package Name</mat-label>
+          <input matInput type="text" formControlName="packageName" />
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Room Category</mat-label>
+          <input matInput type="text" formControlName="roomCategory" />
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Room Price</mat-label>
+          <input matInput type="text" formControlName="roomPrice" />
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Approx Admission Date</mat-label>
+          <input
+            matInput
+            [owlDateTime]="apAD"
+            [owlDateTimeTrigger]="apAD"
+            formControlName="approxAdmissionDate"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="apAD" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #apAD
+            pickerType="both"
+          ></owl-date-time>
+        </mat-form-field>
+      </div>
+
+      <!-- if estimates is no -->
+      <div
+        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'no'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Comment</mat-label>
+          <textarea matInput formControlName="comment"></textarea>
+          <mat-error *ngIf="formGroup.controls['comment'].hasError('required')">
+            Comment is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div>
+      <button mat-flat-button color="primary" (click)="actionSubmit(true)">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

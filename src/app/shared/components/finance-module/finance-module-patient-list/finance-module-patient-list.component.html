@@ -1,0 +1,100 @@
+<div
+  *ngIf="!patientList?.length && !isLoadingPatient"
+  style="height: 100%; display: grid; place-items: center"
+>
+  No Patient Found
+</div>
+
+<div *ngIf="patientList?.length">
+  <div
+    *ngFor="let list of patientList; let i = index"
+    (click)="emitSelectedEvent($event, list?._id, i)"
+  >
+    <div
+      *ngIf="patientList?.length"
+      matRipple
+      [matRippleColor]="'#a7bbf029'"
+      [ngClass]="selectedQueryId === list?._id ? 'card selected' : 'card'"
+    >
+      <div
+        class="d-flex justify-content-between align-items-canter title-wrapper"
+      >
+        <div class="d-flex">
+          <div
+            *ngIf="userDetails.userType !== treatingDoctorUserType"
+            class="title"
+          >
+            {{ list?.name | slice : 0 : 2 | uppercase }}
+          </div>
+          <div
+            *ngIf="userDetails.userType === treatingDoctorUserType"
+            [ngClass]="list?.doctorStatus ? 'title success' : 'title danger'"
+          >
+            {{ list?.name | slice : 0 : 2 | uppercase }}
+          </div>
+          <h5 class="pt-2 name">
+            {{ list?.name }}
+            <div>
+              <p class="mb-0" style="font-size: 12px">
+                <b> ({{ uhidCode ? uhidCode : "NIL" }}{{ list?.mhidCode }})</b>
+              </p>
+            </div>
+          </h5>
+        </div>
+      </div>
+
+      <div
+        class="details"
+        *ngIf="this.specificExpantionIsOpen?.[i]"
+        (click)="myFunction()"
+      >
+        <div class="mt-2">
+          <span class="financeBadge statusUnbilled">Unbilled</span>
+        </div>
+        <p>Country : {{ list?.country }}</p>
+        <p *ngIf="userDetails.userType === treatingDoctorUserType">
+          <span *ngFor="let hospital of list?.hospitalName; let hi = index"
+            >Hospital Name : {{ hospital || "NIL"
+            }}<span *ngIf="list?.hospitalName?.length - 1 < hi">, </span></span
+          >
+        </p>
+        <p *ngIf="userDetails.userType !== treatingDoctorUserType">
+          Partner : {{ list?.referralPartnerName || "NIL" }}
+        </p>
+
+        <p
+          *ngIf="
+            list?.user === null &&
+            userDetails.userType !== treatingDoctorUserType
+          "
+        >
+          {{
+            userDetails?.adminName ? userDetails?.adminName : userDetails?.name
+          }}
+          - Admin
+        </p>
+        <p
+          *ngIf="
+            list?.user !== null &&
+            userDetails.userType !== treatingDoctorUserType
+          "
+        >
+          {{ list?.user?.name }} - {{ list?.user?.userType | titlecase }}
+        </p>
+        <p>Received At : {{ (list?.receivedAt | date : "medium") || "NIL" }}</p>
+        <p>Created At : {{ list?.createdAt | date : "medium" }}</p>
+        <p>Updated At : {{ list?.updatedAt | date : "medium" }}</p>
+        <!-- <span
+          (click)="openHistoryModal(list)"
+          style="
+            font-size: 11.2px;
+            cursor: pointer;
+            color: rgb(51, 51, 237);
+            text-decoration: underline;
+          "
+          >View History</span
+        > -->
+      </div>
+    </div>
+  </div>
+</div>

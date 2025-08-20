@@ -1,0 +1,12 @@
+.tab-wrapper {
+    min-height:15px;
+    .mh-wrapper {
+        padding: 1rem;
+        .mh-content {
+            margin-bottom: 10px;
+            padding: 1rem 1.5rem;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+    }
+}

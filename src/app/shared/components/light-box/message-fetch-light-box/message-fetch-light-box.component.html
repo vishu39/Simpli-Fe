@@ -1,0 +1,69 @@
+<!-- new light-box code -->
+<div class="detailed_sm_lightbox_main row">
+  <div class="detailedTopBar">
+    <div></div>
+    <app-feather-icons
+      [icon]="'x-circle'"
+      class="lightbox-close"
+      (click)="emitLightBoxEvent($event, 'CLOSE')"
+    >
+    </app-feather-icons>
+  </div>
+
+  <div class="detailedMiddleDiv">
+    <div style="height: 100%" class="lightbox-image-container hide-scrollbar">
+      <div
+        class="divCenter"
+        *ngIf="type?.includes('image') || type === 'image'"
+      >
+        <img
+          id="lightbox-image"
+          class="lightbox-image commonPreviewClass"
+          [src]="getSource()"
+        />
+      </div>
+      <div
+        class="divCenter"
+        *ngIf="type === 'application/pdf' || type?.includes('pdf')"
+      >
+        <iframe
+          [autoresize]="true"
+          [show-borders]="false"
+          [src]="getSource() | safeUrl"
+          style="height: 80%; width: 40%; overflow: scroll"
+          class="commonPreviewClass"
+        ></iframe>
+      </div>
+
+      <div class="divCenter" *ngIf="type.includes('audio')">
+        <audio class="lightbox-image commonPreviewClass" controls>
+          <source [src]="getSource()" [type]="type" />
+        </audio>
+      </div>
+      <div class="divCenter" *ngIf="type.includes('video')">
+        <video
+          class="commonPreviewClass"
+          width="100%"
+          height="100%"
+          controls
+          [src]="getSource()"
+        ></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="prevIcon">
+    <app-feather-icons
+      [icon]="'chevron-left'"
+      class="lightbox-pre"
+      (click)="pre()"
+    ></app-feather-icons>
+  </div>
+  <div class="nextIcon">
+    <app-feather-icons
+      [icon]="'chevron-right'"
+      class="lightbox-next"
+      (click)="next()"
+    ></app-feather-icons>
+  </div> -->
+</div>

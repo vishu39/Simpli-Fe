@@ -1,0 +1,326 @@
+<div class="settingSidebar" [ngClass]="isOpenSidebar ? 'showSettingPanel' : ''">
+  <a
+    href="javascript:void(0)"
+    class="settingPanelToggle"
+    (click)="toggleRightSidebar()"
+  >
+    <app-feather-icons
+      [icon]="'dollar-sign'"
+      [class]="'setting-sidebar-icon'"
+    ></app-feather-icons>
+  </a>
+  <div
+    class="settingSidebar-body ps-container ps-theme-default"
+    [ngStyle]="{
+      position: 'relative',
+      'max-height': maxHeight + 'px',
+      'max-width': maxWidth + 'px'
+    }"
+    [perfectScrollbar]
+  >
+    <div class="fade show active">
+      <div class="setting-panel-header">Acive Plan</div>
+      <div class="p-15">
+        <div
+          class="row"
+          *ngIf="!isSubscriptionLoading && !!customerSubscriptionData"
+        >
+          <div class="col-12">
+            <div class="info-box7 bg-c-pink order-info-box7">
+              <div class="info-box7-block">
+                <h5>
+                  {{ planName || "NIL" }}
+                </h5>
+                <div *ngIf="!!subscriptionObj?.status" class="status_tag mt-3">
+                  {{ subscriptionObj?.status | titlecase }}
+                </div>
+                <h2 class="text-end mt-4">
+                  <span class="float-start">{{
+                    subscriptionObj?.currency_code || "USD"
+                  }}</span
+                  ><span
+                    >{{ subscriptionItemArray?.[0]?.unit_price/ 100 || 0 }}</span
+                  >
+                </h2>
+
+                <h5 *ngIf="!!subscriptionObj?.activated_at" class="m-b-0 mt-4">
+                  Active on
+                </h5>
+                <h6 *ngIf="!!subscriptionObj?.activated_at" class="m-b-0 mt-2">
+                  {{
+                    (getDate(subscriptionObj?.activated_at)
+                      | date : "medium") || "NIL"
+                  }}
+                </h6>
+
+                <h5 class="m-b-0 mt-4">Next billing on</h5>
+                <h6 class="m-b-0 mt-2">
+                  {{
+                    (getDate(subscriptionObj?.next_billing_at)
+                      | date : "medium") || "NIL"
+                  }}
+                </h6>
+
+                <h5 class="m-b-0 mt-4">Trial started on</h5>
+                <h6 class="m-b-0 mt-2">
+                  {{
+                    (getDate(subscriptionObj?.trial_start) | date : "medium") ||
+                      "NIL"
+                  }}
+                </h6>
+
+                <h5 class="m-b-0 mt-4">{{ getEndName(subscriptionObj) }}</h5>
+                <h6 class="m-b-0 mt-2">
+                  {{
+                    (getDate(subscriptionObj?.trial_end) | date : "medium") ||
+                      "NIL"
+                  }}
+                </h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12" *ngIf="subscriptionItemArray?.length > 0">
+            <div class="info-box7 bg-c-blue order-info-box7">
+              <div class="info-box7-block">
+                <div>
+                  <div *ngFor="let item of subscriptionItemArray">
+                    <div
+                      *ngIf="
+                        item?.item_type === 'addon' && item?.metered === false
+                      "
+                    >
+                      <h5 class="m-b-20 mt-4">
+                        {{
+                          getNameFromString(item?.item_price_id, "returnName")
+                        }}
+                      </h5>
+
+                      <h6>
+                        <span>Current Limit: </span>{{ item?.quantity || 0 }}
+                      </h6>
+                      <h6>
+                        <span>Total Added: </span>{{ item?.totalAdded || 0 }}
+                      </h6>
+                    </div>
+
+                    <div
+                      *ngIf="
+                        item?.item_type === 'addon' && item?.tier?.length > 0
+                      "
+                    >
+                      <h5 class="m-b-20 mt-4">
+                        {{
+                          getNameFromString(item?.item_price_id, "returnName")
+                        }}
+                      </h5>
+
+                      <div *ngFor="let ti of item?.tier">
+                        <h6>
+                          <span
+                            >{{ ti?.starting_unit }} -
+                            {{
+                              ti?.ending_unit ? ti?.ending_unit : "Infinity"
+                            }}:
+                          </span>
+                          <span>
+                            {{ ti?.price / 100 || 0 }}
+                            {{ subscriptionObj?.currency_code || "USD" }}</span
+                          >
+                        </h6>
+                      </div>
+
+                      <h6>
+                        <span>Quantity Added: </span>
+                        {{ item?.metered_quantity || 0 }}
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="col-12"
+            *ngIf="subscriptionItemArray?.length > 0 && isChargeCardVisible"
+          >
+            <div class="info-box7 bg-c-green order-info-box7">
+              <div class="info-box7-block">
+                <div *ngFor="let item of subscriptionItemArray">
+                  <div *ngIf="item?.item_type === 'charge'">
+                    <h5 class="">
+                      {{ getNameFromString(item?.item_price_id, "returnName") }}
+                      - {{ item?.unit_price / 100 || 0 }}
+                      {{ subscriptionObj?.currency_code || "USD" }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- old query code -->
+
+          <!-- <div class="col-12">
+            <div class="info-box7 bg-c-blue order-info-box7">
+              <div class="info-box7-block">
+                <h5 class="m-b-20">Queries</h5>
+                <h6>
+                  Granted Limit:
+                  <span>{{
+                    customerFeature?.granted ? customerFeature?.granted : 0
+                  }}</span>
+                </h6>
+                <h6>
+                  Current Balance:
+                  <span>{{
+                    customerFeature?.balance ? customerFeature.balance : 0
+                  }}</span>
+                </h6>
+                <h5 class="m-b-20 mt-4">Additional User</h5>
+                <h6>
+                  Maximum Users:
+                  <span>{{
+                    plan?.pricingSchedule[0]?.pricePlanDetails
+                      ?.licenseRateCards[0]?.config?.maxQuantity || 0
+                  }}</span>
+                </h6>
+                <h6>
+                  Total Users:
+                  <span>{{
+                    customerUserFeatureLicence?.length
+                      ? customerUserFeatureLicence[0]?.quantity
+                      : 0
+                  }}</span>
+                </h6>
+                <h5 class="m-b-20 mt-4">Additional User Rate</h5>
+                <h6>
+                  {{
+                    plan?.pricingSchedule[0]?.pricePlanDetails
+                      ?.licenseRateCards[0]?.ratePlan?.slabs[0].startAfter || 0
+                  }}
+                  -
+                  {{
+                    plan?.pricingSchedule[0]?.pricePlanDetails
+                      ?.licenseRateCards[0]?.ratePlan?.slabs[1].startAfter || 0
+                  }}:
+                  <span
+                    >{{
+                      plan?.pricingSchedule[0]?.pricePlanDetails
+                        ?.licenseRateCards[0]?.rateValues[0]?.slabRates[0]
+                        ?.rate || 0
+                    }}
+                    {{
+                      plan?.pricingSchedule[0]?.pricePlanDetails
+                        ?.licenseRateCards[0]?.rateValues[0]?.currency || "USD"
+                    }}</span
+                  >
+                </h6>
+                <h6>
+                  {{
+                    plan?.pricingSchedule[0]?.pricePlanDetails
+                      ?.licenseRateCards[0]?.ratePlan?.slabs[1].startAfter || 0
+                  }}
+                  - Infinity:
+                  <span
+                    >{{
+                      plan?.pricingSchedule[0]?.pricePlanDetails
+                        ?.licenseRateCards[0]?.rateValues[0]?.slabRates[1]
+                        ?.rate || 0
+                    }}
+                    {{
+                      plan?.pricingSchedule[0]?.pricePlanDetails
+                        ?.licenseRateCards[0]?.rateValues[0]?.currency || "USD"
+                    }}</span
+                  >
+                </h6>
+                <h5 class="m-b-20 mt-4">Additional Partner</h5>
+                <h6>
+                  Maximum Referral Partner:
+                  <span>{{
+                    plan?.pricingSchedule[0]?.pricePlanDetails
+                      ?.licenseRateCards[1]?.config?.maxQuantity || 0
+                  }}</span>
+                </h6>
+                <h6>
+                  Total Referral Partner:
+                  <span>{{
+                    customerReferralFeatureLicence?.length
+                      ? customerReferralFeatureLicence[0]?.quantity
+                      : 0
+                  }}</span>
+                </h6>
+                <h5 class="m-b-20 mt-4">Additional Partner Rate</h5>
+                <h6>
+                  {{
+                    plan?.pricingSchedule[0]?.pricePlanDetails
+                      ?.licenseRateCards[1]?.ratePlan?.slabs[0].startAfter || 0
+                  }}
+                  -
+                  {{
+                    plan?.pricingSchedule[0]?.pricePlanDetails
+                      ?.licenseRateCards[1]?.ratePlan?.slabs[1].startAfter || 0
+                  }}:
+                  <span
+                    >{{
+                      plan?.pricingSchedule[0]?.pricePlanDetails
+                        ?.licenseRateCards[1]?.rateValues[0]?.slabRates[0]
+                        ?.rate || 0
+                    }}
+                    {{
+                      plan?.pricingSchedule[0]?.pricePlanDetails
+                        ?.licenseRateCards[1]?.rateValues[0]?.currency || "USD"
+                    }}</span
+                  >
+                </h6>
+                <h6>
+                  {{
+                    plan?.pricingSchedule[0]?.pricePlanDetails
+                      ?.licenseRateCards[1]?.ratePlan?.slabs[1].startAfter || 0
+                  }}
+                  - Infinity:
+                  <span
+                    >{{
+                      plan?.pricingSchedule[0]?.pricePlanDetails
+                        ?.licenseRateCards[1]?.rateValues[0]?.slabRates[1]
+                        ?.rate || 0
+                    }}
+                    {{
+                      plan?.pricingSchedule[0]?.pricePlanDetails
+                        ?.licenseRateCards[1]?.rateValues[0]?.currency || "USD"
+                    }}</span
+                  >
+                </h6>
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+        <div
+          *ngIf="isSubscriptionLoading"
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 200px);
+          "
+        >
+          <mat-spinner [diameter]="30"></mat-spinner>
+        </div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 200px);
+          "
+          *ngIf="!isSubscriptionLoading && !customerSubscriptionData"
+        >
+          --Subscription Not Found--
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

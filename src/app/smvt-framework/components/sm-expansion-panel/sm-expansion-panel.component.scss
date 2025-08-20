@@ -1,0 +1,68 @@
+.mat-expansion-panel {
+  box-shadow: none;
+  border: 1px solid #e5e5e5;
+  padding: 1rem 3rem 1rem 1.4rem;
+  transition: margin 100ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  mat-expansion-panel-header {
+    padding: 0;
+    cursor: default;
+    mat-panel-title {
+      width: 100%;
+      .expansion-header {
+        padding: 0 1rem;
+        mat-radio-button {
+          margin-bottom: .5rem;
+        }
+        mat-checkbox {
+          margin-bottom: 1rem;
+        }
+        .edit-button {
+          cursor: pointer;
+          margin-left: 10px;
+          font: size 10px !important;
+          outline: none !important;
+          color: #707070;
+        }
+        .checkbox-label {
+          font-size: 1.1rem;
+          margin-bottom: 0;
+        }
+        .header-content {
+          width: 100%;
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+          gap: 10px;
+          flex-wrap: wrap;
+          .content,.diagnosis{
+            flex: 1 1 20%;
+            height: 60px;
+            background-color: #f6f1f1;
+            border-radius: 10px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+          }
+          p {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 0;
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
+  .expansion-wrapper {
+    margin: 1.5rem 0 0 -10px;
+    border-top: 1px solid #e3e3e3;
+    .expansion-content {
+      margin-top: 1rem;
+    }
+  }
+}
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {
+  background-color: transparent;
+}
+.mat-expansion-indicator::after {
+  transform: translate(-40% 20px);
+}

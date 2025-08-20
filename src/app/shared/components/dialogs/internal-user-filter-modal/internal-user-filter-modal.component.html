@@ -1,0 +1,142 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="m-4" [formGroup]="internalUserModalForm">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>User Type</mat-label>
+              <mat-select
+                formControlName="userType"
+                multiple
+                [compareWith]="compareObjectsUserType"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchUserType($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!userTypeData?.length && !userTypeLoading"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="userTypeData?.length">
+                  <mat-checkbox (change)="selectAllUserType($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-option
+                  (click)="onTypeChange(item)"
+                  *ngFor="let item of userTypeData"
+                  [value]="item"
+                  >{{ item | titlecase }}
+                </mat-option>
+              </mat-select>
+
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="
+                      let item of internalUserModalForm.get('userType').value
+                    "
+                  >
+                    {{ item | titlecase }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Role</mat-label>
+              <mat-select
+                formControlName="role"
+                multiple
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchRole($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!roleData?.length && !roleLoading"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="roleData?.length">
+                  <mat-checkbox (change)="selectAllRole($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-option
+                  *ngFor="let item of roleData"
+                  (click)="onRoleChange(item)"
+                  [value]="item"
+                  >{{ item.roleName }}
+                </mat-option>
+              </mat-select>
+
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of internalUserModalForm.get('role').value"
+                  >
+                    {{ item?.roleName }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <button mat-raised-button color="primary" (click)="submit()">
+          Submit
+        </button>
+        <button
+          style="margin-left: 12px"
+          mat-flat-button
+          type="button"
+          color="warn"
+          (click)="resetFilter()"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

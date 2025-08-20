@@ -1,0 +1,16 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header d-flex justify-content-between align-items-center">
+      <app-breadcrumb
+        [title]="'Message Fetch'"
+        [active_item]="'All Message Fetch'"
+      ></app-breadcrumb>
+      <button color="primary" mat-raised-button (click)="reload()">
+        Refresh
+      </button>
+    </div>
+    <div>
+      <shared-chats></shared-chats>
+    </div>
+  </div>
+</section>

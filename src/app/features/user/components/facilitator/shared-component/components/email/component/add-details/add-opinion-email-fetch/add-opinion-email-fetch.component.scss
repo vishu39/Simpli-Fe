@@ -1,0 +1,31 @@
+@import "../../../common-email-fetch-style.scss";
+
+.addOpinionEmailFetch {
+  position: relative;
+  padding: 12px 12px 0 12px;
+
+  .mainFormAndAttachmentGroup {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 10px;
+  }
+
+  .mainFormAndAttachmentGroupSolo {
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 10px;
+  }
+
+  .attachments {
+    height: calc(100vh - 290px);
+    overflow-y: auto;
+    width: 100%;
+    border: 1px dashed lightgrey;
+    padding: 0 12px;
+  }
+
+  .formDiv {
+    height: calc(100vh - 290px);
+    overflow-y: auto;
+  }
+}

@@ -1,0 +1,712 @@
+<div class="row mt-4">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="body">
+        <form
+          class="m-4"
+          [formGroup]="defaultEmailForm"
+          (ngSubmit)="formSubmit()"
+        >
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Query To</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="queryTo"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollQueryTo()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchQueryTo($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!queryToData?.length && !isLoadingQueryTo"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="queryToData?.length">
+                      <mat-checkbox (change)="selectAllQueryTo($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingQueryToSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingQueryToSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickQueryTo({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of queryToData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingQueryTo && !isLoadingQueryToSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('queryTo').value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      defaultEmailForm.controls['queryTo'].hasError('required')
+                    "
+                  >
+                    Query To is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Query Cc</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="queryCc"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollQueryCc()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchQueryCc($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!queryCcData?.length && !isLoadingQueryCc"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="queryCcData?.length">
+                      <mat-checkbox (change)="selectAllQueryCc($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingQueryCcSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingQueryCcSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickQueryCc({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of queryCcData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingQueryCc && !isLoadingQueryCcSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('queryCc').value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>VIL To</mat-label>
+
+                  <mat-select
+                    multiple
+                    formControlName="vilTo"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollVilTo()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchVilTo($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!vilToData?.length && !isLoadingVilTo"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="vilToData?.length">
+                      <mat-checkbox (change)="selectAllVilTo($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingVilToSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingVilToSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickVilTo({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of vilToData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingVilTo && !isLoadingVilToSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="let item of defaultEmailForm.get('vilTo').value"
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      defaultEmailForm.controls['vilTo'].hasError('required')
+                    "
+                  >
+                    VIL To is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>VIL Cc</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="vilCc"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollVilCc()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchVilCc($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!vilCcData?.length && !isLoadingVilCc"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="vilCcData?.length">
+                      <mat-checkbox (change)="selectAllVilCc($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingVilCcSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingVilCcSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickVilCc({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of vilCcData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingVilCc && !isLoadingVilCcSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="let item of defaultEmailForm.get('vilCc').value"
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Daily Status To</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="dailyStatusTo"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollDailyStatusTo()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchDailyStatusTo($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !dailyStatusToData?.length && !isLoadingDailyStatusTo
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="dailyStatusToData?.length">
+                      <mat-checkbox (change)="selectAllDailyStatusTo($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingDailyStatusToSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingDailyStatusToSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickDailyStatusTo({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of dailyStatusToData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingDailyStatusTo &&
+                        !isLoadingDailyStatusToSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('dailyStatusTo')
+                            .value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      defaultEmailForm.controls['dailyStatusTo'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Daily Status To is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Daily Status Cc</mat-label>
+
+                  <mat-select
+                    multiple
+                    formControlName="dailyStatusCc"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollDailyStatusCc()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchDailyStatusCc($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !dailyStatusCcData?.length && !isLoadingDailyStatusCc
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="dailyStatusCcData?.length">
+                      <mat-checkbox (change)="selectAllDailyStatusCc($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingDailyStatusCcSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingDailyStatusCcSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickDailyStatusCc({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of dailyStatusCcData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingDailyStatusCc &&
+                        !isLoadingDailyStatusCcSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('dailyStatusCc')
+                            .value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Query Status To</mat-label>
+
+                  <mat-select
+                    multiple
+                    formControlName="queryStatusTo"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollQueryStatusTo()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchQueryStatusTo($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !queryStatusToData?.length && !isLoadingQueryStatusTo
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="queryStatusToData?.length">
+                      <mat-checkbox (change)="selectAllQueryStatusTo($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingQueryStatusToSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingQueryStatusToSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickQueryStatusTo({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of queryStatusToData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingQueryStatusTo &&
+                        !isLoadingQueryStatusToSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('queryStatusTo')
+                            .value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                  <mat-error
+                    *ngIf="
+                      defaultEmailForm.controls['queryStatusTo'].hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Query Status To is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Query Status Cc</mat-label>
+
+                  <mat-select
+                    multiple
+                    formControlName="queryStatusCc"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollQueryStatusCc()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchQueryStatusCc($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !queryStatusCcData?.length && !isLoadingQueryStatusCc
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="queryStatusCcData?.length">
+                      <mat-checkbox (change)="selectAllQueryStatusCc($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingQueryStatusCcSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingQueryStatusCcSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickQueryStatusc({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of queryStatusCcData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingQueryStatusCc &&
+                        !isLoadingQueryStatusCcSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('queryStatusCc')
+                            .value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+              <!-- <button
+                class="btn-space"
+                [disabled]="!referralId"
+                mat-raised-button
+                color="primary"
+              >
+                Submit
+              </button> -->
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

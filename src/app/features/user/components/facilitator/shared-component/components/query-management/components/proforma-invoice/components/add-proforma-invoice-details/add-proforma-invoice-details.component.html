@@ -1,0 +1,130 @@
+<div *ngIf="isEdit" class="modalHeader">
+  <div class="editRowModal">
+    <div class="modalHeader clearfix">
+      <div class="modal-about">
+        <div class="font-weight-bold p-t-5 font-17">
+          {{ title }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    mat-icon-button
+    (click)="closeDialog(false)"
+    aria-label="Close dialog"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="proformaInvoceForm" class="m-4">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Hospital</mat-label>
+          <mat-select *ngIf="!isEdit" formControlName="hospitalName">
+            <div
+              class="other_option"
+              *ngIf="!request?.length && !isLoadingRequest"
+            >
+              No results
+            </div>
+            <ng-container>
+              <mat-option
+                (click)="onClickHospital(item)"
+                *ngFor="let item of request"
+                [value]="item?.hospitalName"
+              >
+                {{ item?.hospitalName }}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <input
+            matInput
+            *ngIf="isEdit"
+            type="text"
+            formControlName="hospitalName"
+          />
+          <mat-error
+            *ngIf="
+              proformaInvoceForm.controls['hospitalName'].hasError('required')
+            "
+          >
+            Hospital is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Received At</mat-label>
+          <input
+            matTooltip="For tasks received via email or WhatsApp, enter the date and time received; if editing is disabled, it’s auto-captured."
+            matInput
+            [owlDateTime]="dt"
+            [owlDateTimeTrigger]="dt"
+            formControlName="receivedAt"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #dt
+            pickerType="both"
+          ></owl-date-time>
+        </mat-form-field>
+      </div>
+      <div>
+        <app-global-image-preview
+          [fileList]="fileList"
+          [filePreviewList]="filePreviewUrls"
+          [type]="'fileUploader'"
+          [remove]="false"
+        ></app-global-image-preview>
+
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Upload Proforma Invoice *</mat-label>
+          <ngx-mat-file-input
+            accept=".png, .jpg, .jpeg, .pdf"
+            name="file"
+            formControlName="file"
+            (change)="onFileSelected($event)"
+          >
+          </ngx-mat-file-input>
+          <mat-icon matSuffix>upload</mat-icon>
+          <mat-error
+            *ngIf="proformaInvoceForm.controls['file'].hasError('required')"
+          >
+            Upload Proforma Invoice is required
+          </mat-error>
+        </mat-form-field>
+        <div class="mb-2" *ngIf="uploadedDoc.length && isEdit">
+          <h6>Uploaded Data</h6>
+          <div class="mt-4">
+            <app-global-image-preview
+              [fileList]="uploadedDoc"
+              [filePreviewList]="uploadedDoc"
+              [type]="'fileUploaded'"
+              [remove]="false"
+            ></app-global-image-preview>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <div class="example-button-row justify-end">
+          <button
+            mat-raised-button
+            color="primary"
+            [disabled]="proformaInvoceForm.hasError('required')"
+            (click)="submit()"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

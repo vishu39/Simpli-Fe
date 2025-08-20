@@ -1,0 +1,67 @@
+<div style="margin:1rem;" class="crud-wrapper card">
+  <app-sm-toolbar [toolBarConfig]="toolbarConfig" (toolbarEvent)="toolbarEventHandler($event,list)" #toolbar>
+    <app-sm-crud-list  [listConfig]="listConfig" #list>
+      <div table>
+        <table mat-table matSort [dataSource]="dataSource" (matSortChange)="announceSortChange($event)" class="table">
+
+          <!-- SELECT LIST  -->
+          <!-- <ng-container matColumnDef="select">
+            <th [resizeColumn]="true" mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                            [aria-label]="checkboxLabel()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                            [aria-label]="checkboxLabel(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container> -->
+
+          <!-- TABLE ACTIONS DO NOT REMOVE -->
+          <ng-container matColumnDef="__action">
+            <th mat-header-cell *matHeaderCellDef [resizeColumn]="false">Actions</th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button class="sm-fi-btn" (click)="edit(row,$event,toolbar)">
+                <app-feather-icons [icon]="'edit'" class="tbl-fav-edit"></app-feather-icons>
+              </button>
+              <button mat-icon-button class="sm-fi-btn" (click)="del(row)">
+                <app-feather-icons [icon]="'trash-2'" class="tbl-fav-delete"></app-feather-icons>
+              </button>
+            </td>
+          </ng-container>
+          <!-- TABLE ACTIONS DO NOT REMOVE -->
+
+          <!-- CUSTOM TABLE-DATA YOU CAN ADD MANY AS PER YOUR NEED -->
+          <ng-container matColumnDef="__copy">
+            <th mat-header-cell *matHeaderCellDef [resizeColumn]="false">Copy</th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button class="sm-fi-btn">
+                <app-feather-icons [icon]="'copy'" class="tbl-fav-edit"></app-feather-icons>
+              </button>
+            </td>
+          </ng-container>
+          <!-- CUSTOM TABLE-DATA YOU CAN ADD MANY AS PER YOUR NEED -->
+
+
+          <!-- DEFAULT TABLE-DATA NO NOT REMOVE-->
+          <ng-container *ngFor="let column of columns;let i = index" [matColumnDef]="column.columnDef">
+            <th mat-header-cell [mat-sort-header]="column.header" [index]="i" [resizeColumn]="true" [disabled]="column.header === 'Role Name'" *matHeaderCellDef>
+              {{column.header}}
+            </th>
+            <td mat-cell *matCellDef="let row">{{column.cell(row)}}</td>
+          </ng-container>
+          <!-- DEFAULT TABLE-DATA NO NOT REMOVE-->
+
+          <tr mat-header-row *matHeaderRowDef="tableColumn"></tr>
+          <tr mat-row *matRowDef="let row; columns: tableColumn;"></tr>
+        </table>
+        <mat-paginator (page)="paginationHandler($event)" [length]="length" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+      </div>
+    </app-sm-crud-list>
+  </app-sm-toolbar>
+</div>

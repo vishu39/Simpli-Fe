@@ -1,0 +1,31 @@
+<div class="toolbar-wrapper">
+  <div class="toolbar flex">
+    <div class="left-side d-flex flex-wrap justify-content-start">
+      <form class="search-form" id="searchForm">
+        <input
+          placeholder="Search"
+          type="text"
+          (keyup)="serchValue($event.target.value)"
+          class="browser-default search-field"
+          aria-label="Search box"
+        />
+        <button mat-icon-button color="primary">
+          <i class="fas fa-search"></i>
+        </button>
+        <ng-content></ng-content>
+      </form>
+    </div>
+    <div
+      *ngIf="decodedToken.userType !== treatingDoctorUserType"
+      class="right-side d-flex flex-wrap justify-content-start"
+    >
+      <button
+        mat-flat-button
+        style="background-color: rgb(21, 96, 189, 1); color: #fff"
+        (click)="emitToolBarEvent($event, 'ADD_QUERY')"
+      >
+        <mat-icon>add</mat-icon> Add Patient
+      </button>
+    </div>
+  </div>
+</div>

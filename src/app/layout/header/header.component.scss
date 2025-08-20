@@ -1,0 +1,67 @@
+.notificationHeader {
+  padding: 16px;
+  background-color: #1560bd;
+  color: white;
+}
+
+::ng-deep {
+  .mat-menu-content {
+    padding: 0 !important;
+  }
+  .mat-menu-panel.my-class {
+    width: 400px;
+  }
+}
+
+.message_container {
+  height: 300px;
+  overflow-y: scroll;
+  .message {
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 0.5px solid lightgray;
+    cursor: pointer;
+  }
+  .isRead {
+    // background-color: rgb(246, 246, 246);
+    background-color: rgba(223, 251, 223, 0.39);
+  }
+  .time {
+    margin-top: 8px;
+    color: rgb(161, 159, 159);
+    display: flex;
+    font-size: 12px;
+    .time_icon {
+      font-size: 18px;
+    }
+  }
+  .initials {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    display: grid;
+    place-items: center;
+    background-color: #e2f0fb;
+    color: black;
+  }
+}
+
+.not_found {
+  display: grid;
+  place-items: center;
+  height: 100px;
+}
+
+::ng-deep
+  .defalutEmailSelection
+  .defalutMessageSelection
+  .mat-form-field-appearance-outline
+  .mat-form-field-wrapper {
+  padding: 0 !important;
+  padding-top: 4px !important;
+}
+
+:host ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}

@@ -1,0 +1,91 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Doctor Communication'"
+        [active_item]="'All Doctor Communication'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <mat-card>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Select Doctor</mat-label>
+                <mat-select
+                  msInfiniteScroll
+                  (infiniteScroll)="onInfiniteScrollDoctor()"
+                  (selectionChange)="onChangeDoctor($event)"
+                  [(ngModel)]="selectDoctor._id"
+                >
+                  <input
+                    class="searchInput"
+                    placeholder="search..."
+                    (keydown.space)="$event.stopPropagation()"
+                    matInput
+                    (keyup)="searchDoctor($event.target.value)"
+                  />
+                  <div
+                    class="other_option"
+                    *ngIf="!doctorData?.length && !isLoadingDoctor"
+                  >
+                    No results
+                  </div>
+                  <mat-option
+                    *ngFor="let item of doctorData"
+                    [value]="item._id"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                  <mat-spinner
+                    *ngIf="isLoadingDoctor"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <mat-tab-group
+          (selectedTabChange)="changeTab($event)"
+          animationDuration="0ms"
+        >
+          <mat-tab label="Assistant Doctor">
+            <div *ngIf="selectedTab === 'Assistant Doctor'">
+              <app-assistant-doctor
+                [doctorId]="selectedDoctorId"
+              ></app-assistant-doctor>
+            </div>
+          </mat-tab>
+          <mat-tab label="Coordinator">
+            <div *ngIf="selectedTab === 'Coordinator'">
+              <app-coordinator [doctorId]="selectedDoctorId"></app-coordinator>
+            </div>
+          </mat-tab>
+          <mat-tab label="Default Email">
+            <div *ngIf="selectedTab === 'Default Email'">
+              <app-default-email
+                [doctorId]="selectedDoctorId"
+              ></app-default-email>
+            </div>
+          </mat-tab>
+          <mat-tab label="Default Message">
+            <div *ngIf="selectedTab === 'Default Message'">
+              <shared-doctor-default-message
+                [doctorId]="selectedDoctorId"
+              ></shared-doctor-default-message>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,23 @@
+@import "../../commonStyle.scss";
+
+.hospitalStatusDiv {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  .hospitalStatus {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+  .greenStatus {
+    background-color: green;
+  }
+  .redStatus {
+    background-color: red;
+  }
+}

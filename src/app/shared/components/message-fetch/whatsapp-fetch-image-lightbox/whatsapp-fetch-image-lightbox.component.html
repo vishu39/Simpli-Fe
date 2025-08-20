@@ -1,0 +1,61 @@
+<div class="detailed_sm_lightbox_main row">
+  <div class="col-12">
+    <div class="lightbox">
+      <div class="lightbox-content">
+        <div
+          class="lightbox-image-container hide-scrollbar"
+          style="width: 100%"
+        >
+          <img
+            *ngIf="type?.includes('image') || type === 'image'"
+            id="lightbox-image"
+            class="lightbox-image"
+            [src]="getSource()"
+          />
+          <div
+            *ngIf="type === 'application/pdf' || type?.includes('pdf')"
+            style="width: 430px;overflow: scroll;"
+          >
+            <iframe
+              [autoresize]="true"
+              [show-borders]="false"
+              [src]="getSource() | safeUrl"
+              style="height: 430px; overflow: scroll; width: 550px"
+            ></iframe>
+          </div>
+          <!-- for audio -->
+          <audio class="image" *ngIf="type?.includes('audio')" controls>
+            <source [src]="getSource()" [type]="type" />
+          </audio>
+          <!-- for video -->
+          <video
+            width="100%"
+            height="100%"
+            *ngIf="type?.includes('video')"
+            controls
+            [src]="getSource()"
+          ></video>
+        </div>
+      </div>
+
+      <app-feather-icons
+        [icon]="'x-circle'"
+        class="lightbox-close"
+        (click)="emitLightBoxEvent($event, 'CLOSE')"
+      >
+      </app-feather-icons>
+
+      <app-feather-icons
+        [icon]="'chevron-right'"
+        class="lightbox-next"
+        (click)="next()"
+      ></app-feather-icons>
+
+      <app-feather-icons
+        [icon]="'chevron-left'"
+        class="lightbox-pre"
+        (click)="pre()"
+      ></app-feather-icons>
+    </div>
+  </div>
+</div>

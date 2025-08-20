@@ -1,0 +1,52 @@
+section.content .content-block {
+  padding: 25px 0 0 12px !important;
+  margin: 0 -15px 0 auto;
+}
+@media screen and (max-width: 768px) {
+  section.content .content-block {
+    padding: 25px 15px 0 12px !important;
+  }
+}
+.operation-board {
+  border: 1px solid #ccc;
+  height: 88vh;
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 1rem;
+  border-radius: 10px;
+  overflow: auto;
+  background-color: #e2f0fb;
+  .operation-board-header {
+    padding: 0 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    .left {
+      flex: 1 1 auto;
+      h2 {
+        margin: 0;
+        padding: 0;
+        font-size: 1.4rem;
+      }
+    }
+    .right {
+      flex: 1 1 20%;
+      app-feather-icons {
+        margin-right: 1rem;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.dashboard-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: 76vh;
+  overflow-y: hidden;
+  overflow-x: auto;
+  padding: 1rem;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+}

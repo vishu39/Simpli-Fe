@@ -1,0 +1,105 @@
+<div class="list-container">
+  <div class="notchDiv"></div>
+  <div
+    class="list-header d-flex flex-wrap justify-content-between align-items-baseline"
+  >
+    <div class="d-flex mt-2 justify-content-between align-items-baseline">
+      <h2>On Ground Patient</h2>
+      <div class="count">{{ totalElement }}</div>
+    </div>
+    <div class="d-flex">
+      <button
+        class="add-btn"
+        *ngFor="let btn of actionButtons"
+        [color]="btn?.color"
+        (click)="action(btn?.icon)"
+        [ngClass]="filterActive(btn?.icon)"
+        mat-icon-button
+      >
+        <mat-icon>{{ btn?.icon }}</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div
+    class="list hide-scrollbar"
+    infiniteScroll
+    [infiniteScrollDistance]="0.5"
+    [scrollWindow]="false"
+    (scrolled)="onInfiniteScrollQuerry()"
+  >
+    <div *ngIf="listData?.length">
+      <div class="list-content" *ngFor="let item of listData">
+        <div class="content-header" (click)="openCommentModal(item)">
+          <div class="d-flex justify-content-between align-items-center">
+            <p class="wrapped-text name">{{ item?.name | titlecase }}</p>
+            <app-feather-icons
+              [matTooltip]="
+                item?.statusAdded
+                  ? 'Daily status already added for today'
+                  : 'Please add pending daily status'
+              "
+              matTooltipPosition="left"
+              [ngClass]="item?.statusAdded ? 'greenFlag' : 'redFlag'"
+              icon="flag"
+            ></app-feather-icons>
+          </div>
+          <span
+            class="d-flex justify-content-between align-items-baseline status"
+          >
+            <h4>{{ item?.currentStatus?.at(-1)?.status || "NIL" }}</h4>
+          </span>
+          <div>
+            <div class="dec">
+              <p>
+                Partner Name:
+                {{
+                  item?.referralPartner ? item?.referralPartner?.name : "NIL"
+                }}
+              </p>
+              <p class="d-flex">
+                Treatment:
+                <span class="text" style="margin-left: 4px">{{
+                  item?.treatment || "NIL"
+                }}</span>
+              </p>
+              <p>Country: {{ item?.country }}</p>
+            </div>
+            <div class="other-details">
+              <div class="content">
+                Arrival Date:
+                <span>
+                  {{
+                    item?.onGroundStatus?.at(-1)?.arrivalDate | date : "medium"
+                  }}
+                </span>
+              </div>
+            </div>
+            <div class="other-details">
+              <div class="content" (click)="$event.stopPropagation()">
+                Hospital Sent:
+                <span
+                  [matTooltip]="showHospitalList(item)"
+                  matTooltipPosition="right"
+                  style="
+                    color: rgba(13, 110, 253, 1);
+                    cursor: pointer;
+                    text-decoration: underline;
+                  "
+                  >View
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isQuerryLoading && !listData?.length" class="loader_center">
+      <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+    </div>
+
+    <div class="loader_center" *ngIf="!listData?.length && !isQuerryLoading">
+      --No Data Found--
+    </div>
+  </div>
+</div>

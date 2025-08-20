@@ -1,0 +1,332 @@
+<div class="chatsMainCardContainer hide-scrollbar">
+  <div class="card chatsMainCard hide-scrollbar">
+    <div class="chatList">
+      <div>
+        <div class="p-3 pb-0">
+          <!-- <div class="d-flex justify-content-between">
+            <h4>Chats</h4>
+            <span>
+              <mat-icon>more_vert</mat-icon>
+            </span>
+          </div> -->
+          <div class="defalutMessageSelection">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Communication Message Id</mat-label>
+              <mat-select
+                [formControl]="choosedDefaultCommunicationMessageControl"
+                (selectionChange)="onDefalutMessageSelectionChange($event)"
+              >
+                <mat-option
+                  *ngFor="let item of messageSettingByUserData"
+                  [value]="item?.messageId"
+                  >{{ item?.messageId }} - {{ item?.type }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="searchChats mb-4 p-3 pt-0 pb-0">
+          <input
+            placeholder="Search..."
+            class="searchChatInput p-2"
+            (keydown.space)="$event.stopPropagation()"
+            (keyup)="searchChatProfile($event.target.value)"
+          />
+        </div>
+
+        <!-- chat list start -->
+        <div
+          class="list_chats hide-scrollbar"
+          *ngIf="chatsData?.length > 0"
+          infiniteScroll
+          [infiniteScrollDistance]="1"
+          (scrolled)="onInfiniteScrollChats()"
+          [scrollWindow]="false"
+        >
+          <div
+            [ngClass]="
+              chat?.chat_id === selectedProfile?.chat_id
+                ? 'chat selectedProfile'
+                : 'chat'
+            "
+            *ngFor="let chat of chatsData"
+            (click)="onClickChatProfile(chat)"
+          >
+            <div class="row">
+              <div class="col-2" style="display: flex; align-items: center">
+                <img
+                  [src]="
+                    chat?.chat_image
+                      ? chat?.chat_image
+                      : 'assets/images/userLogo.png'
+                  "
+                  style="width: 40px; height: 40px; border-radius: 50%"
+                />
+              </div>
+              <div class="col-10">
+                <div class="border_bottom">
+                  <div class="d-flex justify-content-between">
+                    <h5 style="font-size: 15px" class="chatNameElipsis">
+                      {{ chat?.chat_name }}
+                    </h5>
+                    <span style="font-size: 12px; color: grey">{{
+                      formatTimestamp(chat?.latest_message?.timestamp)
+                    }}</span>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <div
+                      class="chatElipsis"
+                      *ngIf="chat?.latest_message?.message_type === 'chat'"
+                    >
+                      {{ chat?.latest_message?.body }}
+                    </div>
+                    <div
+                      class="chatElipsis d-flex"
+                      style="height: 20px"
+                      *ngIf="
+                        chat?.latest_message?.message_type !== 'chat' &&
+                        chat?.latest_message
+                      "
+                    >
+                      <span
+                        *ngIf="
+                          !!messageMediaObj[chat?.latest_message?.message_type]
+                            ?.icon
+                        "
+                        ><mat-icon style="font-size: 20px">{{
+                          messageMediaObj[chat?.latest_message?.message_type]
+                            ?.icon
+                        }}</mat-icon></span
+                      >
+                      <span>{{
+                        messageMediaObj[chat?.latest_message?.message_type]
+                          ?.title
+                      }}</span>
+                    </div>
+                    <div class="chatElipsis" *ngIf="!chat?.latest_message">
+                      No Chat Found
+                    </div>
+
+                    <span
+                      *ngIf="chat?.message_unread_count"
+                      class="unreadBadge"
+                      >{{ chat?.message_unread_count }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <mat-spinner
+              *ngIf="isChatLoading && chatsData?.length > 0"
+              class="mx-auto mb-2 mt-2"
+              [diameter]="30"
+            >
+            </mat-spinner>
+          </div>
+        </div>
+        <!-- chat list end -->
+
+        <div
+          class="chat_div_full_height_center"
+          *ngIf="isChatLoading && !chatsData?.length"
+        >
+          <mat-spinner [diameter]="30"></mat-spinner>
+        </div>
+
+        <div
+          class="chat_div_full_height_center"
+          *ngIf="!chatsData?.length && !isChatLoading"
+        >
+          <h5>No Chats Found</h5>
+        </div>
+      </div>
+    </div>
+    <div class="chatDetails" style="background-color: #f6f7f8">
+      <div class="detailsContainer" *ngIf="isProfileSelected">
+        <div class="detailHeaderContianer">
+          <div class="headerFirstDiv">
+            <span
+              ><img
+                [src]="
+                  selectedProfile?.chat_image
+                    ? selectedProfile?.chat_image
+                    : 'assets/images/userLogo.png'
+                "
+                style="height: 60px; width: 60px; border-radius: 50%"
+            /></span>
+            <span>
+              <h5 style="font-size: 15px" class="">
+                {{ selectedProfile?.chat_name }}
+              </h5>
+              <!-- <div *ngIf="selectedProfile?.chat_type === 'user'">
+                Click here to view info
+              </div> -->
+              <div *ngIf="selectedProfile?.chat_type !== 'user'">
+                {{ selectedProfile?.chat_type | titlecase }}
+              </div>
+            </span>
+          </div>
+
+          <div
+            class="headerSecondDiv"
+            *ngIf="messageData?.messageData?.length > 0"
+          >
+            <button mat-flat-button color="primary" (click)="openOverlay()">
+              Actions
+            </button>
+          </div>
+        </div>
+        <div
+          class="detailMiddleContianer"
+          #scrollMe
+          infiniteScroll
+          [infiniteScrollDistance]="1"
+          [scrollWindow]="false"
+          (scrolledUp)="onInfiniteScrollChatMessages()"
+        >
+          <div *ngIf="chatMessagesData?.length > 0">
+            <div>
+              <mat-spinner
+                *ngIf="isChatMessagesLoading && chatMessagesData?.length > 0"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </div>
+
+            <div *ngFor="let message of chatMessagesData; let i = index">
+              <!-- Show Date Label -->
+              <div *ngIf="shouldShowDateLabel(i)" class="date_label mb-2">
+                <span class="badgeDate">
+                  {{ getFormattedDate(message.timestamp) }}
+                </span>
+              </div>
+
+              <div class="d-flex align-items-center">
+                <mat-checkbox
+                  style="margin-right: 16px"
+                  (change)="
+                    onChatMessageSelect(
+                      $event,
+                      message,
+                      getChatPersonName(message?.sender_phone)
+                    )
+                  "
+                ></mat-checkbox>
+                <div class="chatMessages" style="width: 100%">
+                  <div
+                    [ngClass]="
+                      message?.from_me
+                        ? 'card p-3 pt-2 message messageFromMe'
+                        : 'card p-3 pt-2 message messageFromOther'
+                    "
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-2"
+                    >
+                      <h6 class="chatNameElipsis">
+                        {{ getChatPersonName(message?.sender_phone) }}
+                      </h6>
+
+                      <!-- <button [matMenuTriggerFor]="menu" mat-icon-button>
+                        <mat-icon style="font-size: 18px"
+                          >keyboard_arrow_down</mat-icon
+                        >
+                      </button>
+
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item>Action</button>
+                      </mat-menu> -->
+                    </div>
+
+                    <!-- <div *ngIf="message?.message_type === 'chat'">
+                      {{ parseMessage(message?.body) }}
+                    </div> -->
+                    <div
+                      [innerHTML]="parseMessage(message?.body)"
+                      *ngIf="message?.message_type === 'chat'"
+                    ></div>
+                    <div *ngIf="message?.message_type !== 'chat'">
+                      <div *ngIf="message?.mediaArray?.length">
+                        <app-message-fetch-image-previewer
+                          [fileList]="message?.mediaArray"
+                          [filePreviewList]="message?.mediaArray"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'col-12'"
+                        ></app-message-fetch-image-previewer>
+
+                        <div
+                          class="mt-2"
+                          [innerHTML]="parseMessage(message?.body)"
+                          *ngIf="message?.body"
+                        ></div>
+                      </div>
+
+                      <div *ngIf="!message?.mediaArray?.length">
+                        <div
+                          class="card p-3 m-0 d-flex justify-content-center"
+                          style="background-color: #f0f2f5; text-align: center"
+                        >
+                          <span>
+                            <mat-icon
+                              style="font-size: 20px; margin-right: 12px"
+                              >not_interested</mat-icon
+                            >
+                          </span>
+                          Could not load document!
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex justify-content-end mt-2"
+                      style="font-size: 12px"
+                    >
+                      {{ message?.timestamp | date : "hh:mm a" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="isActionMessageOverlayOpen">
+              <app-message-fetch-action
+                [messageData]="messageData"
+                [selectedProfile]="selectedProfile"
+                (overlayClose)="overlayClose($event)"
+              ></app-message-fetch-action>
+            </div>
+          </div>
+
+          <div
+            *ngIf="isChatMessagesLoading && !chatMessagesData?.length"
+            style="height: 100%; width: 100%"
+            class="d-flex justify-content-center align-items-center"
+          >
+            <mat-spinner [diameter]="30"></mat-spinner>
+          </div>
+
+          <div
+            *ngIf="!chatMessagesData?.length && !isChatMessagesLoading"
+            style="height: 100%; width: 100%"
+            class="d-flex justify-content-center align-items-center"
+          >
+            No Chats Found
+          </div>
+        </div>
+        <!-- <div class="detailFooterContianer"></div> -->
+      </div>
+
+      <div class="no_chats_found" *ngIf="!isProfileSelected">
+        <mat-icon class="mb-3">touch_app</mat-icon>
+        <h5>Select a chat to view</h5>
+        <h6 style="text-decoration: underline; font-size: 13px">
+          Can't see all data? Click to refresh
+        </h6>
+      </div>
+    </div>
+  </div>
+</div>

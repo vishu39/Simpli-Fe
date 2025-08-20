@@ -1,0 +1,503 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form [formGroup]="opinionForm" class="m-4">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Source</mat-label>
+            <mat-select
+              (selectionChange)="onCLickSource($event)"
+              formControlName="source"
+            >
+              <mat-option [value]="source" *ngFor="let source of sourceArray">
+                {{ source }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error
+              *ngIf="opinionForm.controls['source'].hasError('required')"
+            >
+              Source is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hospital</mat-label>
+            <mat-select formControlName="hospitalName">
+              <div
+                class="other_option"
+                *ngIf="!request?.length && !isLoadingRequest"
+              >
+                No results
+              </div>
+              <ng-container>
+                <mat-option
+                  (click)="onClickHospital(item)"
+                  *ngFor="let item of request"
+                  [value]="item?.hospitalName"
+                >
+                  {{ item?.hospitalName }}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+            <mat-error
+              *ngIf="opinionForm.controls['hospitalName'].hasError('required')"
+            >
+              Hospital is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Doctor Name</mat-label>
+            <mat-select formControlName="doctorName">
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchDoctor($event.target.value)"
+              />
+              <div class="other_option" *ngIf="!doctorsList?.length">
+                No results
+              </div>
+              <mat-option
+                (click)="onClickDoctor(list)"
+                *ngFor="let list of doctorsList"
+                [value]="list?.name"
+              >
+                {{ list?.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="opinionForm.controls['doctorName'].hasError('required')"
+            >
+              Doctor is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="
+          !!opinionForm?.get('doctorId')?.value &&
+          opinionForm?.get('source')?.value !== 'Handout'
+        "
+      >
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Assistant Doctor Email</mat-label>
+              <mat-select
+                multiple
+                formControlName="assistantDoctor"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollAssistant()"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchAssistant($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!assistantDoctorData?.length && !isLoadingAssistant"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="assistantDoctorData?.length">
+                  <mat-checkbox (change)="selectAllAssistant($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingAssistantSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingAssistantSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickAssistant({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of assistantDoctorData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isLoadingAssistant && !isLoadingAssistantSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="
+                      let item of opinionForm.get('assistantDoctor').value
+                    "
+                  >
+                    {{ item.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Coordinator Email</mat-label>
+              <mat-select
+                multiple
+                formControlName="coordinator"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollCoordinator()"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCoordinator($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!coordinatorData?.length && !isLoadingCoordinator"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="coordinatorData?.length">
+                  <mat-checkbox (change)="selectAllCoordinator($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingCoordinatorSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingCoordinatorSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickCoordinator({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of coordinatorData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isLoadingCoordinator && !isLoadingCoordinatorSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of opinionForm.get('coordinator').value"
+                  >
+                    {{ item.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="
+          !!opinionForm?.get('doctorId')?.value &&
+          opinionForm?.get('source')?.value !== 'Handout'
+        "
+      >
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Assistant Doctor Message</mat-label>
+              <mat-select
+                multiple
+                formControlName="assistantDoctorMessage"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollAssistantMessage()"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchAssistantMessage($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="
+                    !assistantDoctorMessageData?.length &&
+                    !isLoadingAssistantMessage
+                  "
+                >
+                  No results
+                </div>
+
+                <div
+                  class="other_option"
+                  *ngIf="assistantDoctorMessageData?.length"
+                >
+                  <mat-checkbox (change)="selectAllAssistantMessage($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingAssistantMessageSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingAssistantMessageSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickAssistantMessage({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of assistantDoctorMessageData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="
+                    isLoadingAssistantMessage &&
+                    !isLoadingAssistantMessageSelectAll
+                  "
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="
+                      let item of opinionForm.get('assistantDoctorMessage')
+                        .value
+                    "
+                  >
+                    {{ item.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Coordinator Message</mat-label>
+              <mat-select
+                multiple
+                formControlName="coordinatorMessage"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollCoordinatorMessage()"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCoordinatorMessage($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="
+                    !coordinatorMessageData?.length &&
+                    !isLoadingCoordinatorMessage
+                  "
+                >
+                  No results
+                </div>
+
+                <div
+                  class="other_option"
+                  *ngIf="coordinatorMessageData?.length"
+                >
+                  <mat-checkbox (change)="selectAllCoordinatorMessage($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingCoordinatorMessageSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingCoordinatorMessageSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickCoordinatorMessage({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of coordinatorMessageData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="
+                    isLoadingCoordinatorMessage &&
+                    !isLoadingCoordinatorMessageSelectAll
+                  "
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="
+                      let item of opinionForm.get('coordinatorMessage').value
+                    "
+                  >
+                    {{ item.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="opinionForm?.get('source')?.value !== 'Handout'">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Email Id</mat-label>
+            <input matInput formControlName="emailId" />
+            <mat-icon matSuffix>mail</mat-icon>
+            <mat-error *ngIf="opinionForm.get('emailId').hasError('required')">
+              Email Id is required
+            </mat-error>
+            <mat-error *ngIf="opinionForm.get('emailId').hasError('pattern')">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact</mat-label>
+            <ngx-mat-intl-tel-input
+              formControlName="contact"
+              [enablePlaceholder]="true"
+              [enableSearch]="true"
+              [preferredCountries]="['in']"
+            ></ngx-mat-intl-tel-input>
+
+            <!-- <mat-error
+              *ngIf="opinionForm.controls['contact'].hasError('required')"
+            >
+              Contact is required
+            </mat-error> -->
+            <mat-error
+              *ngIf="
+                opinionForm.controls['contact']?.errors?.validatePhoneNumber
+              "
+              >Invalid contact</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row justify-end">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="submit()"
+              type="submit"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

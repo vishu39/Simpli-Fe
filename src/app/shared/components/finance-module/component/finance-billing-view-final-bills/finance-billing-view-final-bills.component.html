@@ -1,0 +1,71 @@
+<div class="m-4">
+  <ng-container *ngIf="finalBillData?.length">
+    <div *ngFor="let item of finalBillData" class="mb-3">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <p class="mb-0">
+                <b>{{ item?.hospitalName }}</b>
+              </p>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="p-3">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Admission Date</b></div>
+                <div>{{ item?.admissionDate | date : "medium" }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Discharge Date</b></div>
+                <div>{{ item?.dischargeDate | date : "medium" }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Created At</b></div>
+                <div>{{ (item?.createdAt | date : "medium") || "NIL" }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-3" *ngIf="item?.fileFirst?.length">
+            <div><b>Final Bill</b></div>
+            <div class="row">
+              <div *ngIf="item?.fileFirst?.length" class="mt-4">
+                <app-global-image-preview
+                  [fileList]="item?.fileFirst"
+                  [filePreviewList]="item?.fileFirst"
+                  [type]="'fileUploaded'"
+                  [remove]="false"
+                ></app-global-image-preview>
+              </div>
+            </div>
+          </div>
+          <div class="p-3" *ngIf="item?.fileSecond?.length">
+            <div><b>Discharge Summary</b></div>
+            <div class="row">
+              <div *ngIf="item?.fileSecond?.length" class="mt-4">
+                <app-global-image-preview
+                  [fileList]="item?.fileSecond"
+                  [filePreviewList]="item?.fileSecond"
+                  [type]="'fileUploaded'"
+                  [remove]="false"
+                ></app-global-image-preview>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </ng-container>
+
+  <!-- <div class="" *ngIf="isDataLoading">
+    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+  </div>
+
+  <div class="card m-4 p-3" *ngIf="!isDataLoading && !finalBillData?.length">
+    <div style="text-align: center">--No Data Found--</div>
+  </div> -->
+</div>

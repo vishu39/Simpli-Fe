@@ -1,0 +1,169 @@
+.chatsMainCardContainer {
+  width: 100%;
+  overflow: scroll;
+  .chatsMainCard {
+    border: 1px solid lightgrey;
+    display: flex;
+    flex-direction: row;
+    overflow: scroll;
+    width: 100%;
+    height: calc(100vh - 180px);
+    margin-bottom: 0;
+    // display: grid;
+    // grid-template-columns: 400px 500px;
+  }
+}
+
+.chatList {
+  height: 100%;
+  min-width: 400px !important;
+  max-width: 400px;
+  border-right: 1px solid lightgrey;
+  .list_chats {
+    // height: 405px;
+    // height: 365px;
+    height: calc(100vh - 335px);
+    overflow-y: scroll;
+    width: 100%;
+    .chat {
+      width: 100%;
+      cursor: pointer;
+      padding: 0 12px;
+      &:hover {
+        background-color: #f1f3f6e1;
+        // border-radius: 8px;
+      }
+      .border_bottom {
+        border-bottom: 0.5px solid lightgrey;
+        padding: 8px 0;
+      }
+    }
+  }
+}
+
+.chatDetails {
+  height: 100%;
+  flex: 1;
+  min-width: 500px;
+  .detailsContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .detailHeaderContianer {
+      height: 80px;
+      background-color: white;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      gap: 12px;
+      .headerFirstDiv {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+      }
+      .headerSecondDiv {
+        padding-right: 8px;
+      }
+    }
+    .detailMiddleContianer {
+      flex-grow: 1;
+      overflow: auto;
+      padding: 32px;
+      .chatMessages {
+        display: flex;
+        flex-direction: column;
+        .message {
+          min-width: 50%;
+          max-width: 75%;
+        }
+      }
+    }
+    .detailFooterContianer {
+      height: 70px;
+      background-color: lightblue;
+    }
+  }
+}
+
+.searchChats {
+  .searchChatInput {
+    width: 100%;
+    background-color: #e8e9eb;
+    border: 0;
+    border-radius: 10px;
+  }
+}
+
+.no_chats_found {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat_div_full_height_center {
+  height: 365px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatElipsis {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  width: 100%;
+  line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+.chatNameElipsis {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  width: 80%;
+  line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
+.selectedProfile {
+  background-color: #e2e2e4;
+  // border-radius: 8px;
+}
+
+.messageFromMe {
+  background-color: #d9fdd2;
+  align-self: flex-end;
+}
+
+.messageFromOther {
+  background-color: #e9edf7;
+  align-self: flex-start;
+}
+
+.date_label {
+  display: flex;
+  justify-content: center;
+  .badgeDate {
+    padding: 4px 24px;
+    border-radius: 3px;
+    background-color: rgb(235, 247, 235);
+  }
+}
+
+.unreadBadge {
+  padding: 0px 10px;
+  border-radius: 40px;
+  background: #1560bd;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

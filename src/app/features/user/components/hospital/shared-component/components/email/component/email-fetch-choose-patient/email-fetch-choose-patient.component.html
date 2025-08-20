@@ -1,0 +1,166 @@
+<div class="choosePatientGridDiv">
+  <!-- email details div -->
+
+  <div class="formdiv hide-scrollbar">
+    <div
+      style="width: 100%"
+      [ngClass]="!isAiLoading ? 'formdiv hide-scrollbar' : 'hidden'"
+    >
+      <h4 style="margin-bottom: 2rem">
+        Choose patient from the list given below
+      </h4>
+
+      <div class="row d-flex justify-content-center" style="width: 100%">
+        <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Patient</mat-label>
+            <mat-select
+              [formControl]="choosedPatientFormControl"
+              msInfiniteScroll
+              (infiniteScroll)="onInfiniteScrollPatient()"
+            >
+              <input
+                #myInput
+                id="myInput"
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchPatient($event.target.value)"
+              />
+              <div
+                class="other_option"
+                *ngIf="!patientList?.length && !isLoadingPatient"
+              >
+                No results
+              </div>
+              <!-- <mat-option
+                *ngIf="
+                  patientList.indexOf(choosedPatientFormControl?.value) < 0
+                "
+                hidden
+                [value]="choosedPatientFormControl?.value"
+              >
+                {{ choosedPatientFormControl?.value }}</mat-option
+              > -->
+              <mat-option [hidden]="true"></mat-option>
+              <mat-option
+                *ngFor="let item of patientList"
+                [value]="item?._id"
+                (click)="onPatientClick(item)"
+              >
+                {{ item?.name }} - {{ uhidCode }}{{ item?.mhidCode }}
+              </mat-option>
+              <mat-spinner
+                *ngIf="isLoadingPatient"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </mat-select>
+            <mat-error *ngIf="choosedPatientFormControl.hasError('required')">
+              Patient is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div style="width: 100%" class="details mt-3" *ngIf="isPatientSelected">
+        <span
+          class="d-flex justify-content-between align-items-baseline status heading"
+        >
+          <h3>Patient Details</h3>
+        </span>
+
+        <div class="row details-content">
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4 class="wrapped-text">Name</h4>
+            <p style="text-transform: capitalize" class="text">
+              {{ selectedPatient?.name }}
+            </p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4 class="wrapped-text">Email</h4>
+            <p>
+              {{ selectedPatient?.emailId ? selectedPatient?.emailId : "NIL" }}
+            </p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4>Mobile</h4>
+            <p>
+              {{ selectedPatient?.contact ? selectedPatient?.contact : "NIL" }}
+            </p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4>Country</h4>
+            <p>{{ selectedPatient?.country }}</p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4>Gender</h4>
+            <p style="text-transform: capitalize">
+              {{
+                selectedPatient?.gender
+                  ? (selectedPatient?.gender | titlecase)
+                  : "NIL"
+              }}
+            </p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4>Age</h4>
+            <p>
+              {{ selectedPatient?.age ? selectedPatient?.age : "NIL" }}
+              {{ selectedPatient?.ageDuration | titlecase }}
+            </p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4>Treatment</h4>
+            <p>
+              {{
+                selectedPatient?.treatment ? selectedPatient?.treatment : "NIL"
+              }}
+            </p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4>Referral Partner</h4>
+            <p>{{ selectedPatient?.referralPartnerName || "NIL" }}</p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4>Remark</h4>
+            <p>
+              {{ selectedPatient?.remarks ? selectedPatient?.remarks : "NIL" }}
+            </p>
+          </div>
+          <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2">
+            <h4>Passport</h4>
+            <p>
+              {{
+                selectedPatient?.passportNumber
+                  ? selectedPatient?.passportNumber
+                  : "NIL"
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        height: 500px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+      *ngIf="isAiLoading"
+    >
+      AI is fetching details from Email...
+    </div>
+  </div>
+
+  <div class="maildiv hide-scrollbar">
+    <app-email-fetch-common-email
+      [emailData]="emailData"
+    ></app-email-fetch-common-email>
+  </div>
+</div>

@@ -1,0 +1,182 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Customer'"
+        [active_item]="'All Customer'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="dropdown">
+                        <h2>
+                          <strong>Customers</strong>
+                        </h2>
+                      </li>
+                      <li class="dropdown m-l-20">
+                        <label for="search-input"
+                          ><i class="material-icons search-icon"
+                            >search</i
+                          ></label
+                        >
+                        <input
+                          placeholder="Search"
+                          type="text"
+                          (keyup)="search($event.target.value)"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                        />
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-4">
+                    <ul class="header-buttons">
+                      <li>
+                        <div class="m-l-10" matTooltip="ADD">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="addCustomer('Add Customer')"
+                          >
+                            <mat-icon class="col-white">add</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <mat-table #table [dataSource]="customerData" class="mat-cell">
+                <ng-container matColumnDef="customerType">
+                  <mat-header-cell *matHeaderCellDef
+                    >Customer Type</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.customerType | titlecase }}
+                    <mat-icon class="copy_icon" (click)="copyItem(row)"
+                      >content_copy</mat-icon
+                    ></mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row.name | titlecase }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="emailId">
+                  <mat-header-cell *matHeaderCellDef>Email Id</mat-header-cell>
+                  <mat-cell *matCellDef="let row"
+                    ><span class="ellipsis">{{ row.emailId }}</span></mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="role">
+                  <mat-header-cell *matHeaderCellDef>Role</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{
+                      row.role?.roleName ? row.role?.roleName : "NIL"
+                    }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="onPremiseDB">
+                  <mat-header-cell *matHeaderCellDef
+                    >On Premise DB</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.onPremiseDB|| 'false'}}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="credentialPushed">
+                  <mat-header-cell *matHeaderCellDef
+                    >Credential Pushed</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.credentialPushed }}</mat-cell
+                  >
+                </ng-container>
+                <!-- actions -->
+                <ng-container matColumnDef="action">
+                  <mat-header-cell class="pr-0" *matHeaderCellDef
+                    >Action</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row; let i = index" class="pr-0">
+                    <button
+                      mat-icon-button
+                      (click)="editCustomer('Edit Customer', row)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'edit'"
+                        [class]="'tbl-fav-edit'"
+                      ></app-feather-icons>
+                    </button>
+                    <button
+                      mat-icon-button
+                      (click)="deleteRecord(row._id)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'trash-2'"
+                        [class]="'tbl-fav-delete'"
+                      ></app-feather-icons>
+                    </button>
+                    <button
+                      mat-icon-button
+                      [matMenuTriggerFor]="menu"
+                      aria-label="Example icon-button with a menu"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button (click)="pushCredential(row)" mat-menu-item>
+                        <mat-icon>key</mat-icon>
+                        <span>Push</span>
+                      </button>
+                    </mat-menu>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
+                </mat-row>
+              </mat-table>
+
+              <div class="table_loader" *ngIf="isDataLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <div
+                *ngIf="!isDataLoading && customerData.data?.length === 0"
+                class="no-results"
+              >
+                No results
+              </div>
+              <mat-paginator
+                (page)="onPaginateChange($event)"
+                [length]="totalElement"
+                [pageSize]="customerDataDetails.limit"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

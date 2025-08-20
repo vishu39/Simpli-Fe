@@ -1,0 +1,154 @@
+<div id="reply_to_all_fetch_overlay">
+  <div class="topDiv">
+    <app-feather-icons
+      [icon]="'x-circle'"
+      class="close_button"
+      (click)="closeOverlay()"
+    >
+    </app-feather-icons>
+  </div>
+  <div class="mainDiv">
+    <div class="stepperDiv">
+      <mat-stepper [linear]="true" #stepper>
+        <mat-step
+          [stepControl]="choosedPatientFormControl"
+          [completed]="false"
+          [editable]="false"
+        >
+          <ng-template matStepLabel>Step 1</ng-template>
+
+          <div class="actionDiv">
+            <button
+              [disabled]="!choosedPatientFormControl?.valid"
+              mat-raised-button
+              color="primary"
+              (click)="navigateStepperToNext(stepper)"
+            >
+              Next
+            </button>
+          </div>
+
+          <app-email-fetch-choose-patient
+            [choosedPatientFormControl]="choosedPatientFormControl"
+            [choosedPatientIdFormControl]="choosedPatientIdFormControl"
+            [emailData]="emailData"
+          ></app-email-fetch-choose-patient>
+        </mat-step>
+
+        <mat-step [completed]="false" [editable]="false">
+          <ng-template matStepLabel>Step 2</ng-template>
+
+          <div
+            *ngIf="currentStepIndex === 1"
+            class="stepperHeight hide-scrollbar"
+          >
+            <div class="actionDiv mt-1 mb-1">
+              <button
+                mat-raised-button
+                type="button"
+                color="secondary"
+                (click)="navigateStepperToPrevious(stepper)"
+              >
+                Back
+              </button>
+              <button
+                mat-raised-button
+                type="button"
+                color="primary"
+                (click)="navigateStepperToNext(stepper)"
+              >
+                Submit
+              </button>
+            </div>
+
+            <div class="finalStepGrid">
+              <div class="leftFormDiv hide-scrollbar">
+                <!-- <div class="topButtonDiv">
+                  <mat-radio-group
+                    [formControl]="selected"
+                    class="_radio hide-scrollbar"
+                    style="width: 100%"
+                  >
+                    <mat-radio-button
+                      style="margin-right: 10px"
+                      *ngFor="let option of radioGroup"
+                      (click)="formChange(option?.value)"
+                      [value]="option?.value"
+                      >{{ option?.name }}</mat-radio-button
+                    >
+                  </mat-radio-group>
+                </div>
+                <mat-divider></mat-divider> -->
+
+                <ng-container class="topSelect">
+                  <mat-radio-group
+                    [(ngModel)]="selected"
+                    class="_radio hide-scrollbar"
+                    style="width: 100%"
+                  >
+                    <mat-radio-button
+                      style="margin-right: 10px"
+                      *ngFor="let option of radioGroup"
+                      (click)="formChange(option?.value)"
+                      [value]="option?.value"
+                      >{{ option?.name }}</mat-radio-button
+                    >
+                  </mat-radio-group>
+                </ng-container>
+                <hr />
+                <div mat-dialog-content>
+                  <div *ngIf="selected === 'proformaInvoice'">
+                    <app-email-fetch-send-proforma
+                      [patientData]="
+                        emailFetchChoosePatientComponent?.selectedPatient
+                      "
+                      [emailData]="emailData"
+                      [isFormChange]="isFormChange"
+                      [isDialogClosed]="isDialogClosed"
+                    ></app-email-fetch-send-proforma>
+                  </div>
+                  <div *ngIf="selected === 'opd'">
+                    <app-email-fetch-send-opd
+                      [patientData]="
+                        emailFetchChoosePatientComponent?.selectedPatient
+                      "
+                      [emailData]="emailData"
+                      [isFormChange]="isFormChange"
+                      [isDialogClosed]="isDialogClosed"
+                    ></app-email-fetch-send-opd>
+                  </div>
+                  <div *ngIf="selected === 'vil'">
+                    <app-email-fetch-send-vil
+                      [patientData]="
+                        emailFetchChoosePatientComponent?.selectedPatient
+                      "
+                      [emailData]="emailData"
+                      [isFormChange]="isFormChange"
+                      [isDialogClosed]="isDialogClosed"
+                    ></app-email-fetch-send-vil>
+                  </div>
+                  <div *ngIf="selected === 'opinion'">
+                    <app-email-fetch-send-opinion
+                      [patientData]="
+                        emailFetchChoosePatientComponent?.selectedPatient
+                      "
+                      [emailData]="emailData"
+                      [isFormChange]="isFormChange"
+                      [isDialogClosed]="isDialogClosed"
+                    ></app-email-fetch-send-opinion>
+                  </div>
+                </div>
+              </div>
+
+              <div class="maildiv hide-scrollbar">
+                <app-email-fetch-common-email
+                  [emailData]="emailData"
+                ></app-email-fetch-common-email>
+              </div>
+            </div>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </div>
+  </div>
+</div>

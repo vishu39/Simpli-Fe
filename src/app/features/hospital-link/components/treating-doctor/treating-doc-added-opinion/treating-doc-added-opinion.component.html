@@ -1,0 +1,165 @@
+<div class="m-4">
+  <h5 style="margin-bottom: 16px">Opinion Added</h5>
+  <div *ngIf="request?.length">
+    <div class="mb-2" *ngFor="let item of request">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header
+            displayMode="flat"
+            expandedHeight="auto"
+            collapsedHeight="auto"
+            #exPanel
+          >
+            <mat-panel-title>
+              <div class="expansion-header">
+                <div class="d-flex justify-content-between">
+                  <p class="mt-3 mb-3">
+                    <b>{{ item?.hospitalName }}</b>
+                  </p>
+                  <div class="mt-1 mb-3">
+                    <!-- <button
+                        [disabled]="item?.approve"
+                        [matTooltip]="
+                          item?.approve
+                            ? 'Opinion already approved'
+                            : 'Approve Opinion'
+                        "
+                        matTooltipPosition="right"
+                        (click)="
+                          approveOpinion(item, 'default'); !exPanel._toggle()
+                        "
+                        type="button"
+                        class="edit-button"
+                        mat-icon-button
+                      >
+                        <mat-icon>check</mat-icon>
+                      </button> -->
+                    <!-- <button
+                      *ngIf="editFeatureEnabled"
+                      (click)="openEditModal(item); !exPanel._toggle()"
+                      type="button"
+                      class="edit-button"
+                      mat-icon-button
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </button> -->
+                  </div>
+                </div>
+                <div class="header-content hide-scrollbar">
+                  <div class="hide-scrollbar content">
+                    <p>Stay in country</p>
+                    <span
+                      >{{ item?.stayInCountry }}
+                      {{ item?.countryDuration | titlecase }}</span
+                    >
+                  </div>
+                  <div class="hide-scrollbar content">
+                    <p>Stay in hospital</p>
+                    <span
+                      >{{ item?.stayInHospital }}
+                      {{ item?.hospitalDuration | titlecase }}</span
+                    >
+                  </div>
+                  <div class="hide-scrollbar content">
+                    <p>Initial Evaluation</p>
+                    <span
+                      >{{ item?.initialEvaluationMinimum }} -
+                      {{ item?.initialEvaluationMaximum }}
+                      {{ item?.currency?.code || "USD" }}</span
+                    >
+                  </div>
+                  <div class="hide-scrollbar diagnosis">
+                    <p>Diagnosis</p>
+                    <span>{{ item?.diagnosis }}</span>
+                  </div>
+                </div>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="p-3 expansion-wrapper">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Doctor Name</b></div>
+                <div>{{ item?.doctorName }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Hospital City</b></div>
+                <div>{{ item?.hospitalCity }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Treatment Plan</b></div>
+                <div>{{ item?.treatmentPlan }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Currency</b></div>
+                <div>
+                  {{ !!item?.currency?.code ? item?.currency?.code : "NIL" }}
+                  -
+                  {{ !!item?.currency?.name ? item?.currency?.name : "NIL" }}
+                </div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Created At</b></div>
+                <div>{{ item?.createdAt | date : "medium" }}</div>
+              </div>
+            </div>
+            <div>
+              <div><b>Remarks</b></div>
+              <div>{{ item?.remarks || "NIL" }}</div>
+            </div>
+          </div>
+
+          <!-- for treatment -->
+          <div
+            *ngIf="item?.treatment?.length"
+            class="p-3 mt-3 expansion-wrapper"
+          >
+            <h5>Treatment Details</h5>
+            <div *ngFor="let treatment of item?.treatment; let i = index">
+              <div class="mt-4">
+                <p>
+                  <b>Treatment {{ i + 1 }}</b>
+                </p>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Name</b></div>
+                    <div>{{ treatment?.name || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Room</b></div>
+                    <div>{{ treatment?.room || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Min Cost</b></div>
+                    <div>
+                      {{ treatment?.minCost }}
+                      {{ item?.currency?.code || "USD" }}
+                    </div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Max Cost</b></div>
+                    <div>
+                      {{ treatment?.maxCost }}
+                      {{ item?.currency?.code || "USD" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <div class="" *ngIf="isDataLoading">
+    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+  </div>
+
+  <div class="card m-4 p-3" *ngIf="!isDataLoading && !request?.length">
+    <div style="text-align: center">--No Data Found--</div>
+  </div>
+</div>

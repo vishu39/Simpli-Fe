@@ -1,0 +1,78 @@
+.persionDiv {
+  display: flex;
+  box-shadow: 3px 0 5px 0px rgba(0, 0, 0, 0.368);
+  margin: 8px 24px 8px 0;
+  // overflow-x: scroll;
+  // overflow-y: hidden;
+  .persionLeft {
+    width: 310px;
+    .permissionLeftHeader {
+      box-shadow: 3px 0 5px 0px rgba(0, 0, 0, 0.494);
+      // border-top: 1px solid white;
+      border-bottom: 1px solid white;
+      // border-right: 1px solid white;
+      // border-left: 1px solid white;
+      padding-left: 8px;
+      padding: 4px;
+      background-color: #1560bd;
+      color: white;
+      // border-top-left-radius: 10px;
+      // border-bottom-left-radius: 10px;
+    }
+    .permissionLeftContent {
+      box-shadow: 3px 0 5px 0px rgba(0, 0, 0, 0.3);
+      // padding-left: 8px;
+      // padding-right: 8px;
+      padding: 8px;
+      border-bottom: 1px solid lightgrey;
+      // border-right: 1px solid black;
+      // border-left: 1px solid black;
+      background-color: #1560bd;
+      color: white;
+    }
+  }
+  .persionRight {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+}
+
+.roleList {
+  flex-direction: column;
+  display: flex;
+  min-width: 250px;
+  border-bottom: 1px solid lightgrey;
+
+  .roleHeader {
+    padding: 4px;
+    text-align: center;
+    // border-top: 1px solid white;
+    border-bottom: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    // background-color: #da012d;
+    // color: white;
+  }
+  .roleContent {
+    padding: 8px;
+    border-right: 1px solid lightgrey;
+    &:nth-child(odd) {
+      background: #eceaea;
+    }
+    .role {
+      text-align: center;
+    }
+  }
+}
+
+.textElipsis {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  width: 99%;
+  line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}

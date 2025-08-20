@@ -1,0 +1,215 @@
+<nav #navbar class="navbar active">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a
+        href="#"
+        onClick="return false;"
+        class="navbar-toggle collapsed"
+        (click)="isNavbarCollapsed = !isNavbarCollapsed"
+        aria-expanded="false"
+      ></a>
+      <a
+        href="#"
+        onClick="return false;"
+        class="bars"
+        (click)="mobileMenuSidebarOpen($event, 'overlay-open')"
+      ></a>
+    </div>
+    <div class="collapse navbar-collapse" [ngbCollapse]="isNavbarCollapsed">
+      <ul class="float-start collapse-menu-icon">
+        <li>
+          <button
+            mat-icon-button
+            (click)="callSidemenuCollapse()"
+            class="sidemenu-collapse"
+          >
+            <i class="material-icons-outlined icon-color"> menu </i>
+          </button>
+        </li>
+      </ul>
+      <ul
+        class="nav navbar-nav navbar-right"
+        style="display: flex; flex-direction: row"
+      >
+        <!-- message communication -->
+
+        <div
+          class="defalutMessageSelection"
+          style="width: 250px; margin-right: 10px"
+          *ngIf="messageCommunicationShowArray?.includes(tokenData.userType)"
+        >
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Communication Message Id</mat-label>
+            <mat-select
+              [formControl]="choosedDefaultCommunicationMessageControl"
+              (selectionChange)="onDefalutMessageSelectionChange($event)"
+            >
+              <mat-option
+                *ngFor="let item of messageSettingByUserData"
+                [value]="item?.messageId"
+                >{{ item?.messageId }} - {{ item?.type }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- select -->
+        <div
+          class="defalutEmailSelection"
+          style="width: 250px"
+          *ngIf="emailCommunicationShowArray?.includes(tokenData.userType)"
+        >
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Communication Email</mat-label>
+            <mat-select
+              [formControl]="choosedDefaultCommunicationEmailControl"
+              (selectionChange)="onDefalutEmailSelectionChange($event)"
+            >
+              <mat-option
+                *ngFor="let item of emailSettingByUserData"
+                [value]="item?.emailId"
+                >{{ item?.emailId }} - {{ item?.type }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <!-- Notification Button -->
+        <li class="bell" notificationDropdown>
+          <mat-menu class="my-class" #notificationDropdown="matMenu">
+            <div class="notificationHeader">
+              <div>Notifications</div>
+            </div>
+            <ng-template matMenuContent>
+              <div
+                *ngIf="chatArray?.length"
+                class="message_container"
+                infiniteScroll
+                [infiniteScrollUpDistance]="0.5"
+                [scrollWindow]="false"
+                (scrolled)="onInfiniteScrollComment()"
+              >
+                <div *ngFor="let item of chatArray">
+                  <div
+                    (click)="openCommentModal(item)"
+                    [ngClass]="
+                      isCommentRead(item?.mention)
+                        ? 'message'
+                        : 'message isRead'
+                    "
+                  >
+                    <div class="initials">
+                      {{ item?.patient?.name | slice : 0 : 2 | uppercase }}
+                    </div>
+                    <div>
+                      <p class="mb-1">{{ item?.patient?.name | titlecase }}</p>
+                      <p class="mb-1" style="font-size: 12px">
+                        {{ item?.message }}
+                      </p>
+                      <p class="mt-0 mb-0 time">
+                        <mat-icon class="time_icon">query_builder</mat-icon>
+                        {{ item?.createdAt | timeago : live }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <mat-spinner
+                  *ngIf="isCommentLoading"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                ></mat-spinner>
+              </div>
+
+              <div
+                *ngIf="isCommentLoading && !chatArray?.length"
+                class="loader_center"
+              >
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <div
+                class="not_found"
+                *ngIf="!isCommentLoading && !chatArray?.length"
+              >
+                --No Comment Found--
+              </div>
+            </ng-template>
+          </mat-menu>
+          <button
+            *ngIf="!isSupreme && tokenData.userType !== 'treating doctor'"
+            [matBadge]="totalUnreadComments || 0"
+            matBadgeSize="small"
+            [matMenuTriggerFor]="notificationDropdown"
+            mat-icon-button
+            class="nav-notification-icons"
+          >
+            <mat-icon class="material-icons-outlined"
+              >notifications_active</mat-icon
+            >
+          </button>
+        </li>
+        <!-- Full Screen Button -->
+        <li class="fullscreen">
+          <button
+            mat-icon-button
+            (click)="callFullscreen()"
+            class="nav-notification-icons"
+          >
+            <i class="material-icons-outlined icon-color"> fullscreen </i>
+          </button>
+        </li>
+        <!-- #END# Full Screen Button -->
+        <li class="nav-item user_profile" ngbDropdown>
+          <div
+            class="chip dropdown-toggle"
+            ngbDropdownToggle
+            class="nav-notification-icons pt-0"
+          >
+            <mat-spinner
+              *ngIf="isLoading"
+              class="mx-auto mb-2 mt-2"
+              [diameter]="30"
+            >
+            </mat-spinner>
+            <img
+              *ngIf="!isLoading"
+              [src]="
+                accountDetailsData?.brandLogoSymbol?.signedUrl
+                  ? accountDetailsData?.brandLogoSymbol?.signedUrl
+                  : 'assets/images/logo.png'
+              "
+              class="user_img"
+              width="32"
+              height="32"
+              alt="User"
+            />
+          </div>
+          <div ngbDropdownMenu class="notification-dropdown pullDown">
+            <div
+              class="noti-list"
+              style="position: relative; max-width: 600px; max-height: 300px"
+              [perfectScrollbar]
+            >
+              <ul class="menu">
+                <li class="body">
+                  <ul class="user_dw_menu">
+                    <li>
+                      <a href="javascript:void(0);" (click)="logout()">
+                        <app-feather-icons
+                          [icon]="'log-out'"
+                          [class]="'user-menu-icons'"
+                        ></app-feather-icons
+                        >Logout
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <!-- #END# Tasks -->
+      </ul>
+    </div>
+  </div>
+</nav>
