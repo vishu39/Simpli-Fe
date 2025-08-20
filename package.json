@@ -127,6 +127,5 @@
   "overrides": {
     "autoprefixer": "10.4.5",
     "stylus": "0.0.1-security"
-    }
+  }
 }
-
