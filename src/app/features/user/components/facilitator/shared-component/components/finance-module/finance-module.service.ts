@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 @Injectable({
   providedIn: "root",
 })
-export class OperationEntriesService {
+export class FinanceModuleService {
   constructor() {}
   tabs: any[] = [
     { name: "Medical History" },
@@ -15,6 +15,8 @@ export class OperationEntriesService {
     { name: "Admission/Discharge Tracker" },
     { name: "Final Bills" },
   ];
+
+  tabsForMasterData: any[] = [{ name: "Medical History" }, { name: "Reports" }];
 
   queryButtons: any[] = [
     {
@@ -46,6 +48,33 @@ export class OperationEntriesService {
       icon: "add",
       color: "#1560bd",
       tooltip: "Add Hospital UHID",
+    },
+  ];
+
+  buttonsForMasterData: any[] = [
+    {
+      name: "Add Company Master",
+      icon: "add",
+      color: "green",
+      tooltip: "Add Company Master",
+    },
+    {
+      name: "Add Hospital Master Payout",
+      icon: "add",
+      color: "#DA012D",
+      tooltip: "Add Hospital Master Payout",
+    },
+    {
+      name: "Add Partner Master Payout",
+      icon: "add",
+      color: "#1560bd",
+      tooltip: "Add Partner Master Payout",
+    },
+    {
+      name: "Add Sales Incentive Master",
+      icon: "add",
+      color: "orange",
+      tooltip: "Add Sales Incentive Master",
     },
   ];
 }

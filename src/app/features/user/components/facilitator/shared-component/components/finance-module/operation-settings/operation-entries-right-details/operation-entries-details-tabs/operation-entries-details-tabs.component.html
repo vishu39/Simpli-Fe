@@ -1,0 +1,92 @@
+<div class="tab-wrapper">
+  <div [ngSwitch]="currentTab">
+    <!-- Medical history -->
+    <div *ngSwitchCase="'Medical History'">
+      <div class="mh-wrapper">
+        <div class="mh-content">
+          <p class="mb-0">
+            {{ queryData?.medicalHistory ? queryData?.medicalHistory : "NIL" }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Reports -->
+    <div *ngSwitchCase="'Reports'">
+      <div *ngIf="queryData?.report?.length" class="m-4">
+        <app-global-image-preview
+          [fileList]="queryData?.report"
+          [filePreviewList]="queryData?.report"
+          [type]="'fileUploaded'"
+          [remove]="false"
+        ></app-global-image-preview>
+      </div>
+      <div
+        *ngIf="!queryData?.report?.length"
+        class="mt-4"
+        style="text-align: center"
+      >
+        --No Data Found--
+      </div>
+    </div>
+
+    <!-- Opd request -->
+    <div *ngSwitchCase="'UHIDS'">
+      <table border="1" class="mt-4 uhidTable">
+        <thead>
+          <tr>
+            <th>Hospital Name</th>
+            <th>UHID</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of uhidArray">
+          <tr>
+            <td>{{ item?.hospitalName }}</td>
+            <td>{{ item?.uhid }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngSwitchCase="'Amounts'">
+      <table border="1" class="mt-4 uhidTable">
+        <thead>
+          <tr>
+            <th>Hospital Name</th>
+            <th>Currency</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of amountArray">
+            <td>{{ item?.hospitalName }}</td>
+            <td>{{ item?.currency?.code }}</td>
+            <td>{{ item?.amount }}</td>
+          </tr>
+
+          <tr>
+            <td colspan="2"><b>Total Amount</b></td>
+            <td>
+              <b>{{ getTotalAmount(amountArray) }}</b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngSwitchCase="'Doc Bills'">
+      <global-shared-finance-billing-view-doc-bills></global-shared-finance-billing-view-doc-bills>
+    </div>
+
+    <div *ngSwitchCase="'Estimate Bills'">
+      <global-shared-finance-billing-view-estimate-bills></global-shared-finance-billing-view-estimate-bills>
+    </div>
+
+    <div *ngSwitchCase="'Admission/Discharge Tracker'">
+      <global-shared-finance-billing-view-admission-tracker-details></global-shared-finance-billing-view-admission-tracker-details>
+    </div>
+
+    <div *ngSwitchCase="'Final Bills'">
+      <global-shared-finance-billing-view-final-bills></global-shared-finance-billing-view-final-bills>
+    </div>
+  </div>
+</div>

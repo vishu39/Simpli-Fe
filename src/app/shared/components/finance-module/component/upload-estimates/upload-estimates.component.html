@@ -42,7 +42,7 @@
     </div>
     <div class="row">
       <div
-        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2"
         *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
       >
         <mat-form-field class="example-full-width" appearance="outline">
@@ -65,7 +65,7 @@
       </div>
 
       <div
-        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2"
         *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
       >
         <mat-form-field class="example-full-width" appearance="outline">
@@ -87,37 +87,7 @@
       </div>
 
       <div
-        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
-        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
-      >
-        <mat-form-field class="example-full-width" appearance="outline">
-          <mat-label>Package Name</mat-label>
-          <input matInput type="text" formControlName="packageName" />
-        </mat-form-field>
-      </div>
-
-      <div
-        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
-        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
-      >
-        <mat-form-field class="example-full-width" appearance="outline">
-          <mat-label>Room Category</mat-label>
-          <input matInput type="text" formControlName="roomCategory" />
-        </mat-form-field>
-      </div>
-
-      <div
-        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
-        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
-      >
-        <mat-form-field class="example-full-width" appearance="outline">
-          <mat-label>Room Price</mat-label>
-          <input matInput type="text" formControlName="roomPrice" />
-        </mat-form-field>
-      </div>
-
-      <div
-        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2"
         *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
       >
         <mat-form-field class="example-full-width" appearance="outline">
@@ -139,6 +109,73 @@
         </mat-form-field>
       </div>
 
+      <!-- <div
+      class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+      *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+    >
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Package Name</mat-label>
+        <input matInput type="text" formControlName="packageName" />
+      </mat-form-field>
+    </div>
+
+      <div
+        class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Room Category</mat-label>
+          <input matInput type="text" formControlName="roomCategory" />
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Room Price</mat-label>
+          <input matInput type="number" formControlName="roomPrice" />
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2"
+        *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Select Currency</mat-label>
+          <mat-select
+            formControlName="currency"
+            [compareWith]="compareCurrencyObjects"
+          >
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchCurrency($event.target.value)"
+            />
+            <div class="other_option" *ngIf="!currencyArray?.length">
+              No results
+            </div>
+
+            <mat-option
+              (click)="onClickCurrency(currency)"
+              *ngFor="let currency of currencyArray"
+              [value]="currency"
+            >
+              {{ currency?.code }} - {{ currency?.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="formGroup.controls['currency'].hasError('required')"
+          >
+            Select Currency is required
+          </mat-error>
+        </mat-form-field>
+      </div> -->
+
       <!-- if estimates is no -->
       <div
         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2"
@@ -151,6 +188,112 @@
             Comment is required
           </mat-error>
         </mat-form-field>
+      </div>
+    </div>
+
+    <div *ngIf="formGroup?.get('estimateGiven')?.value === 'yes'">
+      <div>
+        <button
+          mat-button
+          type="button"
+          style="background-color: #1560bd; color: #fff; margin-bottom: 12px"
+          (click)="addPackage()"
+        >
+          +Add Package
+        </button>
+      </div>
+      <div *ngIf="getPackageArray?.value?.length">
+        <div formArrayName="packageArray">
+          <div
+            class="card p-3"
+            *ngFor="let package of getPackageArray.controls; let i = index"
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <h4>Package {{ i + 1 }}</h4>
+              <mat-icon
+                style="cursor: pointer; color: red"
+                (click)="deletePackage(i)"
+                >delete_forever</mat-icon
+              >
+            </div>
+            <div class="row" [formGroupName]="i">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Package Name</mat-label>
+                  <input matInput type="text" formControlName="packageName" />
+                </mat-form-field>
+              </div>
+
+              <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Room Category</mat-label>
+                  <input matInput type="text" formControlName="roomCategory" />
+
+                  <mat-error
+                    *ngIf="
+                      package?.controls['roomCategory'].hasError('required')
+                    "
+                  >
+                    Package Category is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Room Price</mat-label>
+                  <input matInput type="number" formControlName="roomPrice" />
+
+                  <mat-error
+                    *ngIf="package?.controls['roomPrice'].hasError('required')"
+                  >
+                    Package Price is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Select Currency</mat-label>
+                  <mat-select
+                    formControlName="currency"
+                    [compareWith]="compareCurrencyObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchCurrency($event.target.value)"
+                    />
+                    <div class="other_option" *ngIf="!currencyArray?.length">
+                      No results
+                    </div>
+
+                    <mat-option
+                      (click)="onClickCurrency(currency)"
+                      *ngFor="let currency of currencyArray"
+                      [value]="currency"
+                    >
+                      {{ currency?.code }} - {{ currency?.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="package.controls['currency'].hasError('required')"
+                  >
+                    Select Currency is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

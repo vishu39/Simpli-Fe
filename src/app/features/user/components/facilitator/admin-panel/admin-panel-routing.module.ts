@@ -30,6 +30,13 @@ const routes: Routes = [
         (m) => m.AccountModule
       ),
   },
+  {
+    path: "finance",
+    loadChildren: () =>
+      import("./components/finance-module/finance-module.module").then(
+        (m) => m.FinanceModuleModule
+      ),
+  },
   { path: "internal-user", component: InternalUserComponent },
   { path: "query-management", component: QueryManagementComponent },
   { path: "patient", component: PatientComponent },

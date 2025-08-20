@@ -2,7 +2,7 @@ import { Component, Inject, Input, OnInit, SimpleChanges } from "@angular/core";
 import { DialogFormConfig } from "src/app/smvt-framework/interfaces/sm-framework-defaults";
 import { CommonService } from "src/app/smvt-framework/services/common.service";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FinanceModuleService } from "../../finance-module.service";
+import { FinanceModuleService } from "../../../finance-module.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
 
 @Component({

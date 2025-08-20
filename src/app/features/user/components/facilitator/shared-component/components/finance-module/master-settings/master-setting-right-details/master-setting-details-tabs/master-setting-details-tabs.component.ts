@@ -1,16 +1,16 @@
 import { Component, Inject, Input, OnInit, SimpleChanges } from "@angular/core";
-import { DialogFormConfig } from "src/app/smvt-framework/interfaces/sm-framework-defaults";
+import { FinanceModuleService } from "../../../finance-module.service";
 import { CommonService } from "src/app/smvt-framework/services/common.service";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FinanceModuleService } from "../../finance-module.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
+import { DialogFormConfig } from "src/app/smvt-framework/interfaces/sm-framework-defaults";
 
 @Component({
-  selector: "app-operation-entries-details-tabs",
-  templateUrl: "./operation-entries-details-tabs.component.html",
-  styleUrls: ["./operation-entries-details-tabs.component.scss"],
+  selector: "app-master-setting-details-tabs",
+  templateUrl: "./master-setting-details-tabs.component.html",
+  styleUrls: ["./master-setting-details-tabs.component.scss"],
 })
-export class OperationEntriesDetailsTabsComponent implements OnInit {
+export class MasterSettingDetailsTabsComponent implements OnInit {
   @Input() queryData: any;
   tabs: any[];
   queryButtons: any[] = this.financeModuleService.queryButtons;
@@ -79,7 +79,7 @@ export class OperationEntriesDetailsTabsComponent implements OnInit {
     private svc: CommonService,
     private financeModuleService: FinanceModuleService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public matRef: MatDialogRef<OperationEntriesDetailsTabsComponent>,
+    public matRef: MatDialogRef<MasterSettingDetailsTabsComponent>,
     private sharedService: SharedService
   ) {}
 

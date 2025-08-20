@@ -184,8 +184,9 @@ import { DashboardRevampComponent } from "./components/dashboard-revamp/dashboar
 import { DashboardRevampFilterModalComponent } from "./components/dashboard-revamp/component/dashboard-revamp-filter-modal/dashboard-revamp-filter-modal.component";
 import { DashboardRevampDownloadModalComponent } from "./components/dashboard-revamp/component/dashboard-revamp-download-modal/dashboard-revamp-download-modal.component";
 import { OperationEntriesComponent } from "./components/finance-module/operation-entries/operation-entries.component";
-import { OperationEntriesRightDetailsComponent } from './components/finance-module/operation-entries-right-details/operation-entries-right-details.component';
-import { OperationEntriesDetailsTabsComponent } from './components/finance-module/operation-entries-right-details/operation-entries-details-tabs/operation-entries-details-tabs.component';
+import { OperationEntriesRightDetailsComponent } from "./components/finance-module/operation-entries-right-details/operation-entries-right-details.component";
+import { OperationEntriesDetailsTabsComponent } from "./components/finance-module/operation-entries-right-details/operation-entries-details-tabs/operation-entries-details-tabs.component";
+import { MasterDataEntriesComponent } from "./components/finance-module/master-data-entries/master-data-entries.component";
 
 @NgModule({
   declarations: [
@@ -370,6 +371,7 @@ import { OperationEntriesDetailsTabsComponent } from './components/finance-modul
     OperationEntriesComponent,
     OperationEntriesRightDetailsComponent,
     OperationEntriesDetailsTabsComponent,
+    MasterDataEntriesComponent,
   ],
   imports: [
     CommonModule,
@@ -435,6 +437,7 @@ import { OperationEntriesDetailsTabsComponent } from './components/finance-modul
     UserPermissionRevampComponent,
     DashboardRevampComponent,
     OperationEntriesComponent,
+    MasterDataEntriesComponent,
   ],
   providers: [FormGroupDirective],
 })

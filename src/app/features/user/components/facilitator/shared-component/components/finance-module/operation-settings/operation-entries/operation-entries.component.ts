@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { hospitalAdminUserType } from "src/app/core/models/role";
-import { HospitalService } from "src/app/core/service/hospital/hospital.service";
+import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
 import { AddHospitalUhidComponent } from "src/app/shared/components/finance-module/component/add-hospital-uhid/add-hospital-uhid.component";
 import { AdmissionDischargeTrackerComponent } from "src/app/shared/components/finance-module/component/admission-discharge-tracker/admission-discharge-tracker.component";
@@ -47,7 +46,7 @@ export class OperationEntriesComponent implements OnInit {
   arrow: string;
   constructor(
     public svc: CommonService,
-    private hospitalService: HospitalService,
+    private facilitatorService: FacilitatorService,
     private dialog: MatDialog,
     private sharedService: SharedService,
     private fb: FormBuilder
@@ -266,7 +265,7 @@ export class OperationEntriesComponent implements OnInit {
     }
     this.isLoadingPatient = true;
 
-    this.hospitalService.getAllPatient(this.patientParams).subscribe(
+    this.facilitatorService.getAllPatient(this.patientParams).subscribe(
       (res: any) => {
         this.totalElement = res?.data?.totalElement;
         this.patientList.push(...res.data.content);
@@ -288,9 +287,11 @@ export class OperationEntriesComponent implements OnInit {
     );
   }
   getAccountDetailsAttribute() {
-    this.hospitalService.getAccountDetailsAttribute().subscribe((res: any) => {
-      this.uhidCode = res?.data?.uhidCode;
-    });
+    this.facilitatorService
+      .getAccountDetailsAttribute()
+      .subscribe((res: any) => {
+        this.uhidCode = res?.data?.uhidCode;
+      });
   }
   onInfiniteScrollPatient(): void {
     if (this.patientList.length < this.totalElement) {
@@ -313,7 +314,7 @@ export class OperationEntriesComponent implements OnInit {
     if (data?._id || data?.id !== this.selectedQueryId) {
       this.selectedQueryId = data?.id || data?._id;
       this.queryLoading = true;
-      this.hospitalService.getPatient(data?.id || data?._id).subscribe(
+      this.facilitatorService.getPatient(data?.id || data?._id).subscribe(
         (res: any) => {
           this.queryData = res?.data;
           this.sharedService.queryDetailSubject.next(res?.data);

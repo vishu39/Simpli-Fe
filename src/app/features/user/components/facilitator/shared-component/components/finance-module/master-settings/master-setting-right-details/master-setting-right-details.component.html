@@ -1,0 +1,172 @@
+<div class="query">
+  <div class="header">
+    <h1
+      class="title wrapped-text"
+      [matTooltip]="queryData?.name"
+      matTooltipPosition="left"
+      style="text-transform: capitalize"
+    >
+      {{ queryData?.name }}
+    </h1>
+    <div class="desktop-header-buttons" *ngIf="windowWidth >= 768">
+      <ng-container *ngFor="let prop of queryButtons">
+        <button
+          (click)="btnHandler($event, prop, null)"
+          mat-mini-fab
+          [ngStyle]="{
+            'background-color': prop.color,
+            color: '#fff'
+          }"
+          class="hover-expand-btn"
+        >
+          <span class="icon-wrapper">
+            <mat-icon class="btn-icon icons">{{ prop.icon }}</mat-icon>
+          </span>
+
+          <span class="btn-label">{{ prop.name }}</span>
+        </button>
+      </ng-container>
+    </div>
+    <div class="mobile" *ngIf="windowWidth < 768">
+      <div class="mobile-header-buttons">
+        <button mat-mini-fab [matMenuTriggerFor]="menu" color="default">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button
+            *ngFor="let prop of queryButtons"
+            [matTooltip]="prop.tooltip"
+            (click)="btnHandler($event, prop, null)"
+            mat-flat-button
+          >
+            {{ prop.name }}
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- details -->
+  <div class="details mt-3">
+    <span
+      class="d-flex justify-content-between align-items-baseline status heading"
+    >
+      <h3>Patient Details</h3>
+      <button mat-icon-button (click)="changeExpansionMode('isDetails')">
+        <i
+          [class]="
+            openedExpansion === 'isDetails'
+              ? 'fas fa-chevron-up'
+              : 'fas fa-chevron-down'
+          "
+        ></i>
+      </button>
+    </span>
+
+    <div *ngIf="openedExpansion === 'isDetails'">
+      <div class="details-content">
+        <div>
+          <h4 class="wrapped-text">Name</h4>
+          <p style="text-transform: capitalize" class="text">
+            {{ queryData?.name }}
+          </p>
+        </div>
+        <div>
+          <h4 class="wrapped-text">Email</h4>
+          <p>{{ queryData?.emailId ? queryData?.emailId : "NIL" }}</p>
+        </div>
+        <div>
+          <h4>Mobile</h4>
+          <p>{{ queryData?.contact ? queryData?.contact : "NIL" }}</p>
+        </div>
+        <div>
+          <h4>Country</h4>
+          <p>{{ queryData?.country }}</p>
+        </div>
+        <div>
+          <h4>Gender</h4>
+          <p style="text-transform: capitalize">
+            {{ queryData.gender ? (queryData.gender | titlecase) : "NIL" }}
+          </p>
+        </div>
+        <div>
+          <h4>Age</h4>
+          <p>
+            {{ queryData.age ? queryData.age : "NIL" }}
+            {{ queryData.ageDuration | titlecase }}
+          </p>
+        </div>
+        <div>
+          <h4>Treatment</h4>
+          <p>{{ queryData?.treatment ? queryData?.treatment : "NIL" }}</p>
+        </div>
+        <div *ngIf="decodedToken?.userType !== treatingDoctorUserType">
+          <h4>Referral Partner</h4>
+          <p>{{ queryData?.referralPartnerName || "NIL" }}</p>
+        </div>
+        <div>
+          <h4>Remark</h4>
+          <p>{{ queryData?.remarks ? queryData?.remarks : "NIL" }}</p>
+        </div>
+        <div>
+          <h4>Passport</h4>
+          <p>
+            {{ queryData?.passportNumber ? queryData?.passportNumber : "NIL" }}
+          </p>
+        </div>
+        <!-- <div>
+          <h4>UHID</h4>
+          <p *ngFor="let item of uhidArray" class="mb-1">
+            {{ item?.hospitalName }} - {{ item?.uhid }}
+          </p>
+        </div>
+        <div>
+          <h4>Amounts</h4>
+          <p class="mb-1">100 USD + 400 EUR + 1000 INR + 2000 INR</p>
+          <hr />
+          <p><b>Total:- </b>3500</p>
+        </div> -->
+      </div>
+
+      <!-- <div style="padding: 0 14px; margin-top: 14px">
+        <h4 style="font-size: 14px !important">Potential Treatment</h4>
+        <span
+          (click)="onClickPotentialTreatment()"
+          style="cursor: pointer; text-decoration: underline; color: #0d6efd"
+          >Find</span
+        >
+      </div> -->
+    </div>
+  </div>
+
+  <!-- tabs -->
+  <div class="other-details mt-3" style="height: auto">
+    <span
+      class="d-flex justify-content-between align-items-baseline status heading"
+    >
+      <h3>Other Details</h3>
+      <button mat-icon-button (click)="changeExpansionMode('isTabs')">
+        <i
+          [class]="
+            openedExpansion === 'isTabs'
+              ? 'fas fa-chevron-up'
+              : 'fas fa-chevron-down'
+          "
+        ></i>
+      </button>
+    </span>
+    <div class="other-details-content" *ngIf="openedExpansion === 'isTabs'">
+      <mat-tab-group>
+        <mat-tab *ngFor="let item of tabs" [label]="item?.name">
+          <ng-template matTabContent>
+            <app-operation-entries-details-tabs
+              [tabName]="item?.name"
+              [queryData]="queryData"
+            ></app-operation-entries-details-tabs>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+      <app-operation-entries-details-tabs></app-operation-entries-details-tabs>
+    </div>
+  </div>
+</div>

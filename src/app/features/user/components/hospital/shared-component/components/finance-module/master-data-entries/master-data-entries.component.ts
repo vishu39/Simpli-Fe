@@ -1,23 +1,17 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { hospitalAdminUserType } from "src/app/core/models/role";
 import { HospitalService } from "src/app/core/service/hospital/hospital.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
-import { AddHospitalUhidComponent } from "src/app/shared/components/finance-module/component/add-hospital-uhid/add-hospital-uhid.component";
-import { AdmissionDischargeTrackerComponent } from "src/app/shared/components/finance-module/component/admission-discharge-tracker/admission-discharge-tracker.component";
-import { UploadBillingDocComponent } from "src/app/shared/components/finance-module/component/upload-billing-doc/upload-billing-doc.component";
-import { UploadEstimatesComponent } from "src/app/shared/components/finance-module/component/upload-estimates/upload-estimates.component";
-import { UploadFinalBillComponent } from "src/app/shared/components/finance-module/component/upload-final-bill/upload-final-bill.component";
 import { SMToolBar } from "src/app/smvt-framework/interfaces/sm-framework-defaults";
 import { CommonService } from "src/app/smvt-framework/services/common.service";
 
 @Component({
-  selector: "shared-operation-entries",
-  templateUrl: "./operation-entries.component.html",
-  styleUrls: ["./operation-entries.component.scss"],
+  selector: "shared-master-data-entries",
+  templateUrl: "./master-data-entries.component.html",
+  styleUrls: ["./master-data-entries.component.scss"],
 })
-export class OperationEntriesComponent implements OnInit {
+export class MasterDataEntriesComponent implements OnInit {
   patientList: any = [];
   totalElement: number;
   patientParams = {
@@ -163,94 +157,89 @@ export class OperationEntriesComponent implements OnInit {
   }
 
   addHospitalUhid() {
-    const dialogRef = this.dialog.open(AddHospitalUhidComponent, {
-      width: "50%",
-      disableClose: true,
-      autoFocus: false,
-    });
-    dialogRef.componentInstance.dialogTitle = "Add Hospital UHID";
-    dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.addHospitalUHIDForm;
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.apiCall == true) {
-        console.log(this.addHospitalUHIDForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
-      }
-    });
+    // const dialogRef = this.dialog.open(AddHospitalUhidComponent, {
+    //   width: "50%",
+    //   disableClose: true,
+    //   autoFocus: false,
+    // });
+    // dialogRef.componentInstance.dialogTitle = "Add Hospital UHID";
+    // dialogRef.componentInstance.patientData = this.queryData;
+    // dialogRef.componentInstance.formGroup = this.addHospitalUHIDForm;
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result?.apiCall == true) {
+    //     console.log(this.addHospitalUHIDForm.getRawValue());
+    //     // this.selectedQuery(this.queryData, "assignedDialogClosed");
+    //   }
+    // });
   }
 
   admissionDischargeTracker() {
-    const dialogRef = this.dialog.open(AdmissionDischargeTrackerComponent, {
-      width: "80%",
-      disableClose: true,
-      autoFocus: false,
-    });
-    dialogRef.componentInstance.dialogTitle = "Admission / Discharge Tracker";
-    dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.admissionDischargeTrackerForm;
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.apiCall == true) {
-        console.log("fileList", result?.fileList);
-        console.log(this.admissionDischargeTrackerForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
-      }
-    });
+    // const dialogRef = this.dialog.open(AdmissionDischargeTrackerComponent, {
+    //   width: "80%",
+    //   disableClose: true,
+    //   autoFocus: false,
+    // });
+    // dialogRef.componentInstance.dialogTitle = "Admission / Discharge Tracker";
+    // dialogRef.componentInstance.patientData = this.queryData;
+    // dialogRef.componentInstance.formGroup = this.admissionDischargeTrackerForm;
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result?.apiCall == true) {
+    //     console.log("fileList", result?.fileList);
+    //     console.log(this.admissionDischargeTrackerForm.getRawValue());
+    //     // this.selectedQuery(this.queryData, "assignedDialogClosed");
+    //   }
+    // });
   }
 
   uploadBillDoc() {
-    const dialogRef = this.dialog.open(UploadBillingDocComponent, {
-      width: "80%",
-      disableClose: true,
-      autoFocus: false,
-    });
-    dialogRef.componentInstance.dialogTitle = "Upload Billing Doc";
-    dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.billingDocForm;
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.apiCall == true) {
-        console.log(this.billingDocForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
-      }
-    });
+    // const dialogRef = this.dialog.open(UploadBillingDocComponent, {
+    //   width: "80%",
+    //   disableClose: true,
+    //   autoFocus: false,
+    // });
+    // dialogRef.componentInstance.dialogTitle = "Upload Billing Doc";
+    // dialogRef.componentInstance.patientData = this.queryData;
+    // dialogRef.componentInstance.formGroup = this.billingDocForm;
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result?.apiCall == true) {
+    //     console.log(this.billingDocForm.getRawValue());
+    //     // this.selectedQuery(this.queryData, "assignedDialogClosed");
+    //   }
+    // });
   }
 
   uploadEstimates() {
-    const dialogRef = this.dialog.open(UploadEstimatesComponent, {
-      width: "80%",
-      disableClose: true,
-      autoFocus: false,
-    });
-    dialogRef.componentInstance.dialogTitle = "Upload Estimates";
-    dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.estimateForm;
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.apiCall == true) {
-        console.log(this.estimateForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
-      }
-    });
+    // const dialogRef = this.dialog.open(UploadEstimatesComponent, {
+    //   width: "80%",
+    //   disableClose: true,
+    //   autoFocus: false,
+    // });
+    // dialogRef.componentInstance.dialogTitle = "Upload Estimates";
+    // dialogRef.componentInstance.patientData = this.queryData;
+    // dialogRef.componentInstance.formGroup = this.estimateForm;
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result?.apiCall == true) {
+    //     console.log(this.estimateForm.getRawValue());
+    //     // this.selectedQuery(this.queryData, "assignedDialogClosed");
+    //   }
+    // });
   }
 
   uploadFinalBill() {
-    const dialogRef = this.dialog.open(UploadFinalBillComponent, {
-      width: "80%",
-      disableClose: true,
-      autoFocus: false,
-    });
-    dialogRef.componentInstance.dialogTitle = "Final Bill Upload";
-    dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.finalBillForm;
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.apiCall == true) {
-        console.log(this.finalBillForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
-      }
-    });
+    // const dialogRef = this.dialog.open(UploadFinalBillComponent, {
+    //   width: "80%",
+    //   disableClose: true,
+    //   autoFocus: false,
+    // });
+    // dialogRef.componentInstance.dialogTitle = "Final Bill Upload";
+    // dialogRef.componentInstance.patientData = this.queryData;
+    // dialogRef.componentInstance.formGroup = this.finalBillForm;
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result?.apiCall == true) {
+    //     console.log(this.finalBillForm.getRawValue());
+    //     // this.selectedQuery(this.queryData, "assignedDialogClosed");
+    //   }
+    // });
   }
 
   searchEventHandler(searchText: string) {

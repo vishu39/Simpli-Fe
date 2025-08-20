@@ -4,7 +4,7 @@ import { OperationEntriesComponent } from "./components/operation-entries/operat
 import { MasterDataEntriesComponent } from "./components/master-data-entries/master-data-entries.component";
 
 const routes: Routes = [
-  { path: "master-data-entries", component: MasterDataEntriesComponent },
+  { path: "master-settings", component: MasterDataEntriesComponent },
   { path: "billing-entries", component: OperationEntriesComponent },
 ];
 

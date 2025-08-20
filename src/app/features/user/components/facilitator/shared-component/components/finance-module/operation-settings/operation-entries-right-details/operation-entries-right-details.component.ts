@@ -10,12 +10,11 @@ import {
 } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { treatingDoctorUserType } from "src/app/core/models/role";
-import { HospitalService } from "src/app/core/service/hospital/hospital.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
-import { FinanceModuleService } from "../finance-module.service";
+import { FinanceModuleService } from "../../finance-module.service";
 import { CommonService } from "src/app/smvt-framework/services/common.service";
 import { SmFormComponent } from "src/app/smvt-framework/sm-crud/sm-form/sm-form.component";
-import { PotentialTreatmentModalComponent } from "src/app/shared/components/dialogs/potential-treatment-modal/potential-treatment-modal.component";
+import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
 
 @Component({
   selector: "app-operation-entries-right-details",
@@ -41,7 +40,7 @@ export class OperationEntriesRightDetailsComponent implements OnInit {
     private svc: CommonService,
     private financeModuleService: FinanceModuleService,
     private sharedService: SharedService,
-    private hospitalService: HospitalService,
+    private facilitatorService: FacilitatorService,
     private dialog: MatDialog
   ) {
     this.windowWidth = window.innerWidth;
@@ -74,21 +73,6 @@ export class OperationEntriesRightDetailsComponent implements OnInit {
 
   treatingDoctorUserType = treatingDoctorUserType;
 
-  recordingData = [];
-  isDataLoading = true;
-  getAllRecordingByDoctor() {
-    this.isDataLoading = true;
-    this.hospitalService.getAllRecordingByDoctor(this.queryData?._id).subscribe(
-      (res: any) => {
-        this.recordingData = res?.data;
-        this.isDataLoading = false;
-      },
-      () => {
-        this.isDataLoading = false;
-      }
-    );
-  }
-
   ngOnInit(): void {
     // if (this.decodedToken.userType === "treating doctor") {
     //   this.tabs = this.financeModuleService.tabsForTratingDoctor;
@@ -98,7 +82,6 @@ export class OperationEntriesRightDetailsComponent implements OnInit {
     this.queryButtons = this.financeModuleService.queryButtons;
     // }
     this.changeExpansionMode("isDetails");
-    this.getAllRecordingByDoctor();
   }
 
   @HostListener("window:resize", ["$event"])

@@ -47,7 +47,7 @@ export class AdminMainLayoutComponent implements OnInit {
     });
 
     // if (tokenData.roleName === "fac" || tokenData.roleName==='Magnus Admin') {
-    //   this.ROUTES.splice(1, 0, 
+    //   this.ROUTES.splice(1, 0,
     //     {
     //     path: "/user/facilitator/admin/analytics-dashboard",
     //     title: "Analytics Dashboard",
@@ -91,8 +91,10 @@ export class AdminMainLayoutComponent implements OnInit {
   getUnreadEmailFetchCount() {
     this.facilitatorService.getUnreadEmailFetchCount().subscribe((res: any) => {
       this.totalUnreadMessage = res?.data?.count;
-      let findIndex=this.ROUTES.findIndex((r:any)=>r.path === '/user/facilitator/admin/email-fetch')
-      let index=findIndex !== -1 ? findIndex : 8
+      let findIndex = this.ROUTES.findIndex(
+        (r: any) => r.path === "/user/facilitator/admin/email-fetch"
+      );
+      let index = findIndex !== -1 ? findIndex : 8;
       // this.ROUTES[8].badge = `${this.totalUnreadMessage}`;
       this.ROUTES[index].badge = `${this.totalUnreadMessage}`;
     });
@@ -194,6 +196,43 @@ export class AdminMainLayoutComponent implements OnInit {
       badge: "",
       badgeClass: "",
       submenu: [],
+    },
+    {
+      path: "",
+      title: "Finance",
+      iconType: "material-icons-two-tone",
+      icon: "money",
+      class: "menu-toggle",
+      active: false,
+      groupTitle: false,
+      badge: "",
+      badgeClass: "",
+      submenu: [
+        {
+          path: "/user/facilitator/admin/finance/master-settings",
+          title: "Master Settings",
+          iconType: "",
+          icon: "",
+          class: "ml-menu",
+          active: false,
+          groupTitle: false,
+          badge: "",
+          badgeClass: "",
+          submenu: [],
+        },
+        {
+          path: "/user/facilitator/admin/finance/billing-entries",
+          title: "Billing Entries",
+          iconType: "",
+          icon: "",
+          class: "ml-menu",
+          active: false,
+          groupTitle: false,
+          badge: "",
+          badgeClass: "",
+          submenu: [],
+        },
+      ],
     },
     {
       path: "/user/facilitator/admin/email-fetch",

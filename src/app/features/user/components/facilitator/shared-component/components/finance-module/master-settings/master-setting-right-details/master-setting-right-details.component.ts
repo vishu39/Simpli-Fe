@@ -8,21 +8,19 @@ import {
   SimpleChanges,
   ViewChild,
 } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
-import { treatingDoctorUserType } from "src/app/core/models/role";
-import { HospitalService } from "src/app/core/service/hospital/hospital.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
-import { FinanceModuleService } from "../finance-module.service";
 import { CommonService } from "src/app/smvt-framework/services/common.service";
+import { FinanceModuleService } from "../../finance-module.service";
+import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
+import { MatDialog } from "@angular/material/dialog";
 import { SmFormComponent } from "src/app/smvt-framework/sm-crud/sm-form/sm-form.component";
-import { PotentialTreatmentModalComponent } from "src/app/shared/components/dialogs/potential-treatment-modal/potential-treatment-modal.component";
 
 @Component({
-  selector: "app-operation-entries-right-details",
-  templateUrl: "./operation-entries-right-details.component.html",
-  styleUrls: ["./operation-entries-right-details.component.scss"],
+  selector: "app-master-setting-right-details",
+  templateUrl: "./master-setting-right-details.component.html",
+  styleUrls: ["./master-setting-right-details.component.scss"],
 })
-export class OperationEntriesRightDetailsComponent implements OnInit {
+export class MasterSettingRightDetailsComponent implements OnInit {
   windowWidth: number | any;
   isDetails: boolean = true;
   isTabs: boolean = false;
@@ -41,7 +39,7 @@ export class OperationEntriesRightDetailsComponent implements OnInit {
     private svc: CommonService,
     private financeModuleService: FinanceModuleService,
     private sharedService: SharedService,
-    private hospitalService: HospitalService,
+    private facilitatorService: FacilitatorService,
     private dialog: MatDialog
   ) {
     this.windowWidth = window.innerWidth;
@@ -72,33 +70,15 @@ export class OperationEntriesRightDetailsComponent implements OnInit {
     },
   ];
 
-  treatingDoctorUserType = treatingDoctorUserType;
-
-  recordingData = [];
-  isDataLoading = true;
-  getAllRecordingByDoctor() {
-    this.isDataLoading = true;
-    this.hospitalService.getAllRecordingByDoctor(this.queryData?._id).subscribe(
-      (res: any) => {
-        this.recordingData = res?.data;
-        this.isDataLoading = false;
-      },
-      () => {
-        this.isDataLoading = false;
-      }
-    );
-  }
-
   ngOnInit(): void {
     // if (this.decodedToken.userType === "treating doctor") {
     //   this.tabs = this.financeModuleService.tabsForTratingDoctor;
     //   this.queryButtons = this.financeModuleService.queryButtonsForTreatingDoctor;
     // } else {
-    this.tabs = this.financeModuleService.tabs;
-    this.queryButtons = this.financeModuleService.queryButtons;
+    this.tabs = this.financeModuleService.tabsForMasterData;
+    this.queryButtons = this.financeModuleService.buttonsForMasterData;
     // }
     this.changeExpansionMode("isDetails");
-    this.getAllRecordingByDoctor();
   }
 
   @HostListener("window:resize", ["$event"])
