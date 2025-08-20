@@ -1,0 +1,36 @@
+.warn_btn {
+  margin-left: 10px;
+}
+
+.addPatientGridDiv {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid lightgrey;
+
+  .addContainer {
+    width: 100%;
+    height: calc(100vh - 205px);
+    overflow: scroll;
+  }
+
+  .maildiv {
+    width: 100%;
+    height: calc(100vh - 205px);
+    overflow: scroll;
+    border-left: 1px solid lightgrey;
+  }
+}
+
+@media only screen and (min-width: 900px) {
+  .addPatientGridDiv {
+    overflow: scroll;
+    flex-direction: row;
+    .addContainer {
+      width: 50%;
+    }
+    .maildiv {
+      width: 50%;
+      border-left: 1px solid lightgrey;
+    }
+  }
+}

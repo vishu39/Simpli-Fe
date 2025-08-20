@@ -1,0 +1,356 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="m-4" [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Name</mat-label>
+              <mat-select
+                multiple
+                formControlName="hospital"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollHospital()"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchHospital($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!hospitalData?.length && !isLoadingHospital"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="hospitalData?.length">
+                  <mat-checkbox (change)="selectAllHospital($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingHospitalSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingHospitalSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickHospital({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of hospitalData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isLoadingHospital && !isLoadingHospitalSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of filterForm.get('hospital').value"
+                  >
+                    {{ item.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Accreditation</mat-label>
+              <mat-select
+                multiple
+                formControlName="accreditation"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollAccreditation()"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchAccreditation($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!accreditationData?.length && !isLoadingAccreditation"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="accreditationData?.length">
+                  <mat-checkbox (change)="selectAllAccreditation($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingAccreditationSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingAccreditationSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickAccreditation({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of accreditationData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="
+                    isLoadingAccreditation && !isLoadingAccreditationSelectAll
+                  "
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of filterForm.get('accreditation').value"
+                  >
+                    {{ item.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div
+          class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+        >
+          <mat-form-field class="example-full-width">
+            <mat-label>City</mat-label>
+            <mat-select
+              multiple
+              formControlName="city"
+              msInfiniteScroll
+              (infiniteScroll)="onInfiniteScrollCity()"
+              [compareWith]="compareObjects"
+            >
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchCity($event.target.value)"
+              />
+              <div
+                class="other_option"
+                *ngIf="!cityData?.length && !isLoadingCity"
+              >
+                No results
+              </div>
+
+              <div class="other_option" *ngIf="cityData?.length">
+                <mat-checkbox (change)="selectAllCity($event)"
+                  >Select All
+                </mat-checkbox>
+              </div>
+
+              <mat-spinner
+                *ngIf="isLoadingCitySelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+
+              <ng-container *ngIf="!isLoadingCitySelectAll">
+                <mat-option
+                  (click)="
+                    onClickCity({
+                      _id: item._id,
+                      name: item.name
+                    })
+                  "
+                  *ngFor="let item of cityData"
+                  [value]="{
+                    _id: item._id,
+                    name: item.name
+                  }"
+                >
+                  {{ item.name }}
+                </mat-option>
+              </ng-container>
+
+              <mat-spinner
+                *ngIf="isLoadingCity && !isLoadingCitySelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </mat-select>
+            <div class="chip_section" [perfectScrollbar]>
+              <mat-chip-list>
+                <mat-chip *ngFor="let item of filterForm?.get('city')?.value">
+                  {{ item?.name }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+        >
+          <mat-form-field class="example-full-width">
+            <mat-label>Country</mat-label>
+            <mat-select
+              multiple
+              formControlName="country"
+              msInfiniteScroll
+              (infiniteScroll)="onInfiniteScrollCountry()"
+              [compareWith]="compareObjects"
+            >
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchCountry($event.target.value)"
+              />
+              <div
+                class="other_option"
+                *ngIf="!countryData?.length && !isLoadingCountry"
+              >
+                No results
+              </div>
+
+              <div class="other_option" *ngIf="countryData?.length">
+                <mat-checkbox (change)="selectAllCountry($event)"
+                  >Select All
+                </mat-checkbox>
+              </div>
+
+              <mat-spinner
+                *ngIf="isLoadingCountrySelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+
+              <ng-container *ngIf="!isLoadingCountrySelectAll">
+                <mat-option
+                  (click)="
+                    onClickCountry({
+                      _id: item._id,
+                      name: item.name
+                    })
+                  "
+                  *ngFor="let item of countryData"
+                  [value]="{
+                    _id: item._id,
+                    name: item.name
+                  }"
+                >
+                  {{ item.name }}
+                </mat-option>
+              </ng-container>
+
+              <mat-spinner
+                *ngIf="isLoadingCountry && !isLoadingCountrySelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </mat-select>
+            <div class="chip_section" [perfectScrollbar]>
+              <mat-chip-list>
+                <mat-chip
+                  *ngFor="let item of filterForm?.get('country')?.value"
+                >
+                  {{ item?.name }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 mt-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Beds</mat-label>
+            <input
+              matInput
+              type="number"
+              placeholder="Beds"
+              formControlName="beds"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div>
+        <button mat-flat-button color="primary" (click)="submit()">
+          Submit
+        </button>
+        <button
+          style="margin-left: 12px"
+          mat-flat-button
+          type="button"
+          color="warn"
+          (click)="resetFilter()"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

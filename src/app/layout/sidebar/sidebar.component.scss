@@ -1,0 +1,17 @@
+.image img {
+  width: 100%;
+}
+.user-panel .image {
+  width: 60%;
+  max-width: unset;
+}
+.sidebar {
+  top: 0%;
+  height: 100vh !important;
+}
+.sidebar .menu .list {
+  max-height: 100% !important;
+}
+.sidebar .menu {
+  overflow-y: hidden !important;
+}

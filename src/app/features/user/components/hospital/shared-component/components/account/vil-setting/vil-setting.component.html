@@ -1,0 +1,230 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'VIL Setting'"
+        [active_item]="'All VIL Setting'"
+      ></app-breadcrumb>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <form [formGroup]="vilSettingForm">
+        <div class="card row p-3">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Reference No Series</mat-label>
+              <input matInput type="text" formControlName="referenceNoSeries" />
+              <mat-hint
+                >(VIL series will have @year/@month/000@count by default and
+                each month it will change by default)</mat-hint
+              >
+              <mat-error
+                *ngIf="
+                  vilSettingForm.controls['referenceNoSeries'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Reference No Series is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="mt-4">
+            <button (click)="submit()" mat-raised-button color="primary">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row mt-5">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card row">
+            <div class="body">
+              <div class="table-responsive">
+                <div class="materialTableHeader">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul class="header-buttons-left ms-0">
+                        <li class="dropdown">
+                          <h2>
+                            <strong>Signatory</strong>
+                          </h2>
+                        </li>
+                        <li class="dropdown m-l-20">
+                          <label for="search-input"
+                            ><i class="material-icons search-icon"
+                              >search</i
+                            ></label
+                          >
+                          <input
+                            placeholder="Search"
+                            type="text"
+                            (keyup)="search($event.target.value)"
+                            class="browser-default search-field"
+                            aria-label="Search box"
+                          />
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                      <ul class="header-buttons">
+                        <li>
+                          <div class="m-l-10" matTooltip="Add">
+                            <button
+                              mat-mini-fab
+                              color="primary"
+                              (click)="addSignatory('Add Signatory')"
+                            >
+                              <mat-icon class="col-white">add</mat-icon>
+                            </button>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <mat-table #table [dataSource]="signatoryData" class="mat-cell">
+                  <ng-container matColumnDef="signingAuthorityName">
+                    <mat-header-cell *matHeaderCellDef
+                      >Authority Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let row">
+                      {{ row?.signingAuthorityName }}</mat-cell
+                    >
+                  </ng-container>
+
+                  <ng-container matColumnDef="signingAuthorityEmailId">
+                    <mat-header-cell *matHeaderCellDef
+                      >Authority EmailId</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let row">
+                      <div class="matTableEmailIdWordBreak">
+                        {{ row?.signingAuthorityEmailId }}
+                      </div>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="signingAuthorityDesignation">
+                    <mat-header-cell *matHeaderCellDef
+                      >Authority Designation</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let row">
+                      {{ row?.signingAuthorityDesignation }}</mat-cell
+                    >
+                  </ng-container>
+                  <ng-container matColumnDef="signingAuthorityContactNo">
+                    <mat-header-cell *matHeaderCellDef
+                      >Authority Contact No</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let row">
+                      {{ row.signingAuthorityContactNo }}</mat-cell
+                    >
+                  </ng-container>
+
+                  <ng-container matColumnDef="signature">
+                    <mat-header-cell *matHeaderCellDef
+                      >Signature</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let row">
+                      <button
+                        matTooltip="Download Signature"
+                        matTooltipPosition="right"
+                        mat-icon-button
+                        (click)="onClickDownload(row?.signature)"
+                        color="primary"
+                      >
+                        <app-feather-icons
+                          [icon]="'download'"
+                        ></app-feather-icons>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                      <button
+                        matTooltip="Edit Signatory"
+                        matTooltipPosition="left"
+                        mat-icon-button
+                        (click)="addSignatory('Edit Signatory', true, row)"
+                        color="primary"
+                        class="tbl-action-btn"
+                      >
+                        <app-feather-icons
+                          [icon]="'edit'"
+                          [class]="'tbl-fav-edit'"
+                        ></app-feather-icons>
+                      </button>
+
+                      <button
+                        matTooltip="Delete Signatory"
+                        matTooltipPosition="right"
+                        mat-icon-button
+                        (click)="deleteSignatroy(row)"
+                        color="primary"
+                        class="tbl-action-btn"
+                      >
+                        <app-feather-icons
+                          [icon]="'trash-2'"
+                          [class]="'tbl-fav-delete'"
+                        ></app-feather-icons>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row
+                    *matHeaderRowDef="displayedColumns"
+                  ></mat-header-row>
+                  <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                  <mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                    [style.cursor]="'pointer'"
+                    matRipple
+                  >
+                  </mat-row>
+                </mat-table>
+
+                <div
+                  *ngIf="!isSearchLoading && signatoryData.data?.length === 0"
+                  class="no-results"
+                  style="margin-bottom: 23px"
+                >
+                  No results
+                </div>
+
+                <div class="table_loader" *ngIf="isSearchLoading">
+                  <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                  </mat-spinner>
+                </div>
+
+                <!-- <mat-paginator
+                    (page)="onPaginateChange($event)"
+                    [length]="totalElement"
+                    [pageSize]="issuedParams.limit"
+                    [pageSizeOptions]="[5, 10, 25, 100]"
+                  >
+                  </mat-paginator> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading">
+      <div class="card p-5">
+        <div>
+          <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+        </div>
+      </div>
+      <div class="card p-5">
+        <div>
+          <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,11 @@
+.cal_loader {
+  height: calc(100vh - 30vh);
+  display: grid;
+  place-items: center;
+}
+
+.hidden {
+  visibility: hidden;
+  height: 0;
+  pointer-events: none;
+}

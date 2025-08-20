@@ -1,0 +1,259 @@
+<div id="contain" #contain class="contain">
+  <div *ngIf="!isAiLoading" style="position: relative">
+    <div
+      cdkDropListGroup
+      [ngClass]="
+        messageData?.attachments?.length > 0
+          ? 'mainFormAndAttachmentGroup'
+          : 'mainFormAndAttachmentGroupSolo'
+      "
+    >
+      <div
+        *ngIf="messageData?.attachments?.length > 0"
+        class="attachments hide-scrollbar"
+      >
+        <h6 class="mb-4 mt-2">Attachments</h6>
+
+        <div class="row">
+          <div
+            id="attachmentList"
+            class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4"
+            *ngFor="let file of messageData?.attachments; let i = index"
+            cdkDropList
+            (cdkDropListDropped)="onFileDrop($event)"
+          >
+            <div class="imageBox" cdkDrag [cdkDragData]="file">
+              <div class="imageHeader">
+                <a
+                  *ngIf="
+                    !file?.type?.includes('application') ||
+                    file?.type === 'application/pdf'
+                  "
+                  class="m-0"
+                  [matTooltip]="file?.originalname"
+                  (click)="openLightBox($event, messageData?.attachments, i)"
+                >
+                  <b class="cursor_pointer">Open File</b>
+                </a>
+
+                <a
+                  class="text"
+                  *ngIf="
+                    file?.type?.includes('application') &&
+                    file?.type !== 'application/pdf'
+                  "
+                  [matTooltip]="file?.name"
+                  >{{ file?.name }}</a
+                >
+
+                <mat-icon
+                  style="cursor: pointer"
+                  (click)="downloadImage(file?.url, file?.originalname)"
+                >
+                  open_in_new
+                </mat-icon>
+              </div>
+              <div class="imageCenter">
+                <!-- for other images -->
+                <img
+                  [src]="file?.url"
+                  *ngIf="file?.type?.includes('image')"
+                  class="image"
+                />
+                <!-- for other pdf -->
+                <iframe
+                  [src]="file?.url | safeUrl"
+                  *ngIf="file?.type === 'application/pdf'"
+                  class="image"
+                ></iframe>
+                <!-- for random docs -->
+                <img
+                  *ngIf="
+                    !file?.type?.includes('application') &&
+                    !file?.type.includes('image') &&
+                    !file?.type?.includes('video') &&
+                    !file?.type?.includes('audio')
+                  "
+                  class="iconImage"
+                  [src]="getRandomDocImage()"
+                />
+                <!-- for other docs -->
+                <img
+                  *ngIf="
+                    file?.type?.includes('application') &&
+                    file?.type !== 'application/pdf'
+                  "
+                  class="iconImage"
+                  [src]="getDocIcon(file)"
+                />
+                <!-- for video -->
+                <video
+                  [src]="file?.url"
+                  class="image"
+                  *ngIf="file?.type?.includes('video')"
+                  controls
+                ></video>
+                <!-- for audio -->
+                <audio
+                  class="image"
+                  *ngIf="file?.type?.includes('audio')"
+                  controls
+                >
+                  <source [src]="file?.url" [type]="file?.type" />
+                </audio>
+              </div>
+              <div class="action_div">
+                <span *ngIf="remove">
+                  <mat-icon
+                    style="cursor: pointer"
+                    class="icon"
+                    (click)="removeFile(i)"
+                  >
+                    delete</mat-icon
+                  >
+                </span>
+              </div>
+            </div>
+          </div>
+          <shared-whatsapp-fetch-image-lightbox
+            [isLightbox]="isLightBox"
+            [lightBoxData]="lightBoxData"
+            *ngIf="isLightBox"
+            (lightBoxEvent)="closeLightBox($event)"
+          ></shared-whatsapp-fetch-image-lightbox>
+        </div>
+      </div>
+
+      <form [formGroup]="vilForm" class="vilForm p-2 hide-scrollbar">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Hospital</mat-label>
+              <mat-select formControlName="hospitalName">
+                <div
+                  class="other_option"
+                  *ngIf="!request?.length && !isLoadingRequest"
+                >
+                  No results
+                </div>
+                <ng-container>
+                  <mat-option
+                    (click)="onClickHospital(item)"
+                    *ngFor="let item of request"
+                    [value]="item?.hospitalName"
+                  >
+                    {{ item?.hospitalName }}
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+              <mat-error
+                *ngIf="vilForm.controls['hospitalName'].hasError('required')"
+              >
+                Hospital is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Received At</mat-label>
+              <input
+                matTooltip="For tasks received via email or WhatsApp, enter the date and time received; if editing is disabled, it’s auto-captured."
+                matInput
+                [owlDateTime]="dt"
+                [owlDateTimeTrigger]="dt"
+                formControlName="receivedAt"
+              />
+              <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+                >today</mat-icon
+              >
+              <owl-date-time
+                hour12Timer="true"
+                #dt
+                pickerType="both"
+              ></owl-date-time>
+            </mat-form-field>
+          </div>
+
+          <!-- <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Reference Number</mat-label>
+              <input matInput type="text" formControlName="referenceNo" />
+
+              <mat-error
+                *ngIf="vilForm.controls['referenceNo'].hasError('required')"
+              >
+                Reference Number is required
+              </mat-error>
+            </mat-form-field>
+          </div> -->
+
+          <div>
+            <div class="mb-2">
+              <shared-whatsapp-fetch-image-previewer
+                [fileList]="fileList"
+                [filePreviewList]="filePreviewUrls"
+                [type]="'fileUploader'"
+                [remove]="false"
+              ></shared-whatsapp-fetch-image-previewer>
+            </div>
+            <div
+              id="fileFirst"
+              cdkDropList
+              [cdkDropListConnectedTo]="['attachmentList']"
+              (cdkDropListDropped)="onFileDrop($event)"
+            >
+              <h6 style="color: #666666">Upload Visa Invitation Letter *</h6>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <ngx-mat-file-input
+                  style="display: none"
+                  accept=".png, .jpg, .jpeg, .pdf"
+                  name="file"
+                  formControlName="file"
+                  (change)="onFileSelected($event)"
+                >
+                </ngx-mat-file-input>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>
+                    <span *ngFor="let file of fileList; let i = index">
+                      <span
+                        >{{ file?.name
+                        }}<span *ngIf="i < fileList?.length - 1">, </span></span
+                      >
+                    </span>
+                  </div>
+                  <mat-icon style="transform: translateY(-5px)"
+                    >upload</mat-icon
+                  >
+                </div>
+                <mat-error
+                  *ngIf="vilForm.controls['file'].hasError('required')"
+                >
+                  Upload Visa Invitation Letter is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    style="
+      height: calc(100vh - 290px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    "
+    *ngIf="isAiLoading"
+  >
+    AI is fetching details from Message...
+  </div>
+</div>

@@ -1,0 +1,38 @@
+/** No CSS for this example */
+::ng-deep mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-calendar-body-cell.selected > .mat-calendar-body-cell-content,
+::ng-deep
+  .mat-calendar-body-cell.selected:hover
+  > .mat-calendar-body-cell-content,
+::ng-deep
+  .mat-calendar-body-cell.selected
+  > .mat-calendar-body-cell-content:hover {
+  background-color: #3f51b5 !important;
+  color: #fff !important;
+}
+
+::ng-deep .multipleDatePicker .mat-form-field-flex {
+  padding-bottom: 14px !important;
+}
+
+::ng-deep .mat-chip-list-wrapper {
+  margin: 0 !important;
+}
+
+.hidden-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chip-list {
+  height: 40px;
+  overflow-y: auto;
+}

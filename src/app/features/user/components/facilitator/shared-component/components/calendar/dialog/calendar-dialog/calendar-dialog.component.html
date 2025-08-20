@@ -1,0 +1,160 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">Calendar Details</div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="m-4" [formGroup]="calendarForm">
+      <!-- Patient div -->
+      <div>
+        <p>Patient Details</p>
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Patient Name</mat-label>
+              <input matInput type="text" formControlName="patient_name" />
+            </mat-form-field>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Treatment</mat-label>
+              <input matInput type="text" formControlName="treatment" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Country</mat-label>
+              <input matInput type="text" formControlName="country" />
+            </mat-form-field>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Hospital</mat-label>
+              <input matInput type="text" formControlName="hospital" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>No of Cabs</mat-label>
+              <input matInput type="text" formControlName="cabs" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flight Details div -->
+      <div>
+        <p>Flight Details</p>
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Flight Name</mat-label>
+              <input matInput type="text" formControlName="flight_name" />
+            </mat-form-field>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Flight No.</mat-label>
+              <input matInput type="text" formControlName="flight_no" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Arrival Date And Time</mat-label>
+              <input
+                matInput
+                [owlDateTime]="dt"
+                [owlDateTimeTrigger]="dt"
+                formControlName="arrivalDate"
+              />
+              <owl-date-time #dt pickerType="both"></owl-date-time>
+            </mat-form-field>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Contact Person</mat-label>
+              <input matInput type="text" formControlName="contact_person" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Contact Person Number</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="contact_person_number"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Coordinator Pickup Date And Time</mat-label>
+              <input
+                matInput
+                [owlDateTime]="dt"
+                [owlDateTimeTrigger]="dt"
+                formControlName="coordinatorPickUpTime"
+              />
+              <owl-date-time #dt pickerType="both"></owl-date-time>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Remarks</mat-label>
+              <input matInput type="text" formControlName="remarks" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <app-global-image-preview
+            [fileList]="calendarData?.ticket"
+            [filePreviewList]="calendarData?.ticket"
+            [type]="'fileUploaded'"
+            [remove]="false"
+          ></app-global-image-preview>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="closeDialog(false)"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

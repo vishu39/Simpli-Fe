@@ -1,0 +1,42 @@
+.details {
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #e2dfdf;
+    padding: 1rem;
+
+    .heading {
+        h3 {
+            font-size: 1.2rem;
+        }
+
+        button {
+            margin-top: -20px;
+        }
+    }
+
+    .details-content {
+        border-top: 1px solid #eed5d5;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+
+        div {
+            margin-top: 14px;
+            border-radius: 10px;
+            padding: 0 14px;
+
+            h4 {
+                font-size: 1rem;
+            }
+
+            p {
+                font-size: 14px;
+                color: #444;
+            }
+        }
+
+        mat-tab-group {
+            width: 100%;
+        }
+    }
+}

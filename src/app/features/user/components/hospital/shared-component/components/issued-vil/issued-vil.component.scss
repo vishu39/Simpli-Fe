@@ -1,0 +1,9 @@
+.filter_active {
+  background: #6cb5f9;
+  color: black;
+  outline: none;
+}
+
+::ng-deep .mat-button-focus-overlay {
+  display: none;
+}

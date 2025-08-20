@@ -1,0 +1,469 @@
+<div class="addPatientGridDiv">
+  <div class="addContainer m-3 hide-scrollbar">
+    <div *ngIf="!isEmailLoading">
+      <div
+        style="color: red"
+        class="mt-2 mb-1 d-flex justify-content-center align-items-center; flex-wrap:wrap;"
+      >
+        <mat-icon style="margin-right: 4px; font-size: 20px">warning</mat-icon>
+        <b
+          >Please recheck and verify details of your mail before adding the
+          patient since this is fetched by AI</b
+        >
+      </div>
+
+      <div *ngIf="!isDuplicateFound">
+        <form
+          class="m-4"
+          [formGroup]="addPatientForm"
+          style="position: relative"
+        >
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Select Mode</mat-label>
+                <mat-select
+                  formControlName="mode"
+                  (selectionChange)="onChangeMode($event)"
+                >
+                  <mat-option value="normal">Normal </mat-option>
+                  <mat-option value="preIntimation">Pre Intimation </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="addPatientForm.controls['mode'].hasError('required')"
+                >
+                  Mode is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput type="text" formControlName="name" />
+                <mat-error
+                  *ngIf="addPatientForm.controls['name'].hasError('required')"
+                >
+                  Name is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Email Id</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  formControlName="emailId"
+                  (keypress)="spaceRestrict($event)"
+                />
+                <mat-error
+                  *ngIf="
+                    addPatientForm.controls['emailId'].hasError('required')
+                  "
+                >
+                  Email id is required
+                </mat-error>
+                <mat-error
+                  *ngIf="addPatientForm.controls['emailId'].hasError('pattern')"
+                >
+                  Invalid email address</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Contact</mat-label>
+                <ngx-mat-intl-tel-input
+                  formControlName="contact"
+                  [enablePlaceholder]="true"
+                  [enableSearch]="true"
+                  [preferredCountries]="['in']"
+                ></ngx-mat-intl-tel-input>
+
+                <mat-error
+                  *ngIf="
+                    addPatientForm.controls['contact'].hasError('required')
+                  "
+                >
+                  Contact is required
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    addPatientForm.controls['contact']?.errors
+                      ?.validatePhoneNumber
+                  "
+                  >Invalid contact</mat-error
+                >
+              </mat-form-field>
+              <!-- <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Contact</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="contact"
+                  (keypress)="spaceRestrict($event)"
+                />
+                <mat-error
+                  *ngIf="
+                    addPatientForm.controls['contact'].hasError('required')
+                  "
+                >
+                  Contact is required
+                </mat-error>
+                <mat-error
+                  *ngIf="addPatientForm.controls['contact'].hasError('pattern')"
+                >
+                  Invalid contact</mat-error
+                >
+              </mat-form-field> -->
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Gender</mat-label>
+                <mat-select formControlName="gender">
+                  <mat-option [value]="item" *ngFor="let item of genderData"
+                    >{{ item | titlecase }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="addPatientForm.controls['gender'].hasError('required')"
+                >
+                  Gender is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Age</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="age"
+                  (keypress)="spaceRestrict($event)"
+                />
+                <mat-error
+                  *ngIf="addPatientForm.controls['age'].hasError('required')"
+                >
+                  Age is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Age Duration</mat-label>
+                <mat-select formControlName="ageDuration">
+                  <mat-option
+                    [value]="item"
+                    *ngFor="let item of ageDurationData"
+                    >{{ item | titlecase }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    addPatientForm.controls['ageDuration'].hasError('required')
+                  "
+                >
+                  Age duration is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Country</mat-label>
+                <mat-select
+                  formControlName="country"
+                  msInfiniteScroll
+                  (infiniteScroll)="onInfiniteScrollCountry()"
+                >
+                  <input
+                    class="searchInput"
+                    placeholder="search..."
+                    (keydown.space)="$event.stopPropagation()"
+                    matInput
+                    (keyup)="searchCountry($event.target.value)"
+                  />
+                  <div
+                    class="other_option"
+                    *ngIf="!countryData?.length && !isLoadingCountry"
+                  >
+                    No results
+                  </div>
+                  <mat-option
+                    *ngIf="
+                      countryData.indexOf(addPatientForm.get('country').value) <
+                      0
+                    "
+                    hidden
+                    [value]="addPatientForm.get('country').value"
+                  >
+                    {{ addPatientForm.get("country").value }}</mat-option
+                  >
+                  <mat-option
+                    *ngFor="let item of countryData"
+                    [value]="item.name"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                  <mat-spinner
+                    *ngIf="isLoadingCountry"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    addPatientForm.controls['country'].hasError('required')
+                  "
+                >
+                  Country is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Treatment</mat-label>
+                <mat-select
+                  formControlName="treatment"
+                  msInfiniteScroll
+                  (infiniteScroll)="onInfiniteScrollTreatment()"
+                >
+                  <input
+                    class="searchInput"
+                    placeholder="search..."
+                    (keydown.space)="$event.stopPropagation()"
+                    matInput
+                    (keyup)="searchTreatment($event.target.value)"
+                  />
+                  <div
+                    class="other_option"
+                    *ngIf="!treatmentData?.length && !isLoadingTreatment"
+                  >
+                    No results
+                  </div>
+                  <mat-option
+                    *ngIf="
+                      treatmentData.indexOf(
+                        addPatientForm.get('treatment').value
+                      ) < 0
+                    "
+                    hidden
+                    [value]="addPatientForm.get('treatment').value"
+                  >
+                    {{ addPatientForm.get("treatment").value }}</mat-option
+                  >
+                  <mat-option
+                    *ngFor="let item of treatmentData"
+                    [value]="item.name"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                  <mat-spinner
+                    *ngIf="isLoadingTreatment"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    addPatientForm.controls['treatment'].hasError('required')
+                  "
+                >
+                  Treatment is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div
+              class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+              *ngIf="decodedToken?.userType !== userType.referralPartner"
+            >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Referral Partner</mat-label>
+                <mat-select formControlName="referralPartner">
+                  <input
+                    class="searchInput"
+                    placeholder="search..."
+                    (keydown.space)="$event.stopPropagation()"
+                    matInput
+                    (keyup)="searchReferralPartner($event.target.value)"
+                  />
+                  <div
+                    class="other_option"
+                    *ngIf="!referralPartnerData?.length"
+                  >
+                    No results
+                  </div>
+                  <mat-option
+                    [value]="item._id"
+                    *ngFor="let item of referralPartnerData"
+                    >{{ item.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Passport Number</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="passportNumber"
+                  (keypress)="spaceRestrict($event)"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Medical History</mat-label>
+                <textarea matInput formControlName="medicalHistory"></textarea>
+                <mat-error
+                  *ngIf="
+                    addPatientForm.controls['medicalHistory'].hasError(
+                      'required'
+                    )
+                  "
+                >
+                  Medical history is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Remarks</mat-label>
+                <textarea matInput formControlName="remarks"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Received At</mat-label>
+                <input
+                  matTooltip="For tasks received via email or WhatsApp, enter the date and time received; if editing is disabled, it’s auto-captured."
+                  matInput
+                  [owlDateTime]="rdt"
+                  [owlDateTimeTrigger]="rdt"
+                  formControlName="receivedAt"
+                />
+                <mat-icon matSuffix [owlDateTimeTrigger]="rdt" class="date-icon"
+                  >today</mat-icon
+                >
+                <owl-date-time
+                  hour12Timer="true"
+                  #rdt
+                  pickerType="both"
+                ></owl-date-time>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+              <app-email-fetch-image-previewer
+                [fileList]="fileList"
+                [filePreviewList]="filePreviewUrls"
+                [type]="'fileUploader'"
+                [remove]="true"
+                (onDelete)="onDelete($event)"
+                [mode]="'addPatient'"
+                (onFileRead)="onClickReadFile($event)"
+              ></app-email-fetch-image-previewer>
+
+              <h6 style="color: #666666">Upload Report</h6>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <ngx-mat-file-input
+                  style="display: none"
+                  multiple
+                  name="image"
+                  formControlName="report"
+                  accept="image/*,video/*,audio/*,application/*"
+                  (change)="onFileSelected($event)"
+                >
+                </ngx-mat-file-input>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <div>
+                    <span *ngFor="let file of fileList; let i = index">
+                      <span
+                        >{{ file?.name
+                        }}<span *ngIf="i < fileList?.length - 1">, </span></span
+                      >
+                    </span>
+                  </div>
+                  <mat-icon style="transform: translateY(-5px)"
+                    >upload</mat-icon
+                  >
+                </div>
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="mt-5" *ngIf="isDuplicateFound">
+        <h4 class="text-center">
+          We have detected a potential duplicate patient
+          <b>(MHID CODE - {{ patientMhid }})</b> record in our system. Before
+          proceeding, would you like to verify and confirm this information?
+          Your input is essential to ensure the accuracy of our records and the
+          quality of care provided.
+        </h4>
+        <div class="example-button-row d-flex justify-content-center mt-5 mb-5">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="backToForm()"
+          >
+            Back
+          </button>
+          <button
+            mat-raised-button
+            color="warn"
+            class="warn_btn"
+            type="submit"
+            (click)="reCheckForm()"
+          >
+            Re Check
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="isEmailLoading"
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      "
+    >
+      Fetching patient data from email...
+    </div>
+  </div>
+
+  <!-- email details div -->
+
+  <div class="maildiv hide-scrollbar">
+    <app-email-fetch-common-email
+      [emailData]="emailData"
+    ></app-email-fetch-common-email>
+  </div>
+</div>

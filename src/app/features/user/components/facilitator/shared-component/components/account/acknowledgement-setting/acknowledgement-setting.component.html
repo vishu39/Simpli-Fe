@@ -1,0 +1,60 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="'Account'" [active_item]="'Acknowlegement Setting'"></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngIf="!isLoading" class="card p-3">
+          <div class="p-3" *ngIf="!isPermissionError">
+            <h4 class="mb-3">Mode</h4>
+            <div class="cardToggleDiv pb-0">
+              <div *ngFor="let mode of modeArray;let i=index" class="card p-3" style="
+                  width: 100%;
+                  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+                    0 1px 3px rgba(0, 0, 0, 0.06);
+                ">
+                <h5>{{ mode?.title }}</h5>
+                <div>
+                  <mat-slide-toggle [(ngModel)]="mode.isActive" (change)="onToggleModeChange($event, i)">
+                  </mat-slide-toggle>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="eventsDataArray?.length > 0" class="row p-3  pt-1">
+            <h4 class="mb-3">Events</h4>
+            <div class="cardToggleDiv">
+              <div class="card p-3" style="
+                  width: 100%;
+                  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+                    0 1px 3px rgba(0, 0, 0, 0.06);
+                " *ngFor="let item of eventsDataArray; let i = index">
+                <h5>{{ item?.name }}</h5>
+                <div>
+                  <mat-slide-toggle (change)="onToggleChange($event, i)" [(ngModel)]="item.value">
+                  </mat-slide-toggle>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <button type="button" (click)="submit()" mat-raised-button color="primary">
+                Submit
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="!eventsDataArray?.length" class="card p-4 d-flex align-items-center justify-content-center">
+            --No Data Found--
+          </div>
+        </div>
+
+        <div class="card p-3" *ngIf="isLoading">
+          <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

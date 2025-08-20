@@ -1,0 +1,117 @@
+<div class="tab-wrapper">
+  <div [ngSwitch]="currentTab">
+    <!-- Medical history -->
+    <div *ngSwitchCase="'Medical History'">
+      <div class="mh-wrapper">
+        <div class="mh-content">
+          <p class="mb-0">
+            {{ queryData?.medicalHistory ? queryData?.medicalHistory : "NIL" }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Reports -->
+    <div *ngSwitchCase="'Reports'">
+      <div *ngIf="queryData?.report?.length" class="m-4">
+        <app-global-image-preview
+          [fileList]="queryData?.report"
+          [filePreviewList]="queryData?.report"
+          [type]="'fileUploaded'"
+          [remove]="false"
+        ></app-global-image-preview>
+      </div>
+      <div
+        *ngIf="!queryData?.report?.length"
+        class="mt-4"
+        style="text-align: center"
+      >
+        --No Data Found--
+      </div>
+    </div>
+    <!-- Opd request -->
+    <div *ngSwitchCase="'OPD Requested'">
+      <shared-opd [patientData]="queryData"></shared-opd>
+    </div>
+    <!-- Patient confirmation -->
+    <div *ngSwitchCase="'Patient Confirmed'">
+      <shared-patient-confirmation
+        [patientData]="queryData"
+      ></shared-patient-confirmation>
+    </div>
+    <!-- OPD Received -->
+    <div *ngSwitchCase="'OPD Added'">
+      <shared-opd-received [patientData]="queryData"></shared-opd-received>
+    </div>
+
+    <!-- Intimation Sent -->
+    <div *ngSwitchCase="'Intimation Sent'">
+      <shared-pre-intemation [patientData]="queryData"></shared-pre-intemation>
+    </div>
+    <!-- PI Requested -->
+    <div *ngSwitchCase="'PI Requested'">
+      <shared-proforma-invoice
+        [patientData]="queryData"
+      ></shared-proforma-invoice>
+    </div>
+
+    <!-- Requested For VIL -->
+    <div *ngSwitchCase="'Requested For VIL'">
+      <shared-vil [patientData]="queryData"></shared-vil>
+    </div>
+
+    <!-- Vil Received -->
+    <div *ngSwitchCase="'VIL Added'">
+      <shared-vil-received [patientData]="queryData"></shared-vil-received>
+    </div>
+
+    <!-- 'Proforma Invoice Response' -->
+    <!-- <div *ngSwitchCase="'Proforma Invoice Response'">
+      <shared-proforma-received
+        [patientData]="queryData"
+      ></shared-proforma-received>
+    </div> -->
+
+    <!-- 'Proforma Invoice Response' -->
+    <div *ngSwitchCase="'Opinion Added'">
+      <div *ngIf="decodedToken.userType !== treating_doc_constant">
+        <shared-opinion-received
+          [patientData]="queryData"
+        ></shared-opinion-received>
+      </div>
+      <div *ngIf="decodedToken.userType === treating_doc_constant">
+        <shared-treating-doc-added-opinion
+          [patientData]="queryData"
+        ></shared-treating-doc-added-opinion>
+      </div>
+    </div>
+
+    <!-- Opinion Pending -->
+    <div *ngSwitchCase="'Opinion Pending'">
+      <div *ngIf="decodedToken.userType !== treating_doc_constant">
+        <shared-opinion [patientData]="queryData"></shared-opinion>
+      </div>
+      <div *ngIf="decodedToken.userType === treating_doc_constant">
+        <shared-treating-doc-pending-opinion
+          [patientData]="queryData"
+        ></shared-treating-doc-pending-opinion>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'Doctor Opinion Requested'">
+      <shared-treating-doc-pending-opinion
+        [patientData]="queryData"
+      ></shared-treating-doc-pending-opinion>
+    </div>
+    <div *ngSwitchCase="'Doctor Opinion Received'">
+      <shared-treating-doc-added-opinion
+        [patientData]="queryData"
+        [editFeatureEnabled]="true"
+      ></shared-treating-doc-added-opinion>
+    </div>
+    <div *ngSwitchCase="'Recordings'" class="p-3">
+      <shared-treating-doc-recoring
+        [patientData]="queryData"
+      ></shared-treating-doc-recoring>
+    </div>
+  </div>
+</div>

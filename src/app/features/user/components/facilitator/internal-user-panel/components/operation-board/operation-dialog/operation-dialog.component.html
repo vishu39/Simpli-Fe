@@ -1,0 +1,474 @@
+<div class="operation-dialog-wrapper">
+  <div class="header d-flex justify-content-between align-items-baseline">
+    <div class="left">
+      <h4>Operation Board / {{ data.title }}</h4>
+    </div>
+    <div class="right">
+      <button (click)="close()" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="content d-flex flex-wrap justify-content-start align-items-start">
+    <div class="left">
+      <div class="main-details">
+        <h2>{{ data.itemData.name }}</h2>
+        <p>Partner Name: {{ data.itemData.partnerName }}</p>
+        <p>Treatment: {{ data.itemData.treatment || "NIL" }}</p>
+        <p>Country: {{ data.itemData.country }}</p>
+      </div>
+      <div class="comments-section">
+        <div class="header d-flex justify-content-between align-items-center">
+          <h4>Comments 1</h4>
+          <app-feather-icons
+            style="cursor: pointer"
+            (click)="isComments = !isComments"
+            class="chevron-icon"
+            [icon]="isComments ? 'chevron-up' : 'chevron-down'"
+          ></app-feather-icons>
+        </div>
+        <div *ngIf="isComments" class="comments hide-scrollbar">
+          <div
+            class="comment-wrapper d-flex justify-content-start align-items-start"
+          >
+            <div class="title">PF</div>
+            <div class="content d-flex">
+              <div class="d-flex comment-header">
+                <h2>Petter Ferguson</h2>
+                <p>{{ currentDate | date : "d MMM y | h:mm a " }}</p>
+              </div>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos,
+                vero.
+              </p>
+            </div>
+          </div>
+          <div
+            class="comment-wrapper d-flex justify-content-start align-items-start"
+          >
+            <div class="title">JD</div>
+            <div class="content d-flex">
+              <div class="d-flex comment-header">
+                <h2>John Doe</h2>
+                <p>{{ currentDate | date : "d MMM y | h:mm a " }}</p>
+              </div>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos,
+                vero.
+              </p>
+              <div *ngIf="uploadedFiles.length > 0" style="margin-bottom: 1rem">
+                <h6>Uploaded files:</h6>
+                <ul class="list-group">
+                  <li
+                    *ngFor="let file of uploadedFiles; let i = index"
+                    class="list-group-item d-flex justify-content-between align-items-baseline"
+                  >
+                    <p>{{ file.name }}</p>
+                    <div>
+                      <button
+                        mat-icon-button
+                        matTooltip="View"
+                        (click)="openLightBox($event, uploadedFiles, i)"
+                      >
+                        <app-feather-icons
+                          class="tbl-fav-edit"
+                          icon="file"
+                        ></app-feather-icons>
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div *ngIf="recordings.length > 0" style="margin-bottom: 1rem">
+                <h6>Audio:</h6>
+                <ul class="list-group">
+                  <li
+                    *ngFor="let recording of recordings; let i = index"
+                    class="list-group-item d-flex justify-content-between align-items-baseline"
+                  >
+                    <p>Audio {{ i + 1 }}</p>
+                    <div>
+                      <button
+                        mat-icon-button
+                        (click)="playRecording(recording)"
+                      >
+                        <app-feather-icons
+                          class="tbl-fav-edit"
+                          icon="play"
+                        ></app-feather-icons>
+                      </button>
+                      <button mat-icon-button (click)="stopPlaying()">
+                        <app-feather-icons
+                          class="tbl-fav-edit"
+                          icon="pause"
+                        ></app-feather-icons>
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div
+            class="comment-wrapper d-flex justify-content-start align-items-start"
+          >
+            <div class="title">PF</div>
+            <div class="content d-flex">
+              <div class="d-flex comment-header">
+                <h2>Petter Ferguson</h2>
+                <p>{{ currentDate | date : "d MMM y | h:mm a " }}</p>
+              </div>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos,
+                vero.
+              </p>
+            </div>
+          </div>
+          <div
+            class="comment-wrapper d-flex justify-content-start align-items-start"
+          >
+            <div class="title">SW</div>
+            <div class="content d-flex">
+              <div
+                class="d-flex justify-content-start align-items-start comment-header"
+              >
+                <h2>Sarah Wilson</h2>
+                <p>{{ currentDate | date : "d MMM y | h:mm a " }}</p>
+              </div>
+              <p class="comment-message">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                Laboriosam eveniet doloremque fugit officia incidunt facilis
+                ratione cum, aut consequuntur fuga nesciunt! Aut, maxime tempore
+                obcaecati repellendus commodi accusamus? Vero, tempore. Beatae,
+                repellat ipsam. Ipsam, officiis recusandae. Natus fuga dolore
+                expedita, dolorum tempora cum iure, iste a esse voluptatum nobis
+                enim dignissimos rerum non dolores? Maxime hic corporis, eos
+                consequuntur obcaecati sint odio reprehenderit eligendi dolorem
+                nemo, iure nisi. Eum, aut in quo iusto, quis odit, autem natus
+                pariatur corrupti facilis ea? Odit, illum assumenda! Dolore
+                temporibus, beatae qui facilis porro vero dolorem officia
+                voluptate nobis animi aperiam, aliquid corporis tempora autem
+                quas molestiae excepturi fuga eligendi dignissimos rerum sint
+                iste praesentium. Expedita, animi illo eaque similique
+                cupiditate nobis earum assumenda, hic maiores maxime debitis
+                odio deserunt quam voluptatem! Numquam fugiat eligendi
+                repudiandae distinctio atque placeat ducimus eius praesentium,
+                repellat quos. Quo recusandae qui ipsa neque natus corrupti,
+                fugiat quasi iusto quaerat tempore facilis ipsum laudantium ea
+                totam suscipit voluptate soluta ullam magni voluptas? Nisi
+                tempora itaque rem veritatis magni. Culpa ex ipsam temporibus
+                porro nesciunt excepturi ad, error eum quae placeat consequatur
+                debitis distinctio asperiores autem veritatis mollitia quos,
+                hic, deserunt aut officia eaque maxime. Eligendi sed voluptatum
+                adipisci labore sunt quod harum quae, incidunt recusandae
+                eveniet id aliquid, repellendus explicabo sint consequuntur
+                repellat error quaerat perferendis aspernatur. Neque, cumque.
+                Optio totam laboriosam voluptate quo odit possimus error saepe,
+                quia natus, blanditiis commodi ea vero nesciunt iste similique
+                est illo tempora doloremque veritatis sequi voluptates quis. Non
+                itaque rerum officia iste asperiores? Non sequi tempore ut at?
+                Saepe ducimus illum necessitatibus aliquam ea cumque commodi
+                vero, blanditiis fuga repellendus nisi excepturi dolorum
+                repellat minima! Nesciunt veniam fugit, impedit, illum cum
+                architecto ipsam aperiam aliquid voluptatum minus ad itaque
+                dolorem enim deleniti excepturi in repellendus consectetur quia
+                consequuntur. Ducimus accusantium pariatur ab, alias assumenda
+                doloremque vel provident aliquam, itaque ut eum, labore a
+                laboriosam? Unde enim ut quidem quia veritatis distinctio libero
+                dolorem officia voluptatum incidunt! Eveniet, voluptates minima
+                recusandae cumque rerum qui natus numquam ex non laborum,
+                corrupti ipsam. Perspiciatis nulla eligendi quae voluptatibus
+                consectetur obcaecati repellat vero expedita animi voluptas
+                reiciendis dolore, nostrum dolorem, odio et officiis porro illum
+                doloribus. Exercitationem, quae aspernatur expedita quas
+                necessitatibus nesciunt, rem soluta reprehenderit atque,
+                perferendis ducimus magnam eius? Minima, suscipit a corporis
+                unde nihil alias placeat sequi, ex incidunt pariatur
+                consequuntur fugiat ullam sed inventore. Beatae blanditiis
+                facilis ex mollitia tempore ab quisquam explicabo
+                exercitationem, nam facere unde labore itaque qui aliquid
+                repellat nulla porro quod hic eligendi dolore, officiis quasi.
+                Ea commodi, aliquam facilis dolores corporis doloremque ex?
+                Consectetur non laudantium cupiditate voluptates possimus facere
+                explicabo eos ea cumque, aliquid neque quod recusandae iste
+                voluptatum illum porro beatae tempora voluptatem reprehenderit
+                aliquam ab doloribus iusto? Tempora necessitatibus nemo dolores
+                distinctio veniam voluptate adipisci laborum consequatur commodi
+                dicta, officiis vero, eos quas, sunt ipsum culpa iste quam!
+                Debitis adipisci consectetur voluptas iure deserunt iste
+                voluptates suscipit voluptate temporibus. Ex iusto repellat
+                suscipit possimus nesciunt, consequuntur repellendus earum minus
+                pariatur nisi at? Non?
+              </p>
+            </div>
+          </div>
+          <div
+            *ngIf="isComments"
+            class="comment-wrapper d-flex justify-content-start align-items-start"
+          >
+            <div class="title">VW</div>
+            <mat-form-field appearance="outline" class="example-full-width">
+              <div
+                *ngIf="showDropdown"
+                class="auto-complete-text d-flex justify-content-start align-items-center"
+              >
+                <p
+                  style="cursor: pointer"
+                  *ngFor="let mention of filteredMentions"
+                  (click)="onMentionSelect(mention)"
+                >
+                  {{ mention }}
+                </p>
+              </div>
+              <textarea
+                class="text-area"
+                (input)="onInputChange($event)"
+                [(ngModel)]="inputValue"
+                matInput
+                [rows]="7"
+                style="resize: none"
+                #message
+                maxlength="500"
+                placeholder="Comment"
+              ></textarea>
+              <div *ngIf="uploadedFiles.length > 0" style="margin-bottom: 1rem">
+                <h6>Uploaded files:</h6>
+                <ul class="list-group">
+                  <li
+                    *ngFor="let file of uploadedFiles; let i = index"
+                    class="list-group-item d-flex justify-content-between align-items-baseline"
+                  >
+                    <p>{{ file.name }}</p>
+                    <button mat-icon-button (click)="deleteFile(i)">
+                      <app-feather-icons
+                        class="tbl-fav-delete"
+                        icon="trash"
+                      ></app-feather-icons>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div *ngIf="recordings.length > 0" style="margin-bottom: 1rem">
+                <h6>Uploaded Audio:</h6>
+                <ul class="list-group">
+                  <li
+                    *ngFor="let recording of recordings; let i = index"
+                    class="list-group-item d-flex justify-content-between align-items-baseline"
+                  >
+                    <p>Audio {{ i + 1 }}</p>
+                    <div>
+                      <button
+                        mat-icon-button
+                        (click)="playRecording(recording)"
+                      >
+                        <app-feather-icons
+                          class="tbl-fav-edit"
+                          icon="play"
+                        ></app-feather-icons>
+                      </button>
+                      <button mat-icon-button (click)="stopPlaying()">
+                        <app-feather-icons
+                          class="tbl-fav-edit"
+                          icon="pause"
+                        ></app-feather-icons>
+                      </button>
+                      <button
+                        mat-icon-button
+                        (click)="deleteRecording(recording)"
+                      >
+                        <app-feather-icons
+                          class="tbl-fav-delete"
+                          icon="trash"
+                        ></app-feather-icons>
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div
+                *ngIf="isRecording"
+                class="recording d-flex align-items-center justify-content-center"
+              >
+                <img
+                  src="assets/images/gifs/recording.gif"
+                  alt="loading.."
+                  width="20%"
+                />
+              </div>
+              <div
+                class="d-flex justify-content-between align-items-center flex-wrap"
+              >
+                <div class="d-flex justify-content-start align-items-center">
+                  <button
+                    mat-icon-button
+                    type="button"
+                    matTooltipPosition="above"
+                    matTooltip="Attach Files"
+                  >
+                    <label for="attachment">
+                      <app-feather-icons
+                        class="tbl-fav-edit"
+                        icon="paperclip"
+                      ></app-feather-icons>
+                    </label>
+                  </button>
+                  <input
+                    style="display: none"
+                    type="file"
+                    name="attachment"
+                    id="attachment"
+                    multiple="true"
+                    (change)="onFileChange($event)"
+                  />
+                  <button
+                    (click)="startRecording()"
+                    *ngIf="!isRecording"
+                    mat-icon-button
+                    type="button"
+                    class="sm-fi-btn"
+                    matTooltipPosition="above"
+                    matTooltip="Start Recording"
+                  >
+                    <app-feather-icons
+                      class="tbl-fav-delete"
+                      icon="mic"
+                    ></app-feather-icons>
+                  </button>
+                  <button
+                    (click)="stopRecording()"
+                    class="d-flex align-items-baseline justify-content-between"
+                    *ngIf="isRecording"
+                    mat-flat-button
+                    type="button"
+                    matTooltipPosition="above"
+                    matTooltip="Stop Recording"
+                  >
+                    <app-feather-icons
+                      class="tbl-fav-delete"
+                      icon="x-circle"
+                    ></app-feather-icons>
+                    <span style="margin-left: 10px">Stop Recording</span>
+                  </button>
+                </div>
+                <button mat-flat-button type="button" color="warn">
+                  Comment
+                </button>
+              </div>
+              <mat-hint align="end">{{ message.value.length }} / 500</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="right d-flex">
+      <mat-form-field appearance="outline">
+        <mat-label>Case Manager</mat-label>
+        <mat-select>
+          <mat-option [value]="null"></mat-option>
+          <mat-option [value]="option.value" *ngFor="let option of foods">{{
+            option.viewValue
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Select Due Date</mat-label>
+        <input matInput [matDatepicker]="picker" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Priority</mat-label>
+        <mat-select>
+          <mat-option [value]="option.value" *ngFor="let option of priority">
+            <app-feather-icons
+              [ngStyle]="{ color: option.flag }"
+              icon="flag"
+            ></app-feather-icons>
+            &nbsp; {{ option.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Reminder</mat-label>
+        <mat-select>
+          <mat-option [value]="null"></mat-option>
+          <mat-option [value]="option.value" *ngFor="let option of reminder">
+            {{ option.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="docs-wrapper">
+        <div class="box-wrapper">
+          <div class="header">
+            <h4>Reports</h4>
+            <app-feather-icons
+              style="cursor: pointer"
+              (click)="isReports = !isReports"
+              class="chevron-icon"
+              [icon]="isReports ? 'chevron-up' : 'chevron-down'"
+            ></app-feather-icons>
+          </div>
+          <div class="content hide-scrollbar" *ngIf="isReports">
+            <div
+              class="box"
+              *ngFor="let item of imageArray; let i = index"
+              (click)="openLightBox($event, imageArray, i)"
+            >
+              <img [src]="item.url" [alt]="item.caption" />
+            </div>
+          </div>
+        </div>
+        <div class="box-wrapper">
+          <div class="header">
+            <h4>Passport</h4>
+            <app-feather-icons
+              style="cursor: pointer"
+              (click)="isPassport = !isPassport"
+              class="chevron-icon"
+              [icon]="isPassport ? 'chevron-up' : 'chevron-down'"
+            ></app-feather-icons>
+          </div>
+          <div class="content hide-scrollbar" *ngIf="isPassport">
+            <div
+              class="box"
+              *ngFor="let item of imageArray; let i = index"
+              (click)="openLightBox($event, imageArray, i)"
+            >
+              <img [src]="item.url" [alt]="item.caption" />
+            </div>
+          </div>
+        </div>
+        <div class="box-wrapper">
+          <div class="header">
+            <h4>Tickets</h4>
+            <app-feather-icons
+              style="cursor: pointer"
+              (click)="isTickets = !isTickets"
+              class="chevron-icon"
+              [icon]="isTickets ? 'chevron-up' : 'chevron-down'"
+            ></app-feather-icons>
+          </div>
+          <div class="content hide-scrollbar" *ngIf="isTickets">
+            <div
+              class="box"
+              *ngFor="let item of imageArray; let i = index"
+              (click)="openLightBox($event, imageArray, i)"
+            >
+              <img [src]="item.url" [alt]="item.caption" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-sm-lightbox
+    [isLightbox]="isLightBox"
+    [lightBoxData]="lightBoxData"
+    *ngIf="isLightBox"
+    (lightBoxEvent)="closeLightBox($event)"
+  ></app-sm-lightbox>
+</div>

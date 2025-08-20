@@ -1,0 +1,168 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header" style="display: flex;justify-content: space-between;align-items: center;">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="['Hospital']" [active_item]="'Profile'"></app-breadcrumb>
+      <button mat-flat-button color="primary" (click)="goBack()">Back</button>
+    </div>
+
+    <mat-spinner *ngIf="dataLoading" class="mx-auto" [diameter]="30"></mat-spinner>
+
+    <div *ngIf="!dataLoading" class="row clearfix">
+      <div class="col-lg-4 col-md-12">
+        <div class="card">
+          <div class="m-b-20">
+            <div class="contact-grid">
+              <div class="profile-header" style="background-color: #1560bd">
+                <div class="user-name">{{ data?.name }}</div>
+              </div>
+              <img style="height: 110px" [src]="getS3Url(data?.mainImage?.key)" class="user-img" alt="" />
+              <div class="row">
+                <div class="col-md-6 col-6 b-r">
+                  <strong>Speciality</strong>
+                  <br />
+                  <p class="text-muted" style="text-transform: capitalize">
+                    {{ data?.speciality }}
+                  </p>
+                </div>
+                <div class="col-md-6 col-6 b-r">
+                  <strong>Country</strong>
+                  <br />
+                  <p class="text-muted">
+                    <span *ngFor="let country of data?.country">{{
+                      country?.name
+                      }}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 col-6 b-r">
+                  <strong>City</strong>
+                  <br />
+                  <div *ngFor="let city of data?.city">{{ city?.name }}</div>
+                </div>
+                <div class="col-md-6 col-6 b-r">
+                  <strong>Established</strong>
+                  <br />
+                  <p class="text-muted">{{ data?.established }}</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 col-6 b-r">
+                  <strong>Ratings</strong>
+                  <br />
+                  <div matTooltip="{{ data?.rating }}" matTooltipPosition="right" [innerHTML]="
+                      generateStarRating(data?.rating ? data?.rating : 0)
+                    "></div>
+                </div>
+                <div class="col-md-6 col-6 b-r">
+                  <strong>Beds</strong>
+                  <br />
+                  <p class="text-muted">
+                    <span>{{ data?.beds }}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accrediations -->
+        <div class="card">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="project_widget">
+              <div class="header">
+                <h2><strong>Accrediations</strong></h2>
+              </div>
+              <div class="body">
+                <div class="row">
+                  <div class="col-md-3 col-6 b-r" *ngFor="let img of data?.accreditation">
+                    <img style="width: 70px; height: 70px" [src]="getS3Url(img?.image?.key)" />
+                    <div style="text-align: center">{{ img?.name }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Awards -->
+        <div class="card">
+          <div class="header">
+            <h2><strong>Awards</strong></h2>
+          </div>
+          <div class="px-3 py-2">
+            <p [innerHTML]="data?.awards"></p>
+          </div>
+        </div>
+        <!-- Facilities -->
+        <div class="card">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="project_widget">
+              <div class="header">
+                <h2><strong>Facilities</strong></h2>
+              </div>
+              <div class="body">
+                <div class="project_widget">
+                  <div>
+                    <span><strong>Distance: </strong></span>
+                    <span> {{ data?.distance }}</span>
+                  </div>
+                  <br />
+                  <div>
+                    <span><strong>Cab/Transport: </strong></span>
+                    <span> {{ data?.transportation }}</span>
+                  </div>
+                  <br />
+                  <div>
+                    <span><strong>Food Dining: </strong></span>
+                    <span> {{ data?.foodDining }}</span>
+                  </div>
+                  <br />
+                  <div>
+                    <span><strong>Money Matters: </strong></span>
+                    <span> {{ data?.moneyMatters }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Infrastructure -->
+      <div class="col-lg-8 col-md-12">
+        <div class="card">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="project_widget">
+              <div class="header">
+                <h2><strong>Infrastructure</strong></h2>
+              </div>
+
+              <div class="body">
+                <div class="row">
+                  <div class="col-md-2 col-4 b-r" *ngFor="let img of data?.images">
+                    <img [src]="getS3Url(img?.key)" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="body" [innerHTML]="data?.infrastructure"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="header">
+            <!-- center of excellence -->
+            <h2><strong>Center of Excellence</strong></h2>
+          </div>
+          <div class="px-3 py-2">
+            <p [innerHTML]="data?.centreOfExcellence"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,9 @@
+<mat-form-field class="w-100" appearance="outline">
+    <mat-label>{{label}}</mat-label>
+    <mat-select (infiniteScroll)="ScrollFunction()" [(ngModel)]="selectedItem" (selectionChange)="onSelectionChange($event)" [complete]="Offset === total" msInfiniteScroll>
+        <input class="searchInput" placeholder="search..." matInput [(ngModel)]="hospitalSearch"
+        [ngModelOptions]="{ standalone: true }" (input)="searchFunction(hospitalSearch)"/>
+        <mat-option [value]="getOptionValue(item)" *ngFor="let item of dropDownItems" (click)="optionClick(item._id)">{{ item.name }}</mat-option>
+        <mat-spinner *ngIf="is_Loader" class="mx-auto" [diameter]="30"></mat-spinner>
+    </mat-select>
+</mat-form-field>   

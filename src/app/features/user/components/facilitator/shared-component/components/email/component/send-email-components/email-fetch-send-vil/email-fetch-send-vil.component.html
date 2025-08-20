@@ -1,0 +1,212 @@
+<div
+  style="height: calc(100vh - 290px); overflow: scroll"
+  class="hide-scrollbar p-4"
+>
+  <form [formGroup]="emailFrom">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Email To</mat-label>
+          <input type="email" matInput formControlName="emailTo" />
+          <mat-error *ngIf="emailFrom.controls['emailTo'].hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="emailFrom.controls['emailTo'].hasError('pattern')">
+            Invalid email address</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      <div>
+        <button
+          mat-button
+          type="button"
+          style="background-color: #1560bd; color: #fff; margin-bottom: 12px"
+          (click)="addCc()"
+        >
+          +Add Cc
+        </button>
+      </div>
+
+      <!-- emailCC array -->
+      <div *ngIf="emailArray?.value?.length">
+        <div formArrayName="emailCc">
+          <div
+            class="card p-3 pb-0"
+            *ngFor="let email of emailArray.controls; let i = index"
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <h6>
+                <b>Cc {{ i + 1 }}</b>
+              </h6>
+              <mat-icon
+                style="cursor: pointer; color: red"
+                (click)="deleteCc(i)"
+                >delete_forever
+              </mat-icon>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-1">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Cc Email</mat-label>
+                <input
+                  type="email"
+                  matInput
+                  type="text"
+                  [formControlName]="i"
+                />
+                <mat-error *ngIf="emailArray?.controls[i]?.hasError('pattern')">
+                  Invalid email address</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- vilReceived -->
+    <div class="mt-4">
+      <h5>VIL Received</h5>
+      <div *ngIf="request?.length">
+        <div class="mt-4" *ngFor="let item of request">
+          <mat-accordion>
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header #exPanel>
+                <mat-panel-title>
+                  <div (click)="!exPanel._toggle()">
+                    <mat-checkbox (change)="selectChange($event, item, false)">
+                      <p class="mb-0">
+                        <b>{{ item?.hospitalName }}</b>
+                      </p>
+                    </mat-checkbox>
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="p-3">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Received At</b></div>
+                    <div>
+                      {{
+                        item?.receivedAt
+                          ? (item?.receivedAt | date : "medium")
+                          : "NIL"
+                      }}
+                    </div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Created At</b></div>
+                    <div>{{ item?.createdAt | date : "medium" }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <div><b>VIL Letter</b></div>
+                <div class="mt-3">
+                  <app-global-image-preview
+                    [fileList]="[item.vilLetter]"
+                    [filePreviewList]="[item.vilLetter]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="" *ngIf="isDataLoading">
+        <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+      </div>
+
+      <div class="card m-4 p-3" *ngIf="!isDataLoading && !request?.length">
+        <div style="text-align: center">--No Data Found--</div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <h5>VIL Received Edited</h5>
+      <div *ngIf="requestEdited?.length">
+        <div class="mt-4" *ngFor="let item of requestEdited">
+          <mat-accordion>
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header #exPanel>
+                <mat-panel-title>
+                  <div (click)="!exPanel._toggle()">
+                    <mat-checkbox (change)="selectChange($event, item, true)">
+                      <p class="mb-0">
+                        <b>{{ item?.hospitalName }}</b>
+                      </p>
+                    </mat-checkbox>
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="p-3">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Received At</b></div>
+                    <div>
+                      {{
+                        item?.receivedAt
+                          ? (item?.receivedAt | date : "medium")
+                          : "NIL"
+                      }}
+                    </div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Created At</b></div>
+                    <div>{{ item?.createdAt | date : "medium" }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <div><b>VIL Letter</b></div>
+                <div class="mt-3">
+                  <app-global-image-preview
+                    [fileList]="[item.vilLetter]"
+                    [filePreviewList]="[item.vilLetter]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="" *ngIf="isEditedDataLoading">
+        <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+      </div>
+
+      <div
+        class="card m-4 p-3"
+        *ngIf="!isEditedDataLoading && !requestEdited?.length"
+      >
+        <div style="text-align: center">--No Data Found--</div>
+      </div>
+    </div>
+
+    <mat-error
+      class="mt-3"
+      *ngIf="
+        emailFrom.controls['selectHospital'].touched &&
+        emailFrom.controls['selectHospital'].invalid
+      "
+    >
+      Hospital Selection is required</mat-error
+    >
+  </form>
+</div>

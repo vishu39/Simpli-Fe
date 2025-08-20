@@ -1,0 +1,356 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="m-4" [formGroup]="addEmailFetchSettingForm">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              formControlName="emailId"
+              (keypress)="spaceRestrict($event)"
+            />
+            <mat-error
+              *ngIf="
+                addEmailFetchSettingForm.controls['emailId'].hasError(
+                  'required'
+                )
+              "
+            >
+              Email is required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                addEmailFetchSettingForm.controls['emailId'].hasError('pattern')
+              "
+            >
+              Invalid email address</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label> Password</mat-label>
+            <input
+              matInput
+              type="password"
+              formControlName="password"
+              (keypress)="spaceRestrict($event)"
+            />
+            <mat-error
+              *ngIf="
+                addEmailFetchSettingForm.controls['password'].hasError(
+                  'required'
+                )
+              "
+            >
+              Password is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option
+                *ngFor="let type of emailSettingTypeData"
+                [value]="type"
+                (click)="onTypeClick()"
+                >{{ type }}</mat-option
+              >
+            </mat-select>
+            <mat-error
+              *ngIf="
+                addEmailFetchSettingForm.controls['type'].hasError('required')
+              "
+            >
+              Type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Type</mat-label>
+              <mat-select
+                multiple
+                formControlName="type"
+                [compareWith]="compareObjectsForType"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchEmailSettingType($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="
+                    !emailSettingTypeData?.length && !isEmailSettingTypeLoading
+                  "
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="emailSettingTypeData?.length">
+                  <mat-checkbox (change)="selectAllType($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isEmailSettingTypeSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isEmailSettingTypeSelectAll">
+                  <mat-option
+                    (click)="onTypeClick(item)"
+                    *ngFor="let item of emailSettingTypeData"
+                    [value]="item"
+                  >
+                    {{ item }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="
+                    isEmailSettingTypeLoading && !isEmailSettingTypeSelectAll
+                  "
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <div
+                    *ngFor="
+                      let type of addEmailFetchSettingForm.get('type').value
+                    "
+                  >
+                    <mat-chip>{{ type }} </mat-chip>
+                  </div>
+                </mat-chip-list>
+              </div>
+              <mat-error
+                *ngIf="
+                  addEmailFetchSettingForm.controls['type'].hasError('required')
+                "
+              >
+                Type is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div> -->
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>SMTP Email Host</mat-label>
+            <input
+              matTooltip="smtp.gmail.com | smtp.office365.com | Custom Host"
+              matInput
+              type="text"
+              formControlName="emailHost"
+              (keypress)="spaceRestrict($event)"
+            />
+            <mat-error
+              *ngIf="
+                addEmailFetchSettingForm.controls['emailHost'].hasError(
+                  'required'
+                )
+              "
+            >
+              SMTP Email host is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Internal User</mat-label>
+              <mat-select
+                multiple
+                formControlName="internalUser"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchInternalUser($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!internalUserData?.length && !isInternalUserLoading"
+                >
+                  No results
+                </div>
+
+                <div
+                  class="other_option"
+                  *ngIf="internalUserData?.length && userType !== 'member'"
+                >
+                  <mat-checkbox (change)="selectAllInternalUser($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isInternalUserdoSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isInternalUserdoSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickInternalUser({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of internalUserData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item?.name }} - {{ item?.userType }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isInternalUserLoading && !isInternalUserdoSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <div
+                    *ngFor="
+                      let internalItem of addEmailFetchSettingForm.get(
+                        'internalUser'
+                      ).value
+                    "
+                  >
+                    <mat-chip *ngIf="internalUserIncludes(internalItem)">
+                      {{ returnNameFromId(internalItem) }}
+                    </mat-chip>
+                  </div>
+                </mat-chip-list>
+              </div>
+              <mat-error
+                *ngIf="
+                  addEmailFetchSettingForm.controls['internalUser'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Internal User is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <h6>Copy Email</h6>
+          <mat-slide-toggle
+            formControlName="copyEmail"
+            (change)="onToggleModeChange($event)"
+          >
+          </mat-slide-toggle>
+        </div>
+
+        <div
+          class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+          *ngIf="addEmailFetchSettingForm?.get('copyEmail').value"
+        >
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>IMAP Email Host</mat-label>
+            <input
+              matTooltip="smtp.gmail.com | smtp.office365.com | Custom Host"
+              matInput
+              type="text"
+              formControlName="imapEmailHost"
+              (keypress)="spaceRestrict($event)"
+            />
+            <mat-error
+              *ngIf="
+                addEmailFetchSettingForm.controls['imapEmailHost'].hasError(
+                  'required'
+                )
+              "
+            >
+              IMAP Email Host is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+          *ngIf="addEmailFetchSettingForm?.get('copyEmail').value"
+        >
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Copy Folder Name</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="copyFolderName"
+            />
+            <mat-error
+              *ngIf="
+                addEmailFetchSettingForm.controls['copyFolderName'].hasError(
+                  'required'
+                )
+              "
+            >
+              Copy Folder Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <button
+            (click)="submit()"
+            class="btn-space"
+            mat-raised-button
+            color="primary"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

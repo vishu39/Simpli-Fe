@@ -1,0 +1,227 @@
+<div id="opinionRequested">
+  <form class="m-4" [formGroup]="opinionRequestForm">
+    <div class="_mc">
+      <div class="_field-title"><span>Top Hospitals List</span></div>
+      <div *ngIf="!isLoadingTopHospital">
+        <div *ngIf="topHospitalData?.length" class="_mc-checkbox-wrapper">
+          <mat-checkbox
+            class="_mc-checkbox"
+            *ngFor="let item of topHospitalData"
+            (change)="mcToggle($event, item)"
+            [checked]="isItemInArray(item)"
+            >{{ item?.name }}</mat-checkbox
+          >
+        </div>
+        <div *ngIf="!topHospitalData?.length" style="text-align: center">
+          -- No Data Found --
+        </div>
+      </div>
+      <mat-spinner
+        *ngIf="isLoadingTopHospital"
+        class="mx-auto mb-2 mt-2"
+        [diameter]="30"
+      >
+      </mat-spinner>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <div class="multiple_select_custom">
+          <mat-form-field class="example-full-width">
+            <mat-label>Hospital</mat-label>
+            <mat-select
+              multiple
+              formControlName="opinionRequest"
+              msInfiniteScroll
+              (infiniteScroll)="onInfiniteScrollHospital()"
+              [compareWith]="compareObjects"
+            >
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchHospital($event.target.value)"
+              />
+              <div
+                class="other_option"
+                *ngIf="!hospitalData?.length && !isLoadingHospital"
+              >
+                No results
+              </div>
+
+              <div class="other_option" *ngIf="hospitalData?.length">
+                <mat-checkbox (change)="selectAllHospital($event)"
+                  >Select All
+                </mat-checkbox>
+              </div>
+
+              <mat-spinner
+                *ngIf="isLoadingHospitalSelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+
+              <ng-container *ngIf="!isLoadingHospitalSelectAll">
+                <mat-option
+                  (click)="
+                    onClickHospital({
+                      _id: item._id,
+                      name: item.name
+                    })
+                  "
+                  *ngFor="let item of hospitalData"
+                  [value]="{
+                    _id: item._id,
+                    name: item.name
+                  }"
+                >
+                  {{ item.name }}
+                </mat-option>
+              </ng-container>
+
+              <mat-spinner
+                *ngIf="isLoadingHospital && !isLoadingHospitalSelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </mat-select>
+            <div class="chip_section" [perfectScrollbar]>
+              <mat-chip-list>
+                <mat-chip
+                  *ngFor="
+                    let item of opinionRequestForm.get('opinionRequest').value
+                  "
+                >
+                  {{ item.name }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+            <mat-error
+              *ngIf="
+                opinionRequestForm.controls['opinionRequest'].hasError(
+                  'required'
+                )
+              "
+            >
+              Hospital is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Aggregator</mat-label>
+
+          <mat-select formControlName="aggregator">
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchAggregator($event.target.value)"
+            />
+            <div
+              class="other_option"
+              *ngIf="!aggregatorList.length && !isAggregatorLoading"
+            >
+              No results
+            </div>
+            <ng-container>
+              <mat-option
+                (click)="onClickAggregator(item)"
+                *ngFor="let item of aggregatorList"
+                [value]="item._id"
+              >
+                {{ item?.name }}
+              </mat-option>
+            </ng-container>
+
+            <mat-spinner
+              *ngIf="isAggregatorLoading"
+              class="mx-auto mb-2 mt-2"
+              [diameter]="30"
+            >
+            </mat-spinner>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Received At</mat-label>
+          <input
+            matTooltip="For tasks received via email or WhatsApp, enter the date and time received; if editing is disabled, it’s auto-captured."
+            matInput
+            [owlDateTime]="dt"
+            [owlDateTimeTrigger]="dt"
+            formControlName="receivedAt"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #dt
+            pickerType="both"
+          ></owl-date-time>
+        </mat-form-field>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row justify-end">
+            <button
+              (click)="getOpinionRequestRecipients()"
+              mat-raised-button
+              color="secondary"
+            >
+              Check Contact Details
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-3 mb-0" *ngIf="isCheckEmailClicked">
+        <mat-tab-group
+          (selectedTabChange)="changeTab($event)"
+          animationDuration="0ms"
+        >
+          <mat-tab label="Email Details">
+            <div *ngIf="selectedTab === 'Email Details'" class="p-3 pb-0">
+              <app-query-management-email-details
+                [emailData]="checkContactData?.emailData"
+                [component]="'opinion'"
+              ></app-query-management-email-details>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Message Details">
+            <div *ngIf="selectedTab === 'Message Details'" class="p-3 pb-0">
+              <app-query-management-check-details
+                [messageData]="checkContactData?.messageData"
+                [component]="'opinion'"
+              ></app-query-management-check-details>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <div class="example-button-row justify-end">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="submit()"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

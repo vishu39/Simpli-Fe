@@ -1,0 +1,513 @@
+<div mat-dialog-content>
+  <form
+    *ngIf="!isOverrideAvailable && !isOverrideLoading"
+    class="m-4"
+    [formGroup]="emailFrom"
+  >
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Send To</mat-label>
+          <mat-select formControlName="sendTo">
+            <mat-option
+              (click)="changeSendTo(list.value)"
+              *ngFor="let list of sendToArray"
+              [value]="list.value"
+              >{{ list?.title }}</mat-option
+            >
+          </mat-select>
+          <mat-error *ngIf="emailFrom.controls['sendTo'].hasError('required')">
+            Send To is a required field
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        *ngIf="emailFrom?.get('sendTo')?.value === 'embassy'"
+      >
+        <div class="multiple_select_custom">
+          <mat-form-field class="example-full-width">
+            <mat-label>Select Embassy</mat-label>
+            <mat-select
+              multiple
+              formControlName="embassy"
+              [compareWith]="compareObjects"
+            >
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchEmbassy($event.target.value)"
+              />
+              <div
+                class="other_option"
+                *ngIf="!embasyData?.length && !isLoadingEmbasy"
+              >
+                No results
+              </div>
+
+              <!-- <div class="other_option" *ngIf="embasyData?.length">
+                <mat-checkbox (change)="selectAllEmbassy($event)"
+                  >Select All
+                </mat-checkbox>
+              </div> -->
+
+              <mat-spinner
+                *ngIf="isLoadingEmbasySelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+
+              <ng-container *ngIf="!isLoadingEmbasySelectAll">
+                <mat-option
+                  (click)="onClickEmbassy(item)"
+                  *ngFor="let item of embasyData"
+                  [value]="{
+                    _id: item._id,
+                    name: item.name
+                  }"
+                >
+                  {{ item.name }}
+                </mat-option>
+              </ng-container>
+
+              <mat-spinner
+                *ngIf="isLoadingEmbasy && !isLoadingEmbasySelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </mat-select>
+            <div class="chip_section" [perfectScrollbar]>
+              <mat-chip-list>
+                <mat-chip *ngFor="let item of emailFrom.get('embassy').value">
+                  {{ item.name }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+            <mat-error
+              *ngIf="emailFrom.controls['embassy'].hasError('required')"
+            >
+              Embassy is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Email To</mat-label>
+          <input type="email" matInput formControlName="emailTo" />
+          <mat-error *ngIf="emailFrom.controls['emailTo'].hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="emailFrom.controls['emailTo'].hasError('pattern')">
+            Invalid email address</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- emailCC array -->
+    <div>
+      <div>
+        <button
+          mat-button
+          type="button"
+          style="background-color: #1560bd; color: #fff; margin-bottom: 12px"
+          (click)="addCc()"
+        >
+          +Add Cc
+        </button>
+      </div>
+
+      <div *ngIf="emailArray?.value?.length">
+        <div formArrayName="emailCc" class="row">
+          <div
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+            *ngFor="let email of emailArray.controls; let i = index"
+          >
+            <div class="card p-3">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                <h6>
+                  <b>Cc {{ i + 1 }}</b>
+                </h6>
+                <mat-icon
+                  style="cursor: pointer; color: red"
+                  (click)="deleteCc(i)"
+                  >delete_forever
+                </mat-icon>
+              </div>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Cc Email</mat-label>
+                  <input
+                    (keypress)="spaceRestrict($event)"
+                    type="email"
+                    matInput
+                    type="text"
+                    [formControlName]="i"
+                  />
+                  <mat-error
+                    *ngIf="emailArray?.controls[i]?.hasError('pattern')"
+                  >
+                    Invalid email address</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- emailCC array end-->
+
+    <!-- add contact code -->
+    <div>
+      <div>
+        <button
+          mat-button
+          type="button"
+          style="background-color: #1560bd; color: #fff; margin-bottom: 12px"
+          (click)="addContact()"
+        >
+          +Add Contact
+        </button>
+      </div>
+
+      <!-- contact array -->
+      <div *ngIf="contactArray?.value?.length">
+        <div formArrayName="contact" class="row">
+          <div
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+            *ngFor="let contact of contactArray.controls; let i = index"
+          >
+            <div class="card p-3">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                <h6>
+                  <b>Contact {{ i + 1 }}</b>
+                </h6>
+                <mat-icon
+                  style="cursor: pointer; color: red"
+                  (click)="deleteContact(i)"
+                  >delete_forever
+                </mat-icon>
+              </div>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Contact</mat-label>
+                  <ngx-mat-intl-tel-input
+                    [formControlName]="i"
+                    [enablePlaceholder]="true"
+                    [enableSearch]="true"
+                    [preferredCountries]="['in']"
+                  ></ngx-mat-intl-tel-input>
+
+                  <!-- <mat-error
+            *ngIf="hospitalStaffForm.controls['contact'].hasError('required')"
+            >
+            Contact is required
+          </mat-error> -->
+                  <mat-error
+                    *ngIf="
+                      contactArray?.controls[i]?.errors?.validatePhoneNumber
+                    "
+                    >Please enter valid contact number</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- add contact code end-->
+
+    <!-- Issued VIL -->
+    <div class="mt-4">
+      <h5>Issued VIL</h5>
+      <div *ngIf="issuedVilData?.length">
+        <div class="mt-4" *ngFor="let item of issuedVilData">
+          <mat-accordion>
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header #exPanel>
+                <mat-panel-title>
+                  <div (click)="!exPanel._toggle()">
+                    <mat-radio-button
+                      [value]="item?._id"
+                      (change)="selectChange($event, item, false, true)"
+                    >
+                      <p class="mb-0">
+                        {{ item?.hospitalName }}
+                      </p>
+                    </mat-radio-button>
+                    <!-- <mat-checkbox
+                      (change)="selectChange($event, item, false, true)"
+                    >
+                      <p class="mb-0">
+                        <b>{{ item?.hospitalName }}</b>
+                      </p>
+                    </mat-checkbox> -->
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="p-3">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Reference Number</b></div>
+                    <div>
+                      {{ item?.referenceNo || "NIL" }}
+                    </div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Received At</b></div>
+                    <div>
+                      {{
+                        item?.receivedAt
+                          ? (item?.receivedAt | date : "medium")
+                          : "NIL"
+                      }}
+                    </div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Created At</b></div>
+                    <div>{{ item?.createdAt | date : "medium" }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <div><b>VIL Letter</b></div>
+                <div class="mt-3">
+                  <app-global-image-preview
+                    [fileList]="[item.vilLetter]"
+                    [filePreviewList]="[item.vilLetter]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="" *ngIf="isVilDataLoading">
+        <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+      </div>
+
+      <div
+        class="card m-4 p-3"
+        *ngIf="!isVilDataLoading && !issuedVilData?.length"
+      >
+        <div style="text-align: center">--No Data Found--</div>
+      </div>
+    </div>
+
+    <!-- vilReceived -->
+    <!-- <div class="mt-4">
+      <h5>VIL Added</h5>
+      <div *ngIf="request?.length">
+        <div class="mt-4" *ngFor="let item of request">
+          <mat-accordion>
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header #exPanel>
+                <mat-panel-title>
+                  <div (click)="!exPanel._toggle()">
+                    <mat-radio-button
+                      [value]="item?._id"
+                      (change)="selectChange($event, item, false)"
+                    >
+                      <p class="mb-0">
+                        {{ item?.hospitalName }}
+                      </p>
+                    </mat-radio-button>
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="p-3">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Created At</b></div>
+                    <div>{{ item?.createdAt | date : "medium" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Reference Number</b></div>
+                    <div>
+                      {{ item?.referenceNo || "NIL" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <div><b>VIL Letter</b></div>
+                <div class="mt-3">
+                  <app-global-image-preview
+                    [fileList]="[item.vilLetter]"
+                    [filePreviewList]="[item.vilLetter]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="" *ngIf="isDataLoading">
+        <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+      </div>
+
+      <div class="card m-4 p-3" *ngIf="!isDataLoading && !request?.length">
+        <div style="text-align: center">--No Data Found--</div>
+      </div>
+    </div> -->
+
+    <!-- <div class="mt-4">
+      <h5>VIL Added Edited</h5>
+      <div *ngIf="requestEdited?.length">
+        <div class="mt-4" *ngFor="let item of requestEdited">
+          <mat-accordion>
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header #exPanel>
+                <mat-panel-title>
+                  <div (click)="!exPanel._toggle()">
+                    <mat-radio-button
+                      [value]="item?._id"
+                      (change)="selectChange($event, item, true)"
+                    >
+                      <p class="mb-0">
+                        {{ item?.hospitalName }}
+                      </p>
+                    </mat-radio-button>
+                  </div>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="p-3">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Created At</b></div>
+                    <div>{{ item?.createdAt | date : "medium" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Reference Number</b></div>
+                    <div>
+                      {{ item?.referenceNo || "NIL" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-3">
+                <div><b>VIL Letter</b></div>
+                <div class="mt-3">
+                  <app-global-image-preview
+                    [fileList]="[item.vilLetter]"
+                    [filePreviewList]="[item.vilLetter]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="" *ngIf="isEditedDataLoading">
+        <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+      </div>
+
+      <div
+        class="card m-4 p-3"
+        *ngIf="!isEditedDataLoading && !requestEdited?.length"
+      >
+        <div style="text-align: center">--No Data Found--</div>
+      </div>
+    </div> -->
+
+    <mat-error
+      class="mt-3"
+      *ngIf="
+        emailFrom.controls['selectHospital'].touched &&
+        emailFrom.controls['selectHospital'].invalid
+      "
+    >
+      Hospital Selection is required</mat-error
+    >
+
+    <div class="mt-4">
+      <button mat-flat-button color="primary" (click)="submit()">Submit</button>
+    </div>
+  </form>
+  <div
+    class="overrideDiv m-4"
+    *ngIf="isOverrideAvailable && !isOverrideLoading"
+  >
+    <h4>VIL has been issued with Same passport Number</h4>
+    <table>
+      <thead>
+        <th>Patient Name</th>
+        <th>Patient MHID</th>
+        <th>Passport Number</th>
+        <th>Send To</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of checkVilSentData?.sentVil">
+          <td>{{ item?.patient?.name | titlecase }}</td>
+          <td>
+            {{ uhidCode ? uhidCode : "NIL" }}{{ item?.patient?.mhidCode }}
+          </td>
+          <td>{{ item?.passportNumber }}</td>
+          <td style="min-height: 160px !important">
+            <div
+              style="
+                color: rgba(13, 110, 253, 1);
+                cursor: pointer;
+                text-decoration: underline;
+                margin-left: 2px;
+              "
+              #tooltipButton
+              id="tooltipButton"
+              (mouseenter)="showSendToDetailsOnHover(tooltipButton, item)"
+              (mouseleave)="hideDetails(tooltipButton, item)"
+            >
+              {{ item?.sendTo | titlecase }}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4 class="mt-2">
+      Please check and override if you want to send to other partner as well
+    </h4>
+    <button (click)="overrideForm()" mat-raised-button color="warn">
+      Override
+    </button>
+  </div>
+
+  <div class="overrideDiv" *ngIf="isOverrideLoading">
+    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+  </div>
+</div>

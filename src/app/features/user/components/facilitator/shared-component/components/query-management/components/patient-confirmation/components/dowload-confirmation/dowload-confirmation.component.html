@@ -1,0 +1,371 @@
+<div mat-dialog-content>
+  <form [formGroup]="emailFrom">
+    <div class="mt-4">
+      <h5>Patient Confirmation</h5>
+      <ng-container *ngIf="requests?.length">
+        <div *ngFor="let request of requests" class="mt-4">
+          <mat-accordion>
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header #exPanel>
+                <mat-panel-title>
+                  <div (click)="!exPanel._toggle()">
+                    <mat-checkbox
+                      (change)="selectChange($event, request, false)"
+                    >
+                      <p class="mb-0">
+                        <b>{{ request?.hospitalName }}</b>
+                      </p>
+                    </mat-checkbox>
+                  </div>
+                </mat-panel-title>
+                <mat-panel-description class="d-flex justify-content-end">
+                  <span class="badge badge-pill badge-success">{{
+                    request?.status ? "Approved" : "Not Approved"
+                  }}</span>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div>
+                <div class="p-3">
+                  <div
+                    class="mb-3"
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <h5>Patient Details</h5>
+                    <button
+                      mat-icon-button
+                      [disabled]="request.aggregator?.length > 0"
+                      color="primary"
+                    >
+                      <mat-icon
+                        (click)="remind(request)"
+                        style="cursor: pointer"
+                        [matTooltip]="
+                          request.aggregator?.length > 0
+                            ? 'You cannot send a reminder for an aggregated request'
+                            : 'Remind Patient Confirmation Request'
+                        "
+                        matTooltipPosition="right"
+                        >alarm</mat-icon
+                      >
+                    </button>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Patient Name</b></div>
+                      <div>{{ patientData?.name }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Treatment</b></div>
+                      <div>{{ patientData?.treatment || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Country</b></div>
+                      <div>{{ patientData?.country }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>No. of cabs</b></div>
+                      <div>{{ request?.cabs || 0 }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Resend Reminder Count</b></div>
+                      <div>{{ request?.reminderCount }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Received At</b></div>
+                      <div>
+                        {{ (request?.receivedAt | date : "medium") || "NIL" }}
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Created At</b></div>
+                      <div>{{ request?.createdAt | date : "medium" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Aggregator</b></div>
+                      <div>
+                        {{
+                          request?.aggregator?.length
+                            ? request?.aggregator.join(", ")
+                            : "NIL"
+                        }}
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Remarks</b></div>
+                      <div>{{ request?.remarks }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-3">
+                  <h5>Flight Details</h5>
+                  <div class="row mt-4">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Flight Name</b></div>
+                      <div>{{ patientData?.flightName || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Flight Number</b></div>
+                      <div>{{ patientData?.flightNo || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Arrival date and time</b></div>
+                      <div>
+                        {{
+                          request?.arrivalDate
+                            ? (request?.arrivalDate | date : "medium")
+                            : "NIL"
+                        }}
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Contact person</b></div>
+                      <div>{{ request?.contactPerson || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Contact person number</b></div>
+                      <div>{{ request?.contactPersonNo || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Coordinator address</b></div>
+                      <div>{{ request?.coordinatorAddress || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Coordinator pickup date and time</b></div>
+                      <div>
+                        {{
+                          request?.coordinatorPickUpTime
+                            ? (request?.coordinatorPickUpTime | date : "medium")
+                            : "NIL"
+                        }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-3" *ngIf="request?.ticket?.length">
+                  <div>
+                    <div><b>Ticket</b></div>
+                    <div class="mt-3">
+                      <app-global-image-preview
+                        [fileList]="request?.ticket"
+                        [filePreviewList]="request?.ticket"
+                        [type]="'fileUploaded'"
+                        [remove]="false"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </ng-container>
+      <div class="" *ngIf="isDataLoading">
+        <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+      </div>
+
+      <div class="card m-4 p-3" *ngIf="!isDataLoading && !requests?.length">
+        <div style="text-align: center">--No Data Found--</div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <h5>Patient Confirmation Edited</h5>
+      <ng-container *ngIf="requestEdited?.length">
+        <div *ngFor="let request of requestEdited" class="mt-4">
+          <mat-accordion>
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header #exPanel>
+                <mat-panel-title>
+                  <div (click)="!exPanel._toggle()">
+                    <mat-checkbox
+                      (change)="selectChange($event, request, false)"
+                    >
+                      <p class="mb-0">
+                        <b>{{ request?.hospitalName }}</b>
+                      </p>
+                    </mat-checkbox>
+                  </div>
+                </mat-panel-title>
+                <mat-panel-description class="d-flex justify-content-end">
+                  <span class="badge badge-pill badge-success">{{
+                    request?.status ? "Approved" : "Not Approved"
+                  }}</span>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div>
+                <div class="p-3">
+                  <div
+                    class="mb-3"
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <h5>Patient Details</h5>
+                    <button
+                      mat-icon-button
+                      [disabled]="request.aggregator?.length > 0"
+                      color="primary"
+                    >
+                      <mat-icon
+                        (click)="remindEdited(request)"
+                        style="cursor: pointer"
+                        [matTooltip]="
+                          request.aggregator?.length > 0
+                            ? 'You cannot send a reminder for an aggregated request'
+                            : 'Remind Patient Confirmation Request'
+                        "
+                        matTooltipPosition="right"
+                        >alarm</mat-icon
+                      >
+                    </button>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Patient Name</b></div>
+                      <div>{{ patientData?.name }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Treatment</b></div>
+                      <div>{{ patientData?.treatment || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Country</b></div>
+                      <div>{{ patientData?.country }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>No. of cabs</b></div>
+                      <div>{{ request?.cabs || 0 }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Resend Reminder Count</b></div>
+                      <div>{{ request?.reminderCount }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Received At</b></div>
+                      <div>
+                        {{ (request?.receivedAt | date : "medium") || "NIL" }}
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Created At</b></div>
+                      <div>{{ request?.createdAt | date : "medium" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Aggregator</b></div>
+                      <div>
+                        {{
+                          request?.aggregator?.length
+                            ? request?.aggregator.join(", ")
+                            : "NIL"
+                        }}
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Remarks</b></div>
+                      <div>{{ request?.remarks }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-3">
+                  <h5>Flight Details</h5>
+                  <div class="row mt-4">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Flight Name</b></div>
+                      <div>{{ patientData?.flightName || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Flight Number</b></div>
+                      <div>{{ patientData?.flightNo || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Arrival date and time</b></div>
+                      <div>
+                        {{
+                          request?.arrivalDate
+                            ? (request?.arrivalDate | date : "medium")
+                            : "NIL"
+                        }}
+                      </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Contact person</b></div>
+                      <div>{{ request?.contactPerson || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Contact person number</b></div>
+                      <div>{{ request?.contactPersonNo || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Coordinator address</b></div>
+                      <div>{{ request?.coordinatorAddress || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Coordinator pickup date and time</b></div>
+                      <div>
+                        {{
+                          request?.coordinatorPickUpTime
+                            ? (request?.coordinatorPickUpTime | date : "medium")
+                            : "NIL"
+                        }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-3" *ngIf="request?.ticket?.length">
+                  <div>
+                    <div><b>Ticket</b></div>
+                    <div class="mt-3">
+                      <app-global-image-preview
+                        [fileList]="request?.ticket"
+                        [filePreviewList]="request?.ticket"
+                        [type]="'fileUploaded'"
+                        [remove]="false"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </ng-container>
+      <div class="" *ngIf="isEditedDataLoading">
+        <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+      </div>
+
+      <div
+        class="card m-4 p-3"
+        *ngIf="!isEditedDataLoading && !requestEdited?.length"
+      >
+        <div style="text-align: center">--No Data Found--</div>
+      </div>
+    </div>
+
+    <mat-error
+      class="mt-3"
+      *ngIf="
+        emailFrom.controls['selectHospital'].touched &&
+        emailFrom.controls['selectHospital'].invalid
+      "
+      >Hospital Selection is required</mat-error
+    >
+
+    <div class="mt-4">
+      <button mat-flat-button color="primary" (click)="submit()">Submit</button>
+    </div>
+  </form>
+</div>

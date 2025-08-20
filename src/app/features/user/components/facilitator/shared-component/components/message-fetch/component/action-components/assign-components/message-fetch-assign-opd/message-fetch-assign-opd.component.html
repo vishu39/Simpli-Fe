@@ -1,0 +1,204 @@
+<div
+  style="height: calc(100vh - 290px); overflow: scroll"
+  class="hide-scrollbar p-4"
+>
+  <form [formGroup]="opdForm">
+    <ng-container>
+      <div class="_radio-wrapper">
+        <div class="_radio-field-title"><span>Top Hospitals List</span></div>
+        <div *ngIf="!isLoadingTopHospital">
+          <div *ngIf="topHospitalData?.length">
+            <mat-radio-group
+              formControlName="opdRequest"
+              class="_radio hide-scrollbar"
+              style="width: 100%"
+            >
+              <mat-radio-button
+                *ngFor="let option of topHospitalData"
+                (change)="topHospitalChange(option)"
+                [value]="option?._id"
+                >{{ option?.name }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div *ngIf="!topHospitalData?.length" style="text-align: center">
+            -- No Data Found --
+          </div>
+        </div>
+        <mat-spinner
+          *ngIf="isLoadingTopHospital"
+          class="mx-auto mb-2 mt-2"
+          [diameter]="30"
+        >
+        </mat-spinner>
+      </div>
+    </ng-container>
+
+    <div class="mt-4 row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <div class="multiple_select_custom">
+          <mat-form-field class="example-full-width">
+            <mat-label>Hospital</mat-label>
+            <mat-select
+              formControlName="opdRequest"
+              msInfiniteScroll
+              (infiniteScroll)="onInfiniteScrollHospital()"
+            >
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchHospital($event.target.value)"
+              />
+              <div
+                class="other_option"
+                *ngIf="!hospitalData?.length && !isLoadingHospital"
+              >
+                No results
+              </div>
+              <ng-container>
+                <mat-option
+                  (click)="
+                    onClickHospital({
+                      _id: item._id,
+                      name: item.name
+                    })
+                  "
+                  *ngFor="let item of hospitalData"
+                  [value]="item?._id"
+                >
+                  {{ item?.name }}
+                </mat-option>
+              </ng-container>
+
+              <mat-spinner
+                *ngIf="isLoadingHospital"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </mat-select>
+            <div class="chip_section" [perfectScrollbar]>
+              <mat-chip-list>
+                <mat-chip *ngIf="selectedHospital?.hospitalId">
+                  {{ selectedHospital?.hospitalName }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+            <mat-error
+              *ngIf="opdForm.controls['opdRequest'].hasError('required')"
+            >
+              Hospital is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Aggregator</mat-label>
+
+          <mat-select formControlName="aggregator">
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchAggregator($event.target.value)"
+            />
+            <div
+              class="other_option"
+              *ngIf="!aggregatorList.length && !isAggregatorLoading"
+            >
+              No results
+            </div>
+            <ng-container>
+              <mat-option
+                (click)="onClickAggregator(item)"
+                *ngFor="let item of aggregatorList"
+                [value]="item._id"
+              >
+                {{ item?.name }}
+              </mat-option>
+            </ng-container>
+
+            <mat-spinner
+              *ngIf="isAggregatorLoading"
+              class="mx-auto mb-2 mt-2"
+              [diameter]="30"
+            >
+            </mat-spinner>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Received At</mat-label>
+          <input
+            matTooltip="For tasks received via email or WhatsApp, enter the date and time received; if editing is disabled, it’s auto-captured."
+            matInput
+            [owlDateTime]="dt"
+            [owlDateTimeTrigger]="dt"
+            formControlName="receivedAt"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #dt
+            pickerType="both"
+          ></owl-date-time>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Doctor</mat-label>
+
+          <input matInput placeholder="Doctor" formControlName="doctorName" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <div class="example-button-row justify-end">
+          <button
+            (click)="getOpinionRequestRecipients()"
+            mat-raised-button
+            color="secondary"
+          >
+            Check Contact Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-3 mb-0" *ngIf="isCheckEmailClicked">
+      <mat-tab-group
+        (selectedTabChange)="changeTab($event)"
+        animationDuration="0ms"
+      >
+        <mat-tab label="Email Details">
+          <div *ngIf="selectedTab === 'Email Details'" class="p-3 pb-0">
+            <app-query-management-email-details
+              [emailData]="checkContactData?.emailData"
+              [component]="'opd'"
+            ></app-query-management-email-details>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Message Details">
+          <div *ngIf="selectedTab === 'Message Details'" class="p-3 pb-0">
+            <app-query-management-check-details
+              [messageData]="checkContactData?.messageData"
+              [component]="'opd'"
+            ></app-query-management-check-details>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </form>
+</div>

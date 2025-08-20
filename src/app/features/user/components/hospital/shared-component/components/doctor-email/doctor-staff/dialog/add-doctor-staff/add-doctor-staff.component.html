@@ -1,0 +1,206 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="m-4" [formGroup]="doctorStaffForm" (ngSubmit)="formSubmit()">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name" />
+            <mat-error
+              *ngIf="doctorStaffForm.controls['name'].hasError('required')"
+            >
+              Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option [value]="item" *ngFor="let item of typeData">{{
+                item | titlecase
+              }}</mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="doctorStaffForm.controls['type'].hasError('required')"
+            >
+              Type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Email Id</mat-label>
+            <input
+              matInput
+              type="email"
+              formControlName="emailId"
+              (keypress)="spaceRestrict($event)"
+            />
+            <mat-error
+              *ngIf="doctorStaffForm.controls['emailId'].hasError('required')"
+            >
+              Email is required
+            </mat-error>
+            <mat-error
+              *ngIf="doctorStaffForm.controls['emailId'].hasError('pattern')"
+            >
+              Invalid email address</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact</mat-label>
+            <ngx-mat-intl-tel-input
+              formControlName="contact"
+              [enablePlaceholder]="true"
+              [enableSearch]="true"
+              [preferredCountries]="['in']"
+            ></ngx-mat-intl-tel-input>
+
+            <mat-error
+            *ngIf="doctorStaffForm.controls['contact'].hasError('required')"
+            >
+            Contact is required
+          </mat-error>
+          <mat-error
+          *ngIf="doctorStaffForm.controls['contact']?.errors?.validatePhoneNumber"
+          >Invalid contact</mat-error
+          >
+        </mat-form-field>
+          <!-- <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="contact"
+              (keypress)="spaceRestrict($event)"
+            />
+            <mat-error
+              *ngIf="doctorStaffForm.controls['contact'].hasError('required')"
+            >
+              Contact is required
+            </mat-error>
+            <mat-error
+              *ngIf="doctorStaffForm.controls['contact'].hasError('pattern')"
+            >
+              Invalid contact</mat-error
+            >
+          </mat-form-field> -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Doctor</mat-label>
+              <mat-select
+                multiple
+                formControlName="doctor"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollDoctor()"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchDoctor($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!doctorData?.length && !isLoadingDoctor"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="doctorData?.length">
+                  <mat-checkbox (change)="selectAllDoctor($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingDoctorSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingDoctorSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickDoctor({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of doctorData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isLoadingDoctor && !isLoadingDoctorSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of doctorStaffForm.get('doctor').value"
+                  >
+                    {{ item.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-error
+                *ngIf="doctorStaffForm.controls['doctor'].hasError('required')"
+              >
+                Doctor is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

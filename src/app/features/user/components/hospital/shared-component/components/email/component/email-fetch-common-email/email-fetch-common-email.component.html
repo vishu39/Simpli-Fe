@@ -1,0 +1,74 @@
+<div class="row" id="commonEmailDetails" style="position: relative">
+  <div
+    style="height: calc(100vh - 205px); overflow: scroll"
+    class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hide-scrollbar"
+  >
+    <div class="p-3">
+      <div>
+        <div class="subject mb-4 mt-2">
+          <h4>{{ emailData?.subject }}</h4>
+        </div>
+        <div class="midDiv">
+          <div class="name">
+            <span class="avatar">
+              {{ getNameFromMail(emailData?.from) | slice : 0 : 2 | uppercase }}
+            </span>
+            <div>
+              <div>
+                <b>{{ getNameFromMail(emailData?.from) }}</b>
+              </div>
+              <p
+                style="
+                  font-size: 13px;
+                  color: #5e5e5e;
+                  display: flex;
+                  align-items: center;
+                "
+              >
+                {{ emailData?.to || "NIL" }}
+                <mat-icon
+                  style="width: 10%"
+                  class="downArrow"
+                  #tooltipButton
+                  id="tooltipButton"
+                  (click)="showTooltip(tooltipButton)"
+                  >arrow_drop_down</mat-icon
+                >
+              </p>
+            </div>
+          </div>
+          <div class="date" style="font-size: 13px; color: #5e5e5e">
+            {{ emailData?.date | date : "EEE, MMM d, hh:mm a" }}
+            ({{ emailData?.date | timeago : "live" }})
+          </div>
+        </div>
+        <div class="bodddy" style="padding-left: 52px">
+          <div *ngIf="emailData?.html !== 'false'">
+            <div [innerHTML]="emailData?.html | safeHtml"></div>
+          </div>
+
+          <div *ngIf="emailData?.html === 'false'">
+            {{ emailData?.text }}
+          </div>
+        </div>
+        <hr />
+        <div
+          style="padding-left: 52px"
+          *ngIf="emailData?.attachment?.length > 0"
+          class="attachments"
+        >
+          <h6 class="mb-4 mt-2">
+            {{ emailData?.attachment?.length }} Attachments
+          </h6>
+          <app-email-fetch-image-previewer
+            [fileList]="emailData?.attachment"
+            [filePreviewList]="emailData?.attachment"
+            [type]="'fileUploaded'"
+            [remove]="false"
+            [className]="'col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-2'"
+          ></app-email-fetch-image-previewer>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

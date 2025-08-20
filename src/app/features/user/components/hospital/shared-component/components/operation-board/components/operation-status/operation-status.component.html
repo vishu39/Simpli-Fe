@@ -1,0 +1,172 @@
+<div class="comments-section">
+  <div class="header_com d-flex justify-content-between align-items-center">
+    <h6>Operation Status</h6>
+    <mat-form-field>
+      <mat-label>Select Type</mat-label>
+      <mat-select [value]="operationStatusParams?.type">
+        <mat-option (click)="onTypeChange('Daily Status')" value="Daily Status"
+          >Daily Status</mat-option
+        >
+        <mat-option (click)="onTypeChange('Query Status')" value="Query Status"
+          >Query Status</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="comment_div">
+    <mat-form-field appearance="outline" class="example-full-width mt-2">
+      <mat-label>Search</mat-label>
+      <input
+        placeholder="search..."
+        (keydown.space)="$event.stopPropagation()"
+        matInput
+        (keyup)="searchStatus($event.target.value)"
+      />
+    </mat-form-field>
+    <!-- <div class="search_div">
+      <input
+        class="search_comment"
+        placeholder="search..."
+        (keydown.space)="$event.stopPropagation()"
+        matInput
+        (keyup)="searchStatus($event.target.value)"
+      />
+    </div> -->
+
+    <div
+      #scrollMe
+      class="comments"
+      infiniteScroll
+      [infiniteScrollDistance]="0.5"
+      [scrollWindow]="false"
+      (scrolledUp)="onInfiniteScrollStatus()"
+    >
+      <div *ngIf="operationStatusData?.length">
+        <mat-spinner
+          *ngIf="isOperationStatusLoading"
+          class="mx-auto mb-2 mt-2"
+          [diameter]="30"
+        ></mat-spinner>
+        <div
+          *ngFor="let chat of operationStatusData"
+          [ngClass]="
+            isDark() ? 'com comment_is_Dark mb-3' : 'com comment_is_Light mb-3'
+          "
+        >
+          <div class="comment-message">
+            <div class="chat_and_file">
+              <p class="mb-1">
+                {{ chat?.message }}
+              </p>
+              <div class="d-flex mt-2">
+                <b style="margin-right: 4px">Type: </b>
+                <div class="text">{{ chat?.type }}</div>
+              </div>
+              <div class="d-flex mt-2">
+                <b style="margin-right: 4px">From: </b>
+                <div class="text">{{ chat?.userName | titlecase }}</div>
+              </div>
+              <div class="d-flex mt-2">
+                <b style="margin-right: 4px">Sent Date: </b>
+                <div class="text">
+                  {{ chat?.createdAt | date : "dd/MM/yyyy" }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="d-flex align-items-center justify-content-between"
+            style="width: 100%; color: #555"
+          >
+            <div></div>
+            <p class="mb-0" style="margin-left: 8px">
+              {{ chat?.createdAt | date : " h:mm a " }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="isOperationStatusLoading && !operationStatusData?.length"
+        class="loader_center"
+      >
+        <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+      </div>
+
+      <div
+        class="not_found"
+        *ngIf="!isOperationStatusLoading && !operationStatusData?.length"
+      >
+        --No Status Found--
+      </div>
+    </div>
+
+    <div
+      *ngIf="title !== 'Finance' && title !== 'Completed Query'"
+      class="add_form"
+    >
+      <form class="comment-box" [formGroup]="operationStatusForm">
+        <div class="main">
+          <div class="comment-div">
+            <mat-form-field class="example-full-width">
+              <mat-label>Select Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option
+                  *ngIf="title !== 'Pending Query'"
+                  value="Daily Status"
+                  >Daily Status</mat-option
+                >
+                <mat-option
+                  *ngIf="title !== 'On Ground Patient'"
+                  value="Query Status"
+                  >Query Status</mat-option
+                >
+              </mat-select>
+
+              <mat-error
+                *ngIf="
+                  operationStatusForm?.controls['type']?.hasError('required')
+                "
+              >
+                Type is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="example-full-width">
+              <mat-label>Message</mat-label>
+              <textarea
+                class="text-area"
+                formControlName="message"
+                matInput
+                [rows]="5"
+                style="resize: none"
+                #message
+                maxlength="500"
+              ></textarea>
+              <mat-error
+                *ngIf="
+                  operationStatusForm?.controls['message']?.hasError('required')
+                "
+              >
+                Message is required
+              </mat-error>
+              <mat-hint align="end">{{ message.value.length }} / 500</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center flex-wrap">
+          <button
+            mat-flat-button
+            type="button"
+            color="warn"
+            (click)="onSubmit()"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

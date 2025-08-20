@@ -1,0 +1,306 @@
+<div *ngIf="isEdit" class="modalHeader">
+  <div class="editRowModal">
+    <div class="modalHeader clearfix">
+      <div class="modal-about">
+        <div class="font-weight-bold p-t-5 font-17">
+          {{ title }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    mat-icon-button
+    (click)="closeDialog(false)"
+    aria-label="Close dialog"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <form class="m-4" [formGroup]="patientConfirmationForm">
+    <div>
+      <h6 class="mt-0 mb-3">Patient Details</h6>
+      <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Patient Name</mat-label>
+            <input matInput type="text" formControlName="patientName" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Treatment</mat-label>
+            <input matInput type="text" formControlName="treatment" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Country</mat-label>
+            <input matInput type="text" formControlName="country" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>No of cabs required</mat-label>
+            <input matInput type="number" formControlName="cabs" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h6 class="mt-0 mb-3">Flight Details</h6>
+      <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Flight Name</mat-label>
+            <input matInput type="text" formControlName="flightName" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Flight Number</mat-label>
+            <input matInput type="text" formControlName="flightNo" />
+          </mat-form-field>
+        </div>
+        <mat-form-field
+          class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2"
+          appearance="outline"
+        >
+          <mat-label>Arrival Date And Time</mat-label>
+          <input
+            matInput
+            [owlDateTime]="dt"
+            [owlDateTimeTrigger]="dt"
+            formControlName="arrivalDate"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #dt
+            pickerType="both"
+          ></owl-date-time>
+          <mat-error
+            *ngIf="
+              patientConfirmationForm.controls['arrivalDate'].hasError(
+                'required'
+              )
+            "
+          >
+            Arrival Date is required
+          </mat-error>
+        </mat-form-field>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact Person Name</mat-label>
+            <input matInput type="text" formControlName="contactPerson" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact Person Number</mat-label>
+            <ngx-mat-intl-tel-input
+              formControlName="contactPersonNo"
+              [enablePlaceholder]="true"
+              [enableSearch]="true"
+              [preferredCountries]="['in']"
+            ></ngx-mat-intl-tel-input>
+          <mat-error
+          *ngIf="patientConfirmationForm.controls['contactPersonNo']?.errors?.validatePhoneNumber"
+          >Invalid contact</mat-error
+          >
+        </mat-form-field>
+          <!-- <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact Person Number</mat-label>
+            <input matInput type="number" formControlName="contactPersonNo" />
+            <mat-error
+              *ngIf="
+                patientConfirmationForm.controls['contactPersonNo'].hasError(
+                  'pattern'
+                )
+              "
+            >
+              Invalid contact</mat-error
+            >
+          </mat-form-field> -->
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Coordinator Address</mat-label>
+            <input matInput type="text" formControlName="coordinatorAddress" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Coordinator Pickup Date And Time</mat-label>
+            <input
+              matInput
+              [owlDateTime]="dtc"
+              [owlDateTimeTrigger]="dtc"
+              formControlName="coordinatorPickUpTime"
+            />
+            <mat-icon matSuffix [owlDateTimeTrigger]="dtc" class="date-icon"
+              >today</mat-icon
+            >
+            <owl-date-time
+              hour12Timer="true"
+              #dtc
+              pickerType="both"
+            ></owl-date-time>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="mb-4">
+        <app-global-image-preview
+          [fileList]="fileList"
+          [filePreviewList]="fileList"
+          [type]="'fileUploader'"
+          [remove]="true"
+          (onDelete)="onDelete($event)"
+        ></app-global-image-preview>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Upload Ticket</mat-label>
+          <ngx-mat-file-input
+            style="display: none"
+            multiple
+            accept=".png, .jpg, .jpeg, .pdf"
+            name="fileFirst"
+            formControlName="fileFirst"
+            (change)="onFileSelected($event)"
+          >
+          </ngx-mat-file-input>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <div>
+              <span *ngFor="let file of fileList; let i = index">
+                <span
+                  >{{ file?.name
+                  }}<span *ngIf="i < fileList?.length - 1">, </span></span
+                >
+              </span>
+            </div>
+            <mat-icon style="transform: translateY(-5px)">upload</mat-icon>
+          </div>
+          <!-- <mat-error
+            *ngIf="
+              patientConfirmationForm.controls['fileFirst'].hasError('required')
+            "
+          >
+            Ticket is required
+          </mat-error> -->
+        </mat-form-field>
+        <div class="mb-2" *ngIf="uploadedDoc?.length">
+          <h6>Uploaded Tickets</h6>
+          <div class="mt-4">
+            <app-global-image-preview
+              [fileList]="uploadedDoc"
+              [filePreviewList]="uploadedDoc"
+              [type]="'fileUploaded'"
+              [remove]="true"
+              (onDelete)="deleteTicket($event)"
+            ></app-global-image-preview>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Remarks</mat-label>
+          <textarea
+            matInput
+            type="textarea"
+            formControlName="remarks"
+            placeholder="Remarks"
+          ></textarea>
+          <mat-error
+            *ngIf="
+              patientConfirmationForm.controls['remarks'].hasError('required')
+            "
+          >
+            Remarks is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Hospital</mat-label>
+          <mat-select
+            *ngIf="!isEdit"
+            formControlName="hospitalName"
+            msInfiniteScroll
+            (infiniteScroll)="onInfiniteScrollHospital()"
+          >
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchHospital($event.target.value)"
+            />
+            <div
+              class="other_option"
+              *ngIf="!hospitalData?.length && !isLoadingHospital"
+            >
+              No results
+            </div>
+            <ng-container>
+              <mat-option
+                (click)="onClickHospital(item)"
+                *ngFor="let item of hospitalData"
+                [value]="item?.name"
+              >
+                {{ item?.name }}
+              </mat-option>
+            </ng-container>
+
+            <mat-spinner
+              *ngIf="isLoadingHospital"
+              class="mx-auto mb-2 mt-2"
+              [diameter]="30"
+            >
+            </mat-spinner>
+          </mat-select>
+          <input
+            matInput
+            *ngIf="isEdit"
+            type="text"
+            formControlName="hospitalName"
+          />
+          <mat-error
+            *ngIf="
+              patientConfirmationForm.controls['hospitalName'].hasError(
+                'required'
+              )
+            "
+          >
+            Hospital is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <div class="example-button-row justify-end">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="submit()"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

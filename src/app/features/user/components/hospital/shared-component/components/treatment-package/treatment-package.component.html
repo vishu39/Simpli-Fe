@@ -1,0 +1,178 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Treatment Package'"
+        [active_item]="'All Treatment Package'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="dropdown">
+                        <h2>
+                          <strong>Treatment Package</strong>
+                        </h2>
+                      </li>
+                      <li class="dropdown m-l-20">
+                        <label for="search-input"
+                          ><i class="material-icons search-icon"
+                            >search</i
+                          ></label
+                        >
+                        <input
+                          placeholder="Search"
+                          type="text"
+                          (keyup)="search($event.target.value)"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                        />
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-4">
+                    <ul class="header-buttons">
+                      <li>
+                        <div class="m-l-10" matTooltip="Add">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="addTreatmentPackage('Add Package')"
+                          >
+                            <mat-icon class="col-white">add</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <mat-table #table [dataSource]="packageData" class="mat-cell">
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row.name }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="doctorName">
+                  <mat-header-cell *matHeaderCellDef
+                    >Doctor Name</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row?.doctorName }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="countryDuration">
+                  <mat-header-cell *matHeaderCellDef
+                    >Stay In Country</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row?.stayInCountry }}
+                    {{ row?.countryDuration | titlecase }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="hospitalDuration">
+                  <mat-header-cell *matHeaderCellDef
+                    >Stay In Hospital</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row?.stayInHospital }}
+                    {{ row?.hospitalDuration | titlecase }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- actions -->
+                <ng-container matColumnDef="action">
+                  <mat-header-cell class="pr-0" *matHeaderCellDef
+                    >Action</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row; let i = index" class="pr-0">
+                    <!-- <button
+                      mat-icon-button
+                      [matMenuTriggerFor]="menu"
+                      aria-label="Example icon-button with a menu"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button
+                        (click)="editTreatmentPackage('Edit Package', row)"
+                        mat-menu-item
+                      >
+                        <span>Edit Package</span>
+                      </button>
+
+                      <button
+                        (click)="deleteTreatmentPackage(row._id)"
+                        mat-menu-item
+                      >
+                        <span>Delete Package</span>
+                      </button>
+                    </mat-menu> -->
+
+                    <button
+                      mat-icon-button
+                      (click)="editTreatmentPackage('Edit Package', row)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'edit'"
+                        [class]="'tbl-fav-edit'"
+                      ></app-feather-icons>
+                    </button>
+                    <button
+                      mat-icon-button
+                      (click)="deleteTreatmentPackage(row._id)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'trash-2'"
+                        [class]="'tbl-fav-delete'"
+                      ></app-feather-icons>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
+                </mat-row>
+              </mat-table>
+
+              <div
+                *ngIf="!isDataLoading && packageData.data?.length === 0"
+                class="no-results"
+              >
+                No results
+              </div>
+
+              <div class="table_loader" *ngIf="isDataLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <mat-paginator
+                (page)="onPaginateChange($event)"
+                [length]="totalElement"
+                [pageSize]="packageParams.limit"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

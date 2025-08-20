@@ -1,0 +1,124 @@
+.header_com {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid #e7e7e7;
+  h4 {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+}
+
+.comment_div {
+  display: flex;
+  flex-direction: column;
+  // row-gap: 16px;
+
+  .search_div {
+    margin-top: 12px;
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: 1px solid #ffd4d4;
+    .search_comment {
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      box-sizing: border-box !important;
+      font-size: inherit !important;
+      padding: 8px !important;
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 100 !important;
+      background: transparent !important;
+    }
+  }
+
+  .comments {
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #ffd4d4;
+    height: 300px;
+    overflow: auto;
+    .com {
+      // background-color: rgba(246, 246, 246, 0.474);
+      border: 0.5px solid lightgrey;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: start;
+    }
+    .comment_is_Light {
+      background-color: rgba(246, 246, 246, 0.474);
+    }
+    .comment_is_Dark {
+      background-color: transparent;
+    }
+
+    .not_found {
+      display: grid;
+      place-items: center;
+      height: 100%;
+    }
+
+    .comment-message {
+      width: 100%;
+      .chat_and_file {
+        width: 200%;
+      }
+    }
+  }
+  .add_form {
+    border-radius: 10px;
+    border: 1px solid #ffd4d4;
+    padding: 0.5rem 1rem;
+    margin-top: 16px;
+    .comment-box {
+      display: flex;
+      flex-direction: column;
+      .main {
+        display: flex;
+        .comment-div {
+          width: 100%;
+          .text-area::placeholder {
+            font-size: 1.2rem;
+          }
+        }
+      }
+    }
+  }
+
+  .mention_div {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+}
+.title {
+  font-size: 1.2rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: #e2f0fb;
+  color: black;
+  font-weight: 600;
+  height: 40px;
+  width: 40px;
+}
+
+.chip {
+  border-radius: 40px;
+  padding: 3px 5px;
+  background-color: #bcdefb;
+  color: black;
+  margin-right: 4px;
+}
+
+.no_data_found {
+  height: 100px;
+  display: grid;
+  place-items: center;
+  border: 1px solid lightgrey;
+  margin-top: 8px;
+  border-radius: 10px;
+}

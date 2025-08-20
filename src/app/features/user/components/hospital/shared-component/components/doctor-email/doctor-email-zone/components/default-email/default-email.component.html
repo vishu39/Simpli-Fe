@@ -1,0 +1,191 @@
+<div class="row mt-4">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="body">
+        <form
+          class="m-4"
+          [formGroup]="defaultEmailForm"
+          (ngSubmit)="formSubmit()"
+        >
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Assistant Doctor</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="assistantDoctor"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollAssistant()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchAssistant($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="
+                        !assistantDoctorData?.length && !isLoadingAssistant
+                      "
+                    >
+                      No results
+                    </div>
+
+                    <div
+                      class="other_option"
+                      *ngIf="assistantDoctorData?.length"
+                    >
+                      <mat-checkbox (change)="selectAllAssistant($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingAssistantSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingAssistantSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickAssistant({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of assistantDoctorData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="isLoadingAssistant && !isLoadingAssistantSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('assistantDoctor')
+                            .value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div class="multiple_select_custom">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Coordinator</mat-label>
+                  <mat-select
+                    multiple
+                    formControlName="coordinator"
+                    msInfiniteScroll
+                    (infiniteScroll)="onInfiniteScrollCoordinator()"
+                    [compareWith]="compareObjects"
+                  >
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                      (keyup)="searchCoordinator($event.target.value)"
+                    />
+                    <div
+                      class="other_option"
+                      *ngIf="!coordinatorData?.length && !isLoadingCoordinator"
+                    >
+                      No results
+                    </div>
+
+                    <div class="other_option" *ngIf="coordinatorData?.length">
+                      <mat-checkbox (change)="selectAllCoordinator($event)"
+                        >Select All
+                      </mat-checkbox>
+                    </div>
+
+                    <mat-spinner
+                      *ngIf="isLoadingCoordinatorSelectAll"
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+
+                    <ng-container *ngIf="!isLoadingCoordinatorSelectAll">
+                      <mat-option
+                        (click)="
+                          onClickCoordinator({
+                            _id: item._id,
+                            name: item.name
+                          })
+                        "
+                        *ngFor="let item of coordinatorData"
+                        [value]="{
+                          _id: item._id,
+                          name: item.name
+                        }"
+                      >
+                        {{ item.name }}
+                      </mat-option>
+                    </ng-container>
+
+                    <mat-spinner
+                      *ngIf="
+                        isLoadingCoordinator && !isLoadingCoordinatorSelectAll
+                      "
+                      class="mx-auto mb-2 mt-2"
+                      [diameter]="30"
+                    >
+                    </mat-spinner>
+                  </mat-select>
+                  <div class="chip_section" [perfectScrollbar]>
+                    <mat-chip-list>
+                      <mat-chip
+                        *ngFor="
+                          let item of defaultEmailForm.get('coordinator').value
+                        "
+                      >
+                        {{ item.name }}
+                      </mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+              <button
+                class="btn-space"
+                [disabled]="!doctorId"
+                mat-raised-button
+                color="primary"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

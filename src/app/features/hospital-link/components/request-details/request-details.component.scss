@@ -1,0 +1,239 @@
+.query-management-container {
+  padding: 15px;
+  position: relative;
+  width: 100%;
+
+  .main-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 96vh;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  %box {
+    height: 100%;
+    overflow-y: hidden;
+    flex: 1 0 auto;
+    background: #fffffff6;
+    box-shadow: 10px 8px 32px 0 #b8b8ba44;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(13.5px);
+    border-radius: 10px;
+    padding: 1rem;
+  }
+
+  .left {
+    @extend %box;
+    width: 44%;
+    padding: 10px;
+
+    .list-toolbar {
+      margin-top: -10px;
+
+      .action {
+        mat-icon {
+          font-size: 1.3rem;
+        }
+      }
+    }
+
+    .list-wrapper {
+      background-color: #d3d3db1a;
+      border-radius: 10px;
+      height: 95%;
+      overflow-y: auto;
+      padding: 10px 5px;
+
+      &::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(232, 229, 229, 0.3);
+        background-color: #e3e3e3;
+        border-radius: 8px;
+      }
+
+      &::-webkit-scrollbar {
+        width: 10px;
+        background-color: #f5f5f5;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: #d9d9d9;
+        border-radius: 8px;
+
+        &:hover {
+          background-color: #b7b1b1;
+        }
+      }
+    }
+  }
+
+  .right {
+    @extend %box;
+    width: 54%;
+
+    .query-wrapper {
+      background-color: #d3d3db1a;
+      border-radius: 10px;
+      height: 100%;
+      overflow-y: auto;
+      padding: 10px;
+      outline: 1px solid #e2f0fb;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background-color: #e2f0fb;
+  width: 100% !important;
+  height: auto;
+
+  .title {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    margin: 10px 0;
+    flex: 1 1 40%;
+  }
+
+  .desktop-header-buttons {
+    flex: 0 0 auto;
+    padding-left: 10px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow-x: auto;
+    border-radius: 10%;
+
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+
+    mat-fab:not([class*="mat-elevation-z"]),
+    .mat-mini-fab:not([class*="mat-elevation-z"]) {
+      box-shadow: none;
+    }
+
+    button {
+      margin-right: 12px;
+      transform: scale(88%) !important;
+    }
+  }
+}
+
+.details {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e2dfdf;
+  padding: 1rem;
+
+  .heading {
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    button {
+      margin-top: -20px;
+    }
+  }
+
+  .details-content {
+    border-top: 1px solid #eed5d5;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+
+    div {
+      margin-top: 14px;
+      border-radius: 10px;
+      padding: 0 14px;
+
+      h4 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 14px;
+        color: #444;
+      }
+    }
+
+    mat-tab-group {
+      width: 100%;
+    }
+  }
+}
+
+.other-details {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e2dfdf;
+  padding: 1rem;
+  height: auto;
+
+  .heading {
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    button {
+      margin-top: -20px;
+    }
+  }
+
+  .other-details-content {
+    mat-tab-group {
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .details-content {
+    grid-template-columns: 200px !important;
+  }
+}
+
+// for tabs
+.tab-wrapper {
+  min-height: 15px;
+
+  .mh-wrapper {
+    padding: 1rem;
+
+    .mh-content {
+      margin-bottom: 10px;
+      padding: 1rem 1.5rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+  }
+}
+
+.text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  width: 70%;
+  line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}

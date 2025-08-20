@@ -1,0 +1,286 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form
+      class="m-4"
+      [formGroup]="queryViewForm"
+      (ngSubmit)="queryViewFormSubmit()"
+    >
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Zone Name</mat-label>
+            <input matInput type="text" formControlName="name" />
+            <mat-error
+              *ngIf="queryViewForm.controls['name'].hasError('required')"
+            >
+              Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Country</mat-label>
+              <mat-select
+                multiple
+                formControlName="country"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollCountry()"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCountry($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!countryData?.length && !isLoadingCountry"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="countryData?.length">
+                  <mat-checkbox (change)="selectAllCountry($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingCountrySelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingCountrySelectAll">
+                  <mat-option
+                    (click)="onClickCountry(item.name)"
+                    *ngFor="let item of countryData"
+                    [value]="item.name"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isLoadingCountry && !isLoadingCountrySelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of queryViewForm.get('country').value"
+                  >
+                    {{ item }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-error
+                *ngIf="queryViewForm.controls['country'].hasError('required')"
+              >
+                Country is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Treatment</mat-label>
+              <mat-select
+                multiple
+                formControlName="treatment"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollTreatment()"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchTreatment($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!treatmentData?.length && !isLoadingTreatment"
+                >
+                  No results
+                </div>
+                <div class="other_option" *ngIf="treatmentData?.length">
+                  <mat-checkbox (change)="selectAllTreatment($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+                <mat-spinner
+                  *ngIf="isLoadingTreatmentSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingTreatmentSelectAll">
+                  <mat-option
+                    (click)="onClickTreatment(item.name)"
+                    *ngFor="let item of treatmentData"
+                    [value]="item.name"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isLoadingTreatment && !isLoadingTreatmentSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of queryViewForm.get('treatment').value"
+                  >
+                    {{ item }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-error
+                *ngIf="queryViewForm.controls['treatment'].hasError('required')"
+              >
+                Treatment is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- own referral partner -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Own Referral Partner</mat-label>
+              <mat-select
+                multiple
+                formControlName="ownReferralPartner"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchOwnReferralPartner($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="
+                    !ownReferralPartnerData?.length &&
+                    !isLoadingOwnReferralPartner
+                  "
+                >
+                  No results
+                </div>
+                <div
+                  class="other_option"
+                  *ngIf="ownReferralPartnerData?.length"
+                >
+                  <mat-checkbox (change)="selectAllOwnReferralPartner($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+                <mat-spinner
+                  *ngIf="isLoadingOwnReferralPartnerSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingOwnReferralPartnerSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickOwnReferralPartner({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of ownReferralPartnerData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="
+                    isLoadingOwnReferralPartner &&
+                    !isLoadingOwnReferralPartnerSelectAll
+                  "
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="
+                      let item of queryViewForm.get('ownReferralPartner').value
+                    "
+                  >
+                    {{ item?.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-error
+                *ngIf="
+                  queryViewForm.controls['ownReferralPartner'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Own Referral Partner is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

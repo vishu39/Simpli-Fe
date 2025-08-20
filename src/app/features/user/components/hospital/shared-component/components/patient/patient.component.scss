@@ -1,0 +1,15 @@
+.status_dropdown{
+    margin-left: 15px;
+}
+
+.filter_active {
+    // background: rgb(197, 252, 233);
+    background: #6cb5f9;
+    color: black;
+    outline: none;
+  }
+  
+  ::ng-deep .mat-button-focus-overlay {
+    display: none;
+  }
+  

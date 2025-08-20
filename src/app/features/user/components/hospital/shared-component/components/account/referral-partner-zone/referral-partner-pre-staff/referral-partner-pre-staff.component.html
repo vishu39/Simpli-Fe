@@ -1,0 +1,166 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Referral Partner Pre Staff'"
+        [active_item]="'All Referral Partner Pre Staff'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="dropdown">
+                        <h2>
+                          <strong>Referral Partner Pre Staff</strong>
+                        </h2>
+                      </li>
+                      <li class="dropdown m-l-20">
+                        <label for="search-input"
+                          ><i class="material-icons search-icon"
+                            >search</i
+                          ></label
+                        >
+                        <input
+                          placeholder="Search"
+                          type="text"
+                          (keyup)="search($event.target.value)"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                        />
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-4">
+                    <!-- <ul class="header-buttons">
+                      <li>
+                        <div class="m-l-10" matTooltip="Add">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="
+                              addHospitalStaff('Add Referral Partner Staff')
+                            "
+                          >
+                            <mat-icon class="col-white">add</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul> -->
+                  </div>
+                </div>
+              </div>
+              <mat-table
+                #table
+                [dataSource]="referralPartnerStaffData"
+                class="mat-cell"
+              >
+                <ng-container matColumnDef="createdAt">
+                  <mat-header-cell *matHeaderCellDef
+                    >Created At</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.createdAt | date : "medium" }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row.name }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="emailId">
+                  <mat-header-cell *matHeaderCellDef>Email Id</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row.emailId }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="contact">
+                  <mat-header-cell *matHeaderCellDef>Contact</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row.contact }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="referral">
+                  <mat-header-cell *matHeaderCellDef
+                    >Referral Partner</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let row"
+                    [matTooltip]="
+                      truncateText(concatHospital(row.referralPartner), 80)
+                    "
+                  >
+                    {{ truncateText(concatHospital(row.referralPartner), 10) }}
+                  </mat-cell>
+                </ng-container>
+                <!-- <ng-container matColumnDef="action">
+                  <mat-header-cell class="pr-0" *matHeaderCellDef
+                    >Action</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row; let i = index" class="pr-0">
+                    <button
+                      mat-icon-button
+                      (click)="
+                        editHospitalStaff('Edit Referral Partner Staff', row)
+                      "
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'edit'"
+                        [class]="'tbl-fav-edit'"
+                      ></app-feather-icons>
+                    </button>
+                    <button
+                      mat-icon-button
+                      (click)="deleteRecord(row._id)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'trash-2'"
+                        [class]="'tbl-fav-delete'"
+                      ></app-feather-icons>
+                    </button>
+                  </mat-cell>
+                </ng-container> -->
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
+                </mat-row>
+              </mat-table>
+
+              <div class="table_loader" *ngIf="isDataLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <div
+                *ngIf="
+                  !isDataLoading && referralPartnerStaffData.data?.length === 0
+                "
+                class="no-results"
+              >
+                No results
+              </div>
+              <mat-paginator
+                (page)="onPaginateChange($event)"
+                [length]="totalElement"
+                [pageSize]="referralPartnerStaffParams.limit"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

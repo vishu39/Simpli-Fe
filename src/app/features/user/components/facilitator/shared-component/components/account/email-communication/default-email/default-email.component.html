@@ -1,0 +1,140 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Email Communication'"
+        [active_item]="'Default Email'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <div class="card">
+          <div class="body">
+            <div id="mail-nav">
+              <mat-form-field
+                appearance="outline"
+                class="example-full-width mt-2"
+              >
+                <mat-label>Search</mat-label>
+                <input
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchInternalUser($event.target.value)"
+                />
+              </mat-form-field>
+              <div class="list-results" *ngIf="internalUserData?.length">
+                <ul id="mail-folders">
+                  <li
+                    *ngFor="let item of internalUserData; let i = index"
+                    class="cursor_pointer"
+                    [ngClass]="{ active: item.active === true }"
+                  >
+                    <a (click)="onActive(item, i)">{{ item.name }} </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="isInternalUserLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <div
+                class="d-flex justify-content-center align-items-center"
+                *ngIf="!isInternalUserLoading && !internalUserData?.length"
+                class="text-secondary text-center"
+              >
+                -- No Data Found --
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+        <div class="card p-3">
+          <!-- if data is present start -->
+          <div *ngIf="!isAdminLoading">
+            <div
+              *ngIf="internalUserData?.length"
+              class="d-flex justify-content-between mb-4"
+            >
+              <h2 class="mb-0">
+                {{internalUserData?.[navIndex]?.name | titlecase}}
+              </h2>
+              <div *ngIf="isEmailSendDataAvailable">
+                {{ emailSendData?.createdAt | date : "medium" }}
+              </div>
+            </div>
+
+            <div
+              *ngIf="
+                emailSettingByUserData?.length > 0 &&
+                !isEmailSettingByUserLoading
+              "
+            >
+              <table>
+                <thead>
+                  <th>Email Id</th>
+                  <th>Email Host</th>
+                  <th>Type</th>
+                  <th>Default</th>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let item of emailSettingByUserData; let i = index"
+                  >
+                    <td>{{ item?.emailId || "NIL" }}</td>
+                    <td>
+                      {{ item?.emailHost || "NIL" }}
+                    </td>
+                    <td>{{ item?.type || "NIL" }}</td>
+                    <td style="min-height: 160px !important">
+                      <mat-slide-toggle
+                        (change)="onToggleChange($event, i)"
+                        [(ngModel)]="item.isDefault"
+                      >
+                      </mat-slide-toggle>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="mt-4">
+                <button
+                  type="button"
+                  (click)="submit()"
+                  mat-raised-button
+                  color="primary"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="isEmailSettingByUserLoading">
+              <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+              </mat-spinner>
+            </div>
+
+            <div
+              *ngIf="
+                !isEmailSettingByUserLoading && !emailSettingByUserData?.length
+              "
+              class="text-secondary text-center"
+            >
+              -- No Data Found --
+            </div>
+          </div>
+
+          <div *ngIf="isAdminLoading">
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+          <!-- if data is present end -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

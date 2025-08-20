@@ -1,0 +1,19 @@
+<div class="tab-wrapper">
+    <ng-container *ngIf="currentTab === 'Medical History'">
+        <div class="mh-wrapper">
+            <div class="mh-content">
+                <h2>Hello World</h2>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta, quo.</p>
+            </div>
+        </div>
+    </ng-container>
+    
+    <ng-container *ngIf="isFormTab()">
+        <app-sm-form
+            [data]="data"
+            [formConfig]="dialogFormConfig"
+            (formEvent)="onFormEvent($event)"
+            (formSubmit)="onFormSubmit($event)">
+          </app-sm-form>
+    </ng-container>
+</div>

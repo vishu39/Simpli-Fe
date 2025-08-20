@@ -1,0 +1,208 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="m-4" [formGroup]="reportForm" (ngSubmit)="reportFormSubmit()">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Report Type</mat-label>
+            <mat-select
+              formControlName="type"
+              (selectionChange)="onChangeMode($event)"
+            >
+              <mat-option [value]="item" *ngFor="let item of reportTypeArray"
+                >{{ item }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="reportForm.controls['type'].hasError('required')">
+              Report Type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Start Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="startDatePicker"
+              formControlName="startDate"
+              [matTooltip]="
+                reportForm?.get('type')?.value === 'Sunday & Holiday Report'
+                  ? 'This date range highlights all queries received on Sundays.'
+                  : ''
+              "
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="startDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+            <mat-error
+              *ngIf="reportForm.controls['startDate'].hasError('required')"
+            >
+              Start date is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>End Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="endDatePicker"
+              formControlName="endDate"
+              [matTooltip]="
+                reportForm?.get('type')?.value === 'Sunday & Holiday Report'
+                  ? 'This date range highlights all queries received on Sundays.'
+                  : ''
+              "
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="endDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+            <mat-error
+              *ngIf="reportForm.controls['endDate'].hasError('required')"
+            >
+              End date is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="reportForm?.get('type')?.value === 'Sunday & Holiday Report'"
+      >
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <div class="multipleDatePicker">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Holidays</mat-label>
+              <input
+                hidden
+                [value]="resetModel"
+                matInput
+                [matDatepicker]="holidayPicker"
+                placeholder="Choose a date"
+                (dateChange)="dateChanged($event, holidayPicker)"
+                formControlName="holiday"
+              />
+
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="holidayPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker
+                #holidayPicker
+                [startAt]="init"
+                [dateClass]="dateClass"
+              ></mat-datepicker>
+
+              <div class="chip-list" *ngIf="model?.length > 0">
+                <mat-chip-list
+                  #chipList
+                  aria-label="Choose a date"
+                  (click)="holidayPicker.open()"
+                >
+                  <mat-chip
+                    *ngFor="let value of model"
+                    [selectable]="false"
+                    [removable]="true"
+                    (removed)="remove(value)"
+                  >
+                    {{ value | date }}
+                    <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-hint style="font-size: 12px">
+                Kindly select a date on which it is holiday to highlight all
+                queries received on Holidays.</mat-hint
+              >
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="reportForm?.get('type')?.value === 'Sunday & Holiday Report'"
+      >
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>From Time</mat-label>
+            <input
+              matInput
+              placeholder="Please enter a time"
+              formControlName="fromTime"
+              matTooltip="Time from (this will be considered from the day you have selected in hrs or if its Prior to the day or post the day subject to Selecting your from and to time)"
+            />
+            <mat-error
+              *ngIf="reportForm.controls['fromTime'].hasError('required')"
+            >
+              From Time is required
+            </mat-error>
+            <mat-error
+              *ngIf="reportForm.controls['fromTime'].hasError('pattern')"
+            >
+              Please enter time from -24 to 24 without any decimal
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>To Time</mat-label>
+            <input
+              matInput
+              placeholder="Please enter a time"
+              formControlName="toTime"
+              matTooltip="Time from (this will be considered from the day you have selected in hrs or if its Prior to the day or post the day subject to Selecting your from and to time)"
+            />
+            <mat-error
+              *ngIf="reportForm.controls['toTime'].hasError('required')"
+            >
+              To Time is required
+            </mat-error>
+            <mat-error
+              *ngIf="reportForm.controls['toTime'].hasError('pattern')"
+            >
+              Please enter time from -24 to 24 without any decimal
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

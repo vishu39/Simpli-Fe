@@ -1,0 +1,7 @@
+<div *ngIf="decodedToken?.userType !== treatingDoctorUserType">
+  <app-shared-query-management></app-shared-query-management>
+</div>
+
+<div *ngIf="decodedToken?.userType === treatingDoctorUserType">
+  <app-treating-doc-query-management></app-treating-doc-query-management>
+</div>

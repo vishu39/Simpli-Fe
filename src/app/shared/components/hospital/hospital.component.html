@@ -1,0 +1,179 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Hospital'"
+        [active_item]="'All Hospital'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="dropdown">
+                        <h2>
+                          <strong>Hospitals</strong>
+                        </h2>
+                      </li>
+                      <li class="dropdown m-l-20">
+                        <label for="search-input"
+                          ><i class="material-icons search-icon"
+                            >search</i
+                          ></label
+                        >
+                        <input
+                          placeholder="Search"
+                          type="text"
+                          (keyup)="search($event.target.value)"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                        />
+                      </li>
+                      <li style="margin-left: 8px">
+                        <button
+                          [matTooltip]="'Filter Hospital'"
+                          [ngClass]="isFilterSelected ? 'filter_active' : ''"
+                          (click)="openFilterModal()"
+                          mat-icon-button
+                        >
+                          <mat-icon>tune</mat-icon>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <mat-table #table [dataSource]="hospitalData" class="mat-cell">
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <a
+                      class="cursor_pointer"
+                      (click)="navigateToProfile(row?._id)"
+                      >{{ row.name }}</a
+                    >
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="accreditation">
+                  <mat-header-cell *matHeaderCellDef
+                    >Accreditation</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    <p
+                      style="
+                        display: inline-block;
+                        background-color: #e2f0fb;
+                        padding: 5px 8px;
+                        margin: 2px;
+                        border-radius: 10px;
+                      "
+                      *ngFor="let item of row.accreditation; let i = index"
+                    >
+                      {{ item.name }}
+                    </p>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="city">
+                  <mat-header-cell *matHeaderCellDef>City</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <span *ngFor="let item of row.city; let i = index">
+                      <a>{{ item.name }}</a>
+                    </span>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="country">
+                  <mat-header-cell *matHeaderCellDef>Country</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <span *ngFor="let item of row.country; let i = index">
+                      <a>{{ item.name }}</a>
+                    </span>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="review">
+                  <mat-header-cell *matHeaderCellDef>Review</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <div
+                      matTooltip="{{ row?.rating || 0 }}"
+                      matTooltipPosition="right"
+                      [innerHTML]="
+                        generateStarRating(row?.rating ? row?.rating : 0)
+                      "
+                    ></div>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="beds">
+                  <mat-header-cell *matHeaderCellDef
+                    >No of Beds</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.beds }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let row"
+                    class="d-flex justify-content-start"
+                  >
+                    <button
+                      matTooltip="Edit Profile"
+                      matTooltipPosition="right"
+                      mat-icon-button
+                      (click)="editHospitalProfile(row)"
+                      color="primary"
+                    >
+                      <app-feather-icons
+                        [icon]="'edit'"
+                        [class]="'tbl-fav-edit'"
+                      >
+                      </app-feather-icons>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
+                </mat-row>
+              </mat-table>
+
+              <div
+                *ngIf="!isDataLoading && hospitalData.data?.length === 0"
+                class="no-results"
+              >
+                No results
+              </div>
+
+              <div class="table_loader" *ngIf="isDataLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <mat-paginator
+                (page)="onPaginateChange($event)"
+                [length]="totalElement"
+                [pageSize]="hospitalParams.limit"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

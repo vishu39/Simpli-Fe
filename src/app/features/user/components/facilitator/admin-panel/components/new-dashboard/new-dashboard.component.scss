@@ -1,0 +1,28 @@
+.row-filters {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; 
+    gap: 10px;
+  }
+  .row1 {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0px; /* Adjust spacing as needed */
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+  margin-left: 16px;
+}
+
+.mat-radio-button.mat-radio-checked {
+  background: #ffffff;
+}
+
+// mat-slider {
+//   width: 300px;
+// }
+
+h5, .h5 {
+  font-size: 1rem;
+}

@@ -1,0 +1,81 @@
+<div>
+  <!-- Left Sidebar -->
+  <aside id="leftsidebar" class="sidebar" (mouseenter)="mouseHover($event)" (mouseleave)="mouseOut($event)">
+    <!-- Menu -->
+    <div class="menu">
+      <ul class="list"
+        [ngStyle]="{'position' : 'relative', 'max-height' : listMaxHeight+'px', 'max-width' : listMaxWidth+'px'}"
+        [perfectScrollbar]>
+        <li class="sidebar-user-panel">
+          <div class="user-panel">
+            <div class="image">
+              <mat-spinner *ngIf="isLoading" class="mx-auto mb-2 mt-2" [diameter]="30">
+              </mat-spinner>
+              <img *ngIf="!isLoading" [src]="accountDetailsData?.brandLogo?.signedUrl?accountDetailsData?.brandLogo?.signedUrl:'assets/images/logo_complete.png'" />
+            </div>
+          </div>
+          <div class="profile-usertitle">
+            <div class="sidebar-userpic-name">{{tokenData?.name?tokenData?.name:tokenData?.userName}} </div>
+            <div *ngIf="tokenData?.userType" class="profile-usertitle-job ">{{tokenData.userType|titlecase}} </div>
+            <div *ngIf="!tokenData?.userType" class="profile-usertitle-job ">Supreme </div>
+
+          </div>
+        </li>
+        <!-- Top Most level menu -->
+        <li *ngFor="let sidebarItem of sidebarItems"
+          [routerLinkActive]="sidebarItem.submenu.length != 0 ? 'active' : ''">
+          <div class="header" *ngIf="sidebarItem.groupTitle === true">{{sidebarItem.title | translate}}</div>
+          <a [routerLink]="sidebarItem.class === '' ? [sidebarItem.path] : null" *ngIf="!sidebarItem.groupTitle;"
+            [ngClass]="{'nav-active': sidebarItem.active === true}"
+            (click)="callToggleMenu($event, sidebarItem.submenu.length)" (click)="getLink(sidebarItem)"
+            class="menu-top {{sidebarItem.class}}">
+            <i [ngClass]="[sidebarItem.iconType]">{{sidebarItem.icon}}</i>
+            <span class="hide-menu">{{sidebarItem.title | translate}}
+            </span>
+            <span *ngIf="sidebarItem.badge != '' " [ngClass]="[sidebarItem.badgeClass]">{{sidebarItem.badge}}</span>
+          </a>
+          <!-- First level menu -->
+          <ul class="ml-menu" *ngIf="sidebarItem.submenu.length > 0">
+            <li *ngFor="let sidebarSubItem1 of sidebarItem.submenu">
+              <a [routerLink]="sidebarSubItem1.submenu.length > 0 ? null : [sidebarSubItem1.path]"
+                (click)="callToggleMenu($event, sidebarSubItem1.submenu.length)" [ngClass]="[sidebarSubItem1.class]"
+                [routerLinkActive]="'active'">
+                {{sidebarSubItem1.title | translate}}
+              </a>
+              <!-- Second level menu -->
+              <ul class="ml-menu-2" *ngIf="sidebarSubItem1.submenu.length > 0">
+                <li *ngFor="let sidebarSubItem2 of sidebarSubItem1.submenu">
+                  <a [routerLink]="sidebarSubItem2.submenu.length > 0 ? null : [sidebarSubItem2.path]"
+                    (click)="callToggleMenu($event, sidebarSubItem2.submenu.length)" [ngClass]="[sidebarSubItem2.class]"
+                    [routerLinkActive]="'active'">
+                    {{sidebarSubItem2.title | translate}}
+                  </a>
+                  <!-- Third level menu -->
+                  <ul class="ml-menu-3" *ngIf="sidebarSubItem2.submenu.length > 0">
+                    <li *ngFor="let sidebarSubItem3 of sidebarSubItem2.submenu">
+                      <a [routerLink]="sidebarSubItem3.submenu.length > 0 ? null : [sidebarSubItem3.path]"
+                        (click)="callToggleMenu($event, sidebarSubItem3.submenu.length)"
+                        [ngClass]="[sidebarSubItem3.class]" [routerLinkActive]="'active'">
+                        {{sidebarSubItem3.title | translate}}
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+        </li>
+        <li>
+          <a class="" (click)="logout()" class="menu-top">
+            <i class="material-icons-two-tone">power_settings_new</i>
+            <span class="hide-menu">Logout
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- #Menu -->
+  </aside>
+  <!-- #END# Left Sidebar -->
+</div>

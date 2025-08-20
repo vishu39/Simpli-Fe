@@ -1,0 +1,450 @@
+<div *ngIf="isEdit" class="modalHeader">
+  <div class="editRowModal">
+    <div class="modalHeader clearfix">
+      <div class="modal-about">
+        <div class="font-weight-bold p-t-5 font-17">
+          {{ title }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    mat-icon-button
+    (click)="closeDialog(false)"
+    aria-label="Close dialog"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="opinionForm" class="m-4">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Hospital</mat-label>
+          <mat-select *ngIf="!isEdit" formControlName="hospitalName">
+            <div
+              class="other_option"
+              *ngIf="!request?.length && !isLoadingRequest"
+            >
+              No results
+            </div>
+            <ng-container>
+              <mat-option
+                (click)="onClickHospital(item)"
+                *ngFor="let item of request"
+                [value]="item?.hospitalName"
+              >
+                {{ item?.hospitalName }}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+          <input
+            disableControl="true"
+            matInput
+            *ngIf="isEdit"
+            type="text"
+            formControlName="hospitalName"
+          />
+          <mat-error
+            *ngIf="opinionForm.controls['hospitalName'].hasError('required')"
+          >
+            Hospital is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Select Treatment Package</mat-label>
+          <mat-select
+            msInfiniteScroll
+            (infiniteScroll)="onInfiniteScrollPackage()"
+            formControlName="treatmentPackage"
+            [disabled]="!opinionForm.get('hospitalName')?.value"
+          >
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchDoctor($event.target.value)"
+            />
+            <div
+              class="other_option"
+              *ngIf="!packageData?.length && !isPackageDataLoading"
+            >
+              No results
+            </div>
+            <mat-option
+              *ngFor="let item of packageData"
+              [value]="item._id"
+              (click)="onClickPackage(item)"
+            >
+              {{ item.name }}
+            </mat-option>
+            <mat-spinner
+              *ngIf="isPackageDataLoading"
+              class="mx-auto mb-2 mt-2"
+              [diameter]="30"
+            >
+            </mat-spinner>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Doctor Name</mat-label>
+          <mat-select formControlName="doctorName">
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchDoctor($event.target.value)"
+            />
+            <div class="other_option" *ngIf="!doctorsList?.length">
+              No results
+            </div>
+            <mat-option
+              (click)="onClickDoctor(list)"
+              *ngFor="let list of doctorsList"
+              [value]="list?.name"
+            >
+              {{ list?.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="opinionForm.controls['doctorName'].hasError('required')"
+          >
+            Doctor is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div
+        *ngIf="opinionForm.get('doctorName')?.value === 'Other'"
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Other Doctor Name</mat-label>
+          <input matInput type="text" formControlName="otherDoctorName" />
+        </mat-form-field>
+      </div>
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Treatment Plan</mat-label>
+          <textarea
+            matInput
+            type="textarea"
+            formControlName="treatmentPlan"
+            placeholder="Treatment Plan"
+          ></textarea>
+          <mat-error
+            *ngIf="opinionForm.controls['treatmentPlan'].hasError('required')"
+          >
+            Treatment Plan is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Diagnosis</mat-label>
+          <textarea
+            matInput
+            type="textarea"
+            formControlName="diagnosis"
+            placeholder="Diagnosis"
+          ></textarea>
+          <mat-error
+            *ngIf="opinionForm.controls['diagnosis'].hasError('required')"
+          >
+            Diagnosis is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Stay in Country</mat-label>
+          <input
+            matInput
+            type="number"
+            (keypress)="spaceRestrict($event)"
+            formControlName="stayInCountry"
+          />
+          <mat-error
+            *ngIf="opinionForm.controls['stayInCountry'].hasError('required')"
+          >
+            Stay in country is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Country Duration</mat-label>
+          <mat-select formControlName="countryDuration">
+            <mat-option [value]="item" *ngFor="let item of durationData"
+              >{{ item | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="opinionForm.controls['countryDuration'].hasError('required')"
+          >
+            Country Duration is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Stay in Hospital</mat-label>
+          <input
+            matInput
+            type="number"
+            (keypress)="spaceRestrict($event)"
+            formControlName="stayInHospital"
+          />
+          <mat-error
+            *ngIf="opinionForm.controls['stayInHospital'].hasError('required')"
+          >
+            Stay in Hospital is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Hospital Duration</mat-label>
+          <mat-select formControlName="hospitalDuration">
+            <mat-option [value]="item" *ngFor="let item of durationData"
+              >{{ item | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="
+              opinionForm.controls['hospitalDuration'].hasError('required')
+            "
+          >
+            Hospital Duration is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Select Currency</mat-label>
+          <mat-select
+            formControlName="currency"
+            [compareWith]="compareCurrencyObjects"
+          >
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchCurrency($event.target.value)"
+            />
+            <div class="other_option" *ngIf="!currencyArray?.length">
+              No results
+            </div>
+
+            <mat-option
+              (click)="onClickCurrency(currency)"
+              *ngFor="let currency of currencyArray"
+              [value]="currency"
+            >
+              {{ currency?.code }} - {{ currency?.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="opinionForm.controls['currency'].hasError('required')"
+          >
+            Select Currency is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Initial Evaluation Minimum</mat-label>
+          <input
+            matInput
+            (keypress)="spaceRestrict($event)"
+            formControlName="initialEvaluationMinimum"
+            type="number"
+          />
+          <mat-error
+            *ngIf="
+              opinionForm.controls['initialEvaluationMinimum'].hasError(
+                'required'
+              )
+            "
+          >
+            Initial Evaluation Minimum is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Initial Evaluation Maximum</mat-label>
+          <input
+            matInput
+            (keypress)="spaceRestrict($event)"
+            formControlName="initialEvaluationMaximum"
+            type="number"
+          />
+          <mat-error
+            *ngIf="
+              opinionForm.controls['initialEvaluationMaximum'].hasError(
+                'required'
+              )
+            "
+          >
+            Initial Evaluation Maximum is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <button
+          mat-button
+          type="button"
+          style="background-color: #1560bd; color: #fff; margin-bottom: 12px"
+          (click)="addTreatment()"
+        >
+          +Add Treatment
+        </button>
+      </div>
+
+      <div *ngIf="treatmentArray?.value?.length">
+        <div formArrayName="treatment">
+          <div
+            class="card p-3"
+            *ngFor="let treatment of treatmentArray.controls; let i = index"
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <h4>Treatment {{ i + 1 }}</h4>
+              <mat-icon
+                *ngIf="i > 0"
+                style="cursor: pointer; color: red"
+                (click)="deleteTreatment(i)"
+                >delete_forever</mat-icon
+              >
+            </div>
+            <div class="row" [formGroupName]="i">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Treatment Name</mat-label>
+                  <input matInput type="text" formControlName="name" />
+                  <mat-error
+                    *ngIf="treatment?.controls['name'].hasError('required')"
+                  >
+                    Treatment Name is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Room</mat-label>
+                  <input matInput type="text" formControlName="room" />
+                  <mat-error
+                    *ngIf="treatment?.controls['room'].hasError('required')"
+                  >
+                    Room is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Minimum Cost</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    (keypress)="spaceRestrict($event)"
+                    formControlName="minCost"
+                  />
+                  <mat-error
+                    *ngIf="treatment?.controls['minCost'].hasError('required')"
+                  >
+                    Minimum Cost is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Maximum Cost</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    (keypress)="spaceRestrict($event)"
+                    formControlName="maxCost"
+                  />
+                  <mat-error
+                    *ngIf="treatment?.controls['maxCost'].hasError('required')"
+                  >
+                    Maximum Cost is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Remarks</mat-label>
+          <textarea
+            matInput
+            type="textarea"
+            formControlName="remarks"
+            placeholder="Remarks"
+          ></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Received At</mat-label>
+          <input
+            matTooltip="For tasks received via email or WhatsApp, enter the date and time received; if editing is disabled, it’s auto-captured."
+            matInput
+            [owlDateTime]="dt"
+            [owlDateTimeTrigger]="dt"
+            formControlName="receivedAt"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #dt
+            pickerType="both"
+          ></owl-date-time>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <div class="example-button-row justify-end">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="submit()"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

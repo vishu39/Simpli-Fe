@@ -1,0 +1,201 @@
+<div class="auth-container">
+  <div class="row auth-main">
+    <div class="col-sm-6 px-0 d-none d-sm-block">
+      <div
+        class="left-img"
+        style="background-image: url(assets/images/banner/auth-banner-min.webp)"
+      ></div>
+    </div>
+    <div class="col-sm-6 auth-form-section">
+      <div class="form-section">
+        <div class="auth-wrapper" *ngIf="!isOtpSend">
+          <h2 class="welcome-msg">Welcome to SimplifyMVT</h2>
+          <p class="auth-signup-text text-muted">
+            Need an account?<a
+              target="_blank"
+              href="https://simplifymvt.com/contact/"
+              class="sign-up-link"
+              >Contact Us
+            </a>
+          </p>
+          <div class="d-flex justify-content-between lbl-alert mb-5">
+            <div>
+              <button
+                [disabled]="isAdmin"
+                mat-raised-button
+                color="primary"
+                type="button"
+                (click)="selectUser('admin')"
+              >
+                Admin
+              </button>
+            </div>
+            <div>
+              <button
+                [disabled]="isMember"
+                mat-raised-button
+                color="accent"
+                type="button"
+                (click)="selectUser('member')"
+              >
+                Member
+              </button>
+            </div>
+            <div>
+              <button
+                (click)="redirectToHospitalAuth()"
+                mat-raised-button
+                color="warn"
+                type="button"
+              >
+                Hospital
+              </button>
+            </div>
+          </div>
+          <h2 class="login-title">
+            Sign in as {{ isAdmin ? "Admin" : "Member" }}
+          </h2>
+          <form
+            class="validate-form"
+            [formGroup]="loginForm"
+            (ngSubmit)="loginFormSubmit()"
+          >
+            <div class="row">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Email</mat-label>
+                  <input
+                    matInput
+                    type="email"
+                    formControlName="emailId"
+                    (keypress)="spaceRestrict($event)"
+                  />
+                  <mat-icon matSuffix>email</mat-icon>
+                  <mat-error
+                    *ngIf="loginForm.controls['emailId'].hasError('required')"
+                  >
+                    Email is required
+                  </mat-error>
+                  <mat-error
+                    *ngIf="loginForm.controls['emailId'].hasError('pattern')"
+                  >
+                    Invalid Email Address</mat-error
+                  >
+                </mat-form-field>
+              </div>
+
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label> Password</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    formControlName="password"
+                    (keypress)="spaceRestrict($event)"
+                  />
+                  <mat-icon matSuffix>password</mat-icon>
+
+                  <mat-error
+                    *ngIf="loginForm.controls['password'].hasError('required')"
+                  >
+                    Password is required
+                  </mat-error>
+                  <mat-error
+                    *ngIf="loginForm.controls['password'].hasError('minlength')"
+                  >
+                    Password must be at least 8 characters</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- <div class="d-flex justify-content-between align-items-center mb-5">
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value=""> Remember me
+                    <span class="form-check-sign">
+                      <span class="check"></span>
+                    </span>
+                  </label>
+                </div>
+                <a class="txt1" routerLink="/authentication/forgot-password">Forgot Password?</a>
+              </div> -->
+            <div class="container-auth-form-btn">
+              <div style="text-align: center">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  class="auth-form-btn"
+                  type="submit"
+                >
+                  Login
+                </button>
+              </div>
+            </div>
+          </form>
+          <!-- <h6 class="social-login-title">OR</h6>
+            <ul class="list-unstyled social-icon mb-0 mt-3">
+              <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                  <i class="fab fa-google"></i>
+                </a></li>
+              <li class="list-inline-item"><a href="javascript:void(0)" class="rounded flex-c-m">
+                  <i class="fab fa-facebook-f"></i>
+                </a></li>
+              <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                  <i class="fab fa-twitter"></i>
+                </a></li>
+              <li class="list-inline-item"><a href="javascript:void(0)" class="rounded">
+                  <i class="fab fa-linkedin-in"></i>
+                </a></li>
+            </ul> -->
+        </div>
+
+        <div class="auth-wrapper" *ngIf="isOtpSend">
+          <h2 class="login-title">OTP Verification</h2>
+          <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Enter OTP</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  [formControl]="otpControl"
+                  (keypress)="spaceRestrict($event)"
+                />
+                <mat-error *ngIf="otpControl.hasError('required')">
+                  OTP is required
+                </mat-error>
+                <mat-error *ngIf="otpControl.hasError('pattern')">
+                  OTP must be 6 digits
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <span
+            style="cursor: pointer; color: #1560bd; font-size: 12px"
+            (click)="regenerateOTP()"
+            >OTP Expired? Regenerate OTP</span
+            >
+            <span>{{ convertToMinutesAndSeconds(otpTime) }}</span>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+              <button
+                mat-raised-button
+                color="primary"
+                class="auth-form-btn"
+                type="button"
+                (click)="verifyOtp()"
+              >
+                Verify OTP
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

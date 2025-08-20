@@ -1,0 +1,86 @@
+.detailed_sm_lightbox_main {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1;
+
+  .details {
+    background-color: #fffffff2;
+    width: 100%;
+    height: 100vh;
+    overflow: scroll;
+  }
+
+  .lightbox {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .lightbox-close {
+    color: white !important;
+    cursor: pointer;
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    height: 30px !important;
+    width: 30px !important;
+    padding: 10px;
+    transform: scale(2);
+  }
+
+  .lightbox-pre {
+    color: white !important;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 33%;
+    height: 30px !important;
+    width: 30px !important;
+    padding: 10px;
+    transform: scale(2);
+  }
+
+  .lightbox-next {
+    color: white !important;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 2%;
+    height: 30px !important;
+    width: 30px !important;
+    padding: 10px;
+    transform: scale(2);
+  }
+
+  .lightbox-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lightbox-image-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+  }
+
+  .lightbox-pdf {
+    width: 50vw;
+    height: 500px;
+  }
+
+  .lightbox-image {
+    width: 50vw;
+    height: 500px;
+  }
+  .btn:hover {
+    opacity: 0.8;
+  }
+}

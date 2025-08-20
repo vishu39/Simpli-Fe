@@ -1,0 +1,116 @@
+<div class="chatDetails" style="background-color: #f6f7f8">
+  <div class="detailsContainer">
+    <div class="detailHeaderContianer">
+      <div class="headerFirstDiv">
+        <span
+          ><img
+            [src]="
+              selectedProfile?.chat_image
+                ? selectedProfile?.chat_image
+                : 'assets/images/userLogo.png'
+            "
+            style="height: 60px; width: 60px; border-radius: 50%"
+        /></span>
+        <span>
+          <h5 style="font-size: 15px" class="">
+            {{ selectedProfile?.chat_name }}
+          </h5>
+          <!-- <div *ngIf="selectedProfile?.chat_type === 'user'">
+            Click here to view info
+          </div> -->
+          <div *ngIf="selectedProfile?.chat_type !== 'user'">
+            {{ selectedProfile?.chat_type | titlecase }}
+          </div>
+        </span>
+      </div>
+    </div>
+
+    <div class="detailMiddleContianer" #scrollMe>
+      <div *ngIf="clonedMessages?.length > 0">
+        <div *ngFor="let message of clonedMessages; let i = index">
+          <div *ngIf="shouldShowDateLabel(i)" class="date_label mb-2">
+            <span class="badgeDate">
+              {{ getFormattedDate(message.timestamp) }}
+            </span>
+          </div>
+
+          <div class="d-flex align-items-center">
+            <div class="chatMessages" style="width: 100%">
+              <div
+                [ngClass]="
+                  message?.from_me
+                    ? 'card p-3 pt-2 message messageFromMe'
+                    : 'card p-3 pt-2 message messageFromOther'
+                "
+              >
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <h6 class="chatNameElipsis">
+                    {{ message?.sender_name }}
+                  </h6>
+
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item>Action</button>
+                  </mat-menu>
+                </div>
+
+                <div
+                  [innerHTML]="parseMessage(message?.body)"
+                  *ngIf="message?.message_type === 'chat'"
+                ></div>
+                <div *ngIf="message?.message_type !== 'chat'">
+                  <div *ngIf="message?.mediaArray?.length">
+                    <shared-whatsapp-fetch-image-previewer
+                      [fileList]="message?.mediaArray"
+                      [filePreviewList]="message?.mediaArray"
+                      [type]="'fileUploaded'"
+                      [remove]="false"
+                      [className]="'col-12'"
+                      [isTypeCommonWhatsapp]="true"
+                      [attachments]="clonedAttachment"
+                    ></shared-whatsapp-fetch-image-previewer>
+
+                    <div
+                      class="mt-2"
+                      [innerHTML]="parseMessage(message?.body)"
+                      *ngIf="message?.body"
+                    ></div>
+                  </div>
+
+                  <div *ngIf="!message?.mediaArray?.length">
+                    <div
+                      class="card p-3 m-0 d-flex justify-content-center"
+                      style="background-color: #f0f2f5; text-align: center"
+                    >
+                      <span>
+                        <mat-icon style="font-size: 20px; margin-right: 12px"
+                          >not_interested</mat-icon
+                        >
+                      </span>
+                      Could not load document!
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="d-flex justify-content-end mt-2"
+                  style="font-size: 12px"
+                >
+                  {{ message?.timestamp | date : "hh:mm a" }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="!clonedMessages?.length"
+        style="height: 100%; width: 100%"
+        class="d-flex justify-content-center align-items-center"
+      >
+        No Chats Found
+      </div>
+    </div>
+  </div>
+</div>

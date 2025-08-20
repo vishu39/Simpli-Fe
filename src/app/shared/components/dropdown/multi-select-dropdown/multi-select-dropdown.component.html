@@ -1,0 +1,21 @@
+<!-- <mat-form-field class="example-full-width" appearance="outline">
+    <mat-label>Treatment</mat-label>
+    <mat-select (infiniteScroll)="getTreatmentData()" [complete]="treatmentData.length === totalTreatment" msInfiniteScroll formControlName="treatment" multiple>
+      <input class="searchInput" placeholder="search..." matInput [(ngModel)]="treatmentSearch" [ngModelOptions]="{ standalone: true }"/>
+      <mat-option (click)="selectAllTreatment()" [value]="'all'">Select All</mat-option>
+      <mat-option [value]="item.name" *ngFor="let item of treatmentData">{{ item.name }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf=" Form.get('treatment').invalid && Form.get('treatment').touched">Treatment name is required</mat-error>
+</mat-form-field> -->
+<mat-form-field class="example-full-width drop-mat" [ngClass]="[isRequired ? 'mat-form-field-invalid' : '']" appearance="outline">
+    <mat-label>{{label}}</mat-label>
+    <mat-select (infiniteScroll)="ScrollFunction(dropdownType)" [complete]="Offset === total" msInfiniteScroll multiple (blur)="BlurFunction(dropdownType)">
+      <input class="searchInput" placeholder="search..." matInput [(ngModel)]="hospitalSearch" 
+      [ngModelOptions]="{ standalone: true }" (input)="searchFunction(hospitalSearch)"/>
+      <mat-checkbox [(ngModel)]="allSelecteds" [ngModelOptions]="{standalone: true}" 
+      color="primary" (change)="toggleAllSelection()">Select All</mat-checkbox>      
+      <mat-option [value]="getOptionValue(item)" *ngFor="let item of dropDownItems" (click)="optionClick(item._id)">{{ item.name }}</mat-option>
+      <mat-spinner *ngIf="is_Loader" class="mx-auto" [diameter]="30"></mat-spinner>
+    </mat-select>
+</mat-form-field>
+<mat-error *ngIf="isRequired" class="drop-errors">{{label}} name is required</mat-error>

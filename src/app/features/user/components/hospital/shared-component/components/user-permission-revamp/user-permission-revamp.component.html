@@ -1,0 +1,190 @@
+<section class="content" style="position: relative">
+  <div class="content-block">
+    <div
+      class="card p-3 pt-0 pb-0 mt-4"
+      style="
+        position: sticky;
+        top: 85px;
+        z-index: 999;
+        right: 50px;
+        width: 100%;
+        box-shadow: 3px 0 5px 0px rgba(0, 0, 0, 0.368);
+      "
+    >
+      <div class="d-flex justify-content-between align-items-center gap-3">
+        <app-breadcrumb
+          [title]="'User Permission'"
+          [active_item]="'All Permission'"
+        ></app-breadcrumb>
+        <div>
+          <button
+            (click)="deleteUserPermission()"
+            mat-icon-button
+            style="margin-right: 8px; background-color: #da012d; color: white"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button
+            (click)="editUserPermission()"
+            mat-icon-button
+            style="margin-right: 8px; background-color: green; color: white"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            (click)="addUserPermission()"
+            mat-icon-button
+            style="margin-right: 8px; background-color: #1560bd; color: white"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-raised-button color="warn" (click)="submit()">
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="row"
+      *ngIf="allPermissionList?.length > 0 && !isAllPermissionLoading"
+    >
+      <div
+        class="card p-3 mb-2"
+        *ngFor="let permission of allPermissionList; let index = index"
+      >
+        <div>
+          <h5>{{ camelCaseToNormal(permission?.moduleName) || "" }}</h5>
+          <p>
+            {{ permission?.fnDesc }}
+          </p>
+          <div>
+            <div class="persionDiv">
+              <div class="persionLeft">
+                <div class="permissionLeftHeader">
+                  <b>Rights</b>
+                </div>
+                <div class="permissionLeftContent">
+                  <div
+                    *ngFor="
+                      let obj of permission?.permission
+                        | keyvalue : originalOrder
+                    "
+                  >
+                    {{ camelCaseToNormal(obj?.key) || obj?.key }}
+                  </div>
+                </div>
+              </div>
+              <div
+                class="persionRight hide-scrollbar synced-scroll-x"
+                (scroll)="onHorizontalScroll($event)"
+              >
+                <ng-container
+                  *ngIf="
+                    userPermission?.length > 0 && !isUserPermissionsLoading
+                  "
+                >
+                  <div
+                    class="roleList"
+                    *ngFor="let item of userPermission; let upi = index"
+                  >
+                    <div class="roleHeader">
+                      <b
+                        class="textElipsis"
+                        [matTooltip]="item?.roleName"
+                        matTooltipPosition="above"
+                      >
+                        <mat-checkbox
+                          style="margin-right: 8px"
+                          (change)="
+                            onClickSelectAll($event, {
+                              mainIndex: index,
+                              permissionIndex: upi,
+                              moduleName: permission.moduleName,
+                              roleName: item.roleName,
+                              key: 'all'
+                            })
+                          "
+                        ></mat-checkbox>
+                        {{ item?.roleName }}</b
+                      >
+                    </div>
+                    <div class="roleContent">
+                      <div
+                        class="role"
+                        *ngFor="let obj of permissionArrayAccordingToRoleIndex?.[index]?.[upi]?.permission | keyvalue : originalOrder"
+                      >
+                        <mat-checkbox
+                          [checked]="obj?.value"
+                          (change)="
+                            onClickCheckbox(
+                              $event,
+                              index,
+                              upi,
+                              obj?.key,
+                              permission?.moduleName,
+                              item?.roleName
+                            )
+                          "
+                        >
+                        </mat-checkbox>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container class="card" *ngIf="isUserPermissionsLoading">
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      height: 100%;
+                      width: 100%;
+                    "
+                  >
+                    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                    </mat-spinner>
+                  </div>
+                </ng-container>
+
+                <ng-container
+                  class="card p-4"
+                  *ngIf="!userPermission?.length && !isUserPermissionsLoading"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      height: 100%;
+                      width: 100%;
+                    "
+                  >
+                    --No Data Found--
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="card p-4"
+      style="display: flex; justify-items: center"
+      *ngIf="isAllPermissionLoading"
+    >
+      <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+    </div>
+
+    <div
+      class="card p-4"
+      style="text-align: center"
+      *ngIf="!allPermissionList?.length && !isAllPermissionLoading"
+    >
+      --No Data Found--
+    </div>
+  </div>
+</section>

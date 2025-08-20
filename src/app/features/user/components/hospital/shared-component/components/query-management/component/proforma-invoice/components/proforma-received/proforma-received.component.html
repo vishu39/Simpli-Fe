@@ -1,0 +1,122 @@
+<div class="m-4">
+  <h5>Proforma Received</h5>
+  <div *ngIf="request?.length">
+    <div class="mt-4" *ngFor="let item of request">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header #exPanel>
+            <mat-panel-title
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <p class="mb-0">
+                <b>{{ item?.hospitalName }}</b>
+              </p>
+            </mat-panel-title>
+            <mat-panel-description class="d-flex justify-content-end">
+              <mat-icon
+                class="mt-1"
+                (click)="openEditModal(item); !exPanel._toggle()"
+                style="cursor: pointer"
+                matTooltip="Edit request"
+                matTooltipPosition="right"
+                >edit
+              </mat-icon>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="p-3">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Created At</b></div>
+                <div>{{ item?.createdAt | date : "medium" }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-3">
+            <div><b>Proforma Invoice</b></div>
+            <div class="mt-3">
+              <app-global-image-preview
+                [fileList]="[item.proformaInvoice]"
+                [filePreviewList]="[item.proformaInvoice]"
+                [type]="'fileUploaded'"
+                [remove]="false"
+              ></app-global-image-preview>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <div class="" *ngIf="isDataLoading">
+    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+  </div>
+
+  <div class="card m-4 p-3" *ngIf="!isDataLoading && !request?.length">
+    <div style="text-align: center">--No Data Found--</div>
+  </div>
+</div>
+
+<div class="m-4">
+  <h5>Proforma Received Edited</h5>
+  <div *ngIf="requestEdited?.length">
+    <div class="mt-4" *ngFor="let item of requestEdited">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header #exPanel>
+            <mat-panel-title
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <p class="mb-0">
+                <b>{{ item?.hospitalName }}</b>
+              </p>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="p-3">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Created At</b></div>
+                <div>{{ item?.createdAt | date : "medium" }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-3">
+            <div><b>Proforma Invoice</b></div>
+            <div class="mt-3">
+              <app-global-image-preview
+                [fileList]="[item.proformaInvoice]"
+                [filePreviewList]="[item.proformaInvoice]"
+                [type]="'fileUploaded'"
+                [remove]="false"
+              ></app-global-image-preview>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+  <div class="" *ngIf="isEditedDataLoading">
+    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+  </div>
+
+  <div
+    class="card m-4 p-3"
+    *ngIf="!isEditedDataLoading && !requestEdited?.length"
+  >
+    <div style="text-align: center">--No Data Found--</div>
+  </div>
+</div>

@@ -1,0 +1,370 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="m-4" [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Hospital</mat-label>
+              <mat-select
+                multiple
+                formControlName="hospital"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollHospital()"
+                [compareWith]="compareObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchHospital($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!hospitalData?.length && !isLoadingHospital"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="hospitalData?.length">
+                  <mat-checkbox (change)="selectAllHospital($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingHospitalSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingHospitalSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickHospital({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of hospitalData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isLoadingHospital && !isLoadingHospitalSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of filterForm.get('hospital').value"
+                  >
+                    {{ item.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>User</mat-label>
+              <mat-select
+                multiple
+                formControlName="userName"
+                [compareWith]="compareObjectsForUser"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchInternalUser($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!internalUserData?.length && !isAdminLoading"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="internalUserData?.length">
+                  <mat-checkbox (change)="selectAllUser($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isAdminLoadingSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isAdminLoadingSelectAll">
+                  <mat-option
+                    (click)="
+                      onClickUser({
+                        _id: item._id,
+                        name: item.name
+                      })
+                    "
+                    *ngFor="let item of internalUserData"
+                    [value]="{
+                      _id: item._id,
+                      name: item.name
+                    }"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isAdminLoading && !isAdminLoadingSelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip *ngFor="let item of filterForm.get('userName').value">
+                    {{ item?.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>User Type</mat-label>
+              <mat-select
+                formControlName="userType"
+                multiple
+                [compareWith]="compareObjectsUserType"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchUserType($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!userTypeData?.length && !userTypeLoading"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="userTypeData?.length">
+                  <mat-checkbox (change)="selectAllUserType($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-option
+                  (click)="onTypeChange(item)"
+                  *ngFor="let item of userTypeData"
+                  [value]="item"
+                  >{{ item | titlecase }}
+                </mat-option>
+              </mat-select>
+
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of filterForm.get('userType').value"
+                  >
+                    {{ item | titlecase }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="row">
+        <div
+          class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+        >
+          <mat-form-field class="example-full-width">
+            <mat-label>Country</mat-label>
+            <mat-select
+              multiple
+              formControlName="country"
+              msInfiniteScroll
+              (infiniteScroll)="onInfiniteScrollCountry()"
+            >
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchCountry($event.target.value)"
+              />
+              <div
+                class="other_option"
+                *ngIf="!countryData?.length && !isLoadingCountry"
+              >
+                No results
+              </div>
+
+              <div class="other_option" *ngIf="countryData?.length">
+                <mat-checkbox (change)="selectAllCountry($event)"
+                  >Select All
+                </mat-checkbox>
+              </div>
+
+              <mat-spinner
+                *ngIf="isLoadingCountrySelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+
+              <ng-container *ngIf="!isLoadingCountrySelectAll">
+                <mat-option
+                  (click)="onClickCountry(item.name)"
+                  *ngFor="let item of countryData"
+                  [value]="item.name"
+                >
+                  {{ item.name }}
+                </mat-option>
+              </ng-container>
+
+              <mat-spinner
+                *ngIf="isLoadingCountry && !isLoadingCountrySelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </mat-select>
+            <div class="chip_section" [perfectScrollbar]>
+              <mat-chip-list>
+                <mat-chip
+                  *ngFor="let item of filterForm?.get('country')?.value"
+                >
+                  {{ item }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+        >
+          <mat-form-field class="example-full-width">
+            <mat-label>Treatment</mat-label>
+            <mat-select
+              multiple
+              formControlName="treatment"
+              msInfiniteScroll
+              (infiniteScroll)="onInfiniteScrollTreatment()"
+            >
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchTreatment($event.target.value)"
+              />
+              <div
+                class="other_option"
+                *ngIf="!treatmentData?.length && !isLoadingTreatment"
+              >
+                No results
+              </div>
+              <div class="other_option" *ngIf="treatmentData?.length">
+                <mat-checkbox (change)="selectAllTreatment($event)"
+                  >Select All
+                </mat-checkbox>
+              </div>
+              <mat-spinner
+                *ngIf="isLoadingTreatmentSelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+
+              <ng-container *ngIf="!isLoadingTreatmentSelectAll">
+                <mat-option
+                  (click)="onClickTreatment(item.name)"
+                  *ngFor="let item of treatmentData"
+                  [value]="item.name"
+                >
+                  {{ item.name }}
+                </mat-option>
+              </ng-container>
+
+              <mat-spinner
+                *ngIf="isLoadingTreatment && !isLoadingTreatmentSelectAll"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              >
+              </mat-spinner>
+            </mat-select>
+            <div class="chip_section" [perfectScrollbar]>
+              <mat-chip-list>
+                <mat-chip
+                  *ngFor="let item of filterForm?.get('treatment')?.value"
+                >
+                  {{ item }}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </mat-form-field>
+        </div>
+      </div> -->
+
+      <div>
+        <button mat-flat-button color="primary" (click)="submit()">
+          Submit
+        </button>
+        <button
+          style="margin-left: 12px"
+          mat-flat-button
+          type="button"
+          color="warn"
+          (click)="resetFilter()"
+        >
+          Reset
+        </button>
+      </div>
+      </form>
+  </div>
+</div>

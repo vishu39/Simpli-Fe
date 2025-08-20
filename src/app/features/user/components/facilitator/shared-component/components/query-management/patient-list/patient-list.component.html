@@ -1,0 +1,216 @@
+<div
+  *ngIf="!patientList?.length && !isLoadingPatient"
+  style="height: 100%; display: grid; place-items: center"
+>
+  No Patient Found
+</div>
+
+<div *ngIf="patientList?.length">
+  <div
+    *ngFor="let list of patientList; let i = index"
+    (click)="emitSelectedEvent($event, list?._id, i)"
+  >
+    <div
+      *ngIf="patientList?.length"
+      matRipple
+      [matRippleColor]="'#a7bbf029'"
+      [ngClass]="selectedQueryId === list?._id ? 'card selected' : 'card'"
+    >
+      <div
+        class="d-flex justify-content-between align-items-canter title-wrapper"
+      >
+        <div class="d-flex">
+          <div class="title">{{ list?.name | slice : 0 : 2 | uppercase }}</div>
+          <h5 class="pt-2 name">
+            {{ list?.name }}
+            <div>
+              <p class="mb-0" style="font-size: 12px">
+                <b>({{ uhidCode ? uhidCode : "NIL" }}{{ list?.mhidCode }})</b>
+              </p>
+            </div>
+          </h5>
+        </div>
+        <p class="count mb-0">
+          <button
+            mat-icon-button
+            matTooltip="Status Count"
+            [matMenuTriggerFor]="menu"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <span
+                >Opinion [<span matTooltip="Received">{{
+                  list.queryManagement
+                    ? list.queryManagement?.opinionReceived?.length
+                    : 0
+                }}</span
+                >/<span matTooltip="Requested">{{
+                  list.queryManagement
+                    ? list.queryManagement?.opinionRequest?.length
+                    : 0
+                }}</span
+                >]</span
+              >
+            </button>
+            <button mat-menu-item>
+              <span
+                >OPD [<span matTooltip="Received">{{
+                  list.queryManagement
+                    ? list.queryManagement?.opdReceived?.length
+                    : 0
+                }}</span
+                >/<span matTooltip="Requested">{{
+                  list.queryManagement
+                    ? list.queryManagement?.opdRequest?.length
+                    : 0
+                }}</span
+                >]</span
+              >
+            </button>
+            <button mat-menu-item>
+              <span
+                >VIL [<span matTooltip="Received">{{
+                  list.queryManagement
+                    ? list.queryManagement?.vilReceived?.length
+                    : 0
+                }}</span
+                >/<span matTooltip="Requested">{{
+                  list.queryManagement
+                    ? list.queryManagement?.vilRequest?.length
+                    : 0
+                }}</span
+                >]</span
+              >
+            </button>
+            <button mat-menu-item>
+              <span
+                >Pre Intimation [<span matTooltip="Sent">{{
+                  list.queryManagement
+                    ? list.queryManagement?.preIntimation?.length
+                    : 0
+                }}</span
+                >/<span matTooltip="Sent">{{
+                  list.queryManagement
+                    ? list.queryManagement?.preIntimation?.length
+                    : 0
+                }}</span
+                >]</span
+              >
+            </button>
+            <button mat-menu-item>
+              <span
+                >Proforma Invoice [<span matTooltip="Received">{{
+                  list.queryManagement
+                    ? list.queryManagement?.proformaInvoiceReceived?.length
+                    : 0
+                }}</span
+                >/<span matTooltip="Requested">{{
+                  list.queryManagement
+                    ? list.queryManagement?.proformaInvoiceRequest?.length
+                    : 0
+                }}</span
+                >]</span
+              >
+            </button>
+            <button mat-menu-item>
+              <span
+                >Patient Confirmation [<span matTooltip="Sent">{{
+                  list.queryManagement
+                    ? list.queryManagement?.patientConfirmation?.length
+                    : 0
+                }}</span
+                >/<span matTooltip="Sent">{{
+                  list.queryManagement
+                    ? list.queryManagement?.patientConfirmation?.length
+                    : 0
+                }}</span
+                >]</span
+              >
+            </button>
+          </mat-menu>
+        </p>
+      </div>
+      <span
+        class="d-flex justify-content-between align-items-baseline status"
+        style="z-index: 100"
+      >
+        <div class="d-flex align-items-center gap-2">
+          <h4>{{ list?.currentStatus?.at(-1)?.status || "NIL" }}</h4>
+          <button
+            matTooltip="View History"
+            (click)="openHistoryModal(list)"
+            class="historyBtn"
+            mat-icon-button
+          >
+            <mat-icon> show_chart</mat-icon>
+          </button>
+        </div>
+        <button mat-icon-button (click)="isOpen(i)">
+          <i
+            [class]="this.specificExpantionIsOpen?.[i] ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"
+          ></i>
+        </button>
+      </span>
+
+      <div
+        class="details"
+        *ngIf="this.specificExpantionIsOpen?.[i]"
+        (click)="myFunction()"
+      >
+        <!-- <p class="m-0">
+          <a
+            class="cursor_pointer"
+            style="font-size: 11.2px !important; text-decoration: underline"
+            (click)="openHistoryModal(list)"
+            >View History</a
+          >
+        </p>
+        <p>({{ uhidCode ? uhidCode : "NIL" }}{{ list?.mhidCode }})</p> -->
+        <p>Country : {{ list?.country }}</p>
+        <p>Treatment : {{ list?.treatment ? list?.treatment : "NIL" }}</p>
+        <p>Partner : {{ list?.referralPartner?.name || "NIL" }}</p>
+        <p>
+          Aggregator :
+          {{
+            list?.queryOwnerId != userDetails?.adminId
+              ? list?.queryOwnerName
+              : "NIL"
+          }}
+        </p>
+
+        <p *ngIf="list?.user === null">
+          {{
+            userDetails?.adminName ? userDetails?.adminName : userDetails?.name
+          }}
+          - Admin
+        </p>
+        <p *ngIf="list?.user !== null">
+          {{ list?.user?.name }} - {{ list?.user?.userType | titlecase }}
+        </p>
+        <p>
+          Assignee Name :
+          {{
+            list?.assignee?.length > 0
+              ? list?.assignee[list?.assignee?.length - 1]?.name
+              : "NIL"
+          }}
+        </p>
+        <p>Received At : {{ (list?.receivedAt | date : "medium") || "NIL" }}</p>
+        <p>Created At : {{ list?.createdAt | date : "medium" }}</p>
+        <p>Updated At : {{ list?.updatedAt | date : "medium" }}</p>
+        <!-- <span
+          (click)="openHistoryModal(list)"
+          style="
+            font-size: 11.2px;
+            cursor: pointer;
+            color: rgb(51, 51, 237);
+            text-decoration: underline;
+          "
+          >View History</span
+        > -->
+      </div>
+    </div>
+  </div>
+</div>

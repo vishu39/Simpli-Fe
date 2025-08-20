@@ -1,0 +1,60 @@
+._mc-checkbox-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+._mc {
+  padding: 0px 10px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+
+  ._field-title {
+    margin-top: -10px;
+
+    span {
+      background-color: #e2f0fb;
+      font-size: 1.1rem;
+      padding: 3px 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  }
+}
+
+._mc-checkbox {
+  margin: 3px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background-color: #f5feff;
+  border: 1px solid #ccc;
+  // flex: 1 1 180px;
+}
+
+// radio
+._radio-wrapper {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  ._radio {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  ._radio-field-title {
+    margin-top: -16px;
+
+    span {
+      background-color: #e2f0fb;
+      font-size: 1.1rem;
+      padding: 3px 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  }
+}

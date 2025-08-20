@@ -1,0 +1,240 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="'Account'"
+        [active_item]="'Email Setting'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <mat-spinner
+            *ngIf="isLoading"
+            class="mx-auto mb-2 mt-2"
+            [diameter]="30"
+          >
+          </mat-spinner>
+          <div class="body" *ngIf="!isLoading">
+            <form
+              class="m-4"
+              [formGroup]="emailSettingForm"
+              (ngSubmit)="formSubmit()"
+            >
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label
+                      >Partner / Embassy Communication Email ID</mat-label
+                    >
+                    <input
+                      matInput
+                      type="email"
+                      formControlName="hospitalCommEmailId"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls[
+                          'hospitalCommEmailId'
+                        ].hasError('required')
+                      "
+                    >
+                      Partner / Embassy Communication Email ID is required
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls[
+                          'hospitalCommEmailId'
+                        ].hasError('pattern')
+                      "
+                    >
+                      Invalid Email Address</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label
+                      >Partner / Embassy Communication Email Password</mat-label
+                    >
+                    <input
+                      matInput
+                      type="password"
+                      formControlName="hospitalCommPassword"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls[
+                          'hospitalCommPassword'
+                        ].hasError('required')
+                      "
+                    >
+                      Partner / Embassy Communication Email Password is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Patient Communication Email Id</mat-label>
+                    <input
+                      matInput
+                      type="email"
+                      formControlName="patientCommEmailId"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls[
+                          'patientCommEmailId'
+                        ].hasError('required')
+                      "
+                    >
+                      Patient communication email address is required
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls[
+                          'patientCommEmailId'
+                        ].hasError('pattern')
+                      "
+                    >
+                      Invalid Email Address</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label> Patient Communication Password</mat-label>
+                    <input
+                      matInput
+                      type="password"
+                      formControlName="patientCommPassword"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls[
+                          'patientCommPassword'
+                        ].hasError('required')
+                      "
+                    >
+                      Patient communication password is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Report Communication Email Id</mat-label>
+                    <input
+                      matInput
+                      type="email"
+                      formControlName="reportCommEmailId"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls['reportCommEmailId'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Report communication email address is required
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls['reportCommEmailId'].hasError(
+                          'pattern'
+                        )
+                      "
+                    >
+                      Invalid Email Address</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label> Report Communication Password</mat-label>
+                    <input
+                      matInput
+                      type="password"
+                      formControlName="reportCommPassword"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls[
+                          'reportCommPassword'
+                        ].hasError('required')
+                      "
+                    >
+                      Report communication password is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Email Host</mat-label>
+                    <input
+                      matTooltip="smtp.gmail.com | smtp.office365.com | Custom Host"
+                      matInput
+                      type="text"
+                      formControlName="emailHost"
+                      (keypress)="spaceRestrict($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        emailSettingForm.controls['emailHost'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Email host is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <button class="btn-space" mat-raised-button color="primary">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

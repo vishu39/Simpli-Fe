@@ -1,0 +1,145 @@
+<div class="card p-3">
+  <h5 class="m-4">Add OPD Details</h5>
+  <form [formGroup]="opdForm" class="m-4">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Hospital</mat-label>
+          <input matInput type="text" formControlName="hospitalName" />
+          <mat-error
+            *ngIf="opdForm.controls['hospitalName'].hasError('required')"
+          >
+            Hospital is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Doctor Name</mat-label>
+          <mat-select formControlName="doctorName">
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchDoctor($event.target.value)"
+            />
+            <div class="other_option" *ngIf="!doctorsList?.length">
+              No results
+            </div>
+            <mat-option *ngFor="let list of doctorsList" [value]="list?.name">
+              {{ list?.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="opdForm.controls['doctorName'].hasError('required')"
+          >
+            Doctor name is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div
+        *ngIf="opdForm.get('doctorName')?.value === 'Other'"
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+      >
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Other Doctor Name</mat-label>
+          <input matInput type="text" formControlName="otherDoctorName" />
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Received At</mat-label>
+          <input
+            matTooltip="For tasks received via email or WhatsApp, enter the date and time received; if editing is disabled, it’s auto-captured."
+            matInput
+            [owlDateTime]="dt"
+            [owlDateTimeTrigger]="dt"
+            formControlName="receivedAt"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #dt
+            pickerType="both"
+          ></owl-date-time>
+
+          <mat-error
+            *ngIf="opdForm.controls['receivedAt'].hasError('required')"
+          >
+            Received At is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>OPD At</mat-label>
+          <input
+            matInput
+            [owlDateTime]="odt"
+            [owlDateTimeTrigger]="odt"
+            formControlName="opdAt"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="odt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #odt
+            pickerType="both"
+          ></owl-date-time>
+          <mat-error *ngIf="opdForm.controls['opdAt'].hasError('required')">
+            OPD At is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Meeting Link</mat-label>
+          <input
+            (keypress)="spaceRestrict($event)"
+            matInput
+            formControlName="meetingLink"
+          />
+          <mat-error
+            *ngIf="opdForm.controls['meetingLink'].hasError('pattern')"
+          >
+            Please enter a valid meeting link
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Payment Link</mat-label>
+          <input
+            (keypress)="spaceRestrict($event)"
+            matInput
+            formControlName="paymentLink"
+          />
+          <mat-error
+            *ngIf="opdForm.controls['paymentLink'].hasError('pattern')"
+          >
+            Please enter a valid payment link
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <div class="example-button-row justify-end">
+          <button
+            mat-raised-button
+            color="primary"
+            [disabled]="opdForm.hasError('required')"
+            (click)="submit()"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

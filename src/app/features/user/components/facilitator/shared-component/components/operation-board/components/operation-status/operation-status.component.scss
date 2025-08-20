@@ -1,0 +1,11 @@
+@import "../../styles/chat-component.scss";
+
+.text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  width: 70%;
+  line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}

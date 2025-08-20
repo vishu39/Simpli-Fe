@@ -1,0 +1,22 @@
+<div class="toolbar-wrapper">
+    <div class="toolbar flex">
+        <div class="left-side d-flex flex-wrap justify-content-start ">
+            <form class="search-form">
+                <input type="text" placeholder="search..." (keydown.space)="$event.stopPropagation()">
+                <button mat-icon-button type="submit" color="primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+        <div class="right-side d-flex flex-wrap justify-content-start">
+            <button mat-flat-button style="background-color: rgb(58, 255, 255); color: #463a3a;" (click)="emitToolBarEvent($event,'ADD_QUERY')"><mat-icon>add</mat-icon> Add Query</button>
+            <button mat-icon-button class="toolbar-button"><mat-icon>refresh</mat-icon></button>
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown toolbar-button">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item><mat-icon>create</mat-icon>Actions&nbsp; &nbsp;</button>
+            </mat-menu>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+.choosePatientGridDiv {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid lightgrey;
+
+  .formdiv {
+    width: 100%;
+    height: calc(100vh - 205px);
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.6rem;
+  }
+
+  .hidden {
+    visibility: hidden;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .maildiv {
+    width: 100%;
+    border-top: 1px solid lightgrey;
+  }
+}
+
+@media only screen and (min-width: 756px) {
+  .choosePatientGridDiv {
+    flex-direction: row;
+    .formdiv {
+      width: 50%;
+    }
+    .maildiv {
+      width: 50%;
+      border-left: 1px solid lightgrey;
+    }
+  }
+}
+
+.details {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e2dfdf;
+  padding: 1rem;
+
+  .heading {
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    button {
+      margin-top: -20px;
+    }
+  }
+
+  .details-content {
+    border-top: 1px solid #e2f0fb;
+
+    div {
+      margin-top: 14px;
+      border-radius: 10px;
+      padding: 0 14px;
+
+      h4 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 14px;
+        color: #444;
+      }
+    }
+
+    mat-tab-group {
+      width: 100%;
+    }
+  }
+}

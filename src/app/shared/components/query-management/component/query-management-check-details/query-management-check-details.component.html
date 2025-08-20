@@ -1,0 +1,48 @@
+<div class="card p-3" *ngFor="let message of messageData">
+  <h6 class="mb-2">
+    <b>{{ message?.hospitalName }}</b>
+  </h6>
+  <div>
+    <!-- other than vil and confirmation -->
+    <div class="w-100" *ngIf="queryArray?.includes(component)">
+      <p class="mt-3 h6">Query Message:</p>
+      <div class="row" *ngIf="message?.queryMessage?.length">
+        <div *ngFor="let query of message?.queryMessage" class="mb-2">
+          <div class="text-secondary">
+            {{ query?.name }} - {{ query?.contact }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!message?.queryMessage?.length">-- No Data Found --</div>
+    </div>
+
+    <!--vil -->
+    <div class="w-100" *ngIf="component === 'vil'">
+      <p class="mt-3 h6">VIL Message:</p>
+      <div class="row" *ngIf="message?.vilMessage?.length">
+        <div *ngFor="let vil of message?.vilMessage" class="mb-2">
+          <div class="text-secondary">{{ vil?.name }} - {{ vil?.contact }}</div>
+        </div>
+      </div>
+      <div *ngIf="!message?.vilMessage?.length">-- No Data Found --</div>
+    </div>
+
+    <!--confirmation -->
+    <div class="w-100" *ngIf="component === 'confirmation'">
+      <p class="mt-3 h6">Confirmation Message:</p>
+      <div class="row" *ngIf="message?.confirmationMessage?.length">
+        <div
+          *ngFor="let confirmation of message?.confirmationMessage"
+          class="mb-2"
+        >
+          <div class="text-secondary">
+            {{ confirmation?.name }} - {{ confirmation?.contact }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!message?.confirmationMessage?.length">
+        -- No Data Found --
+      </div>
+    </div>
+  </div>
+</div>

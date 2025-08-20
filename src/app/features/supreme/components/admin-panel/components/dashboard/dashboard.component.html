@@ -1,0 +1,157 @@
+<section class="content">
+    <div class="content-block">
+      <div class="block-header d-flex justify-content-between align-items-baseline mt-3 mb-3">
+        <!-- breadcrumb -->
+        <!-- <app-breadcrumb [title]="'Dashboad'" [items]="[]" [active_item]="'Dashboad'"></app-breadcrumb> -->
+        <div></div>
+        <button mat-flat-button><mat-icon>download</mat-icon>Download</button>
+      </div>
+      <!-- Widgets -->
+      <div class="row">
+        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngFor="let item of widgetData;let i=index" >
+          <div class="card card-statistic-2">
+            <div class="clearfix">
+              <div class="card-icon shadow-primary" [ngStyle]="{'background-color': item.iconBg,'color':'#fff'}" >
+                <i class="material-icons align-middle">{{item.icon}}</i>
+              </div>
+              <div class="card-right">
+                <div>
+                  <h5 [ngStyle]="{'color': item?.iconBg}" class="float-end">{{item.name}}</h5>
+                </div>
+                <div class="m-r-10 m-l-10">
+                  <h3 class="font-weight-bold float-end mb-0">{{item.value}}</h3>
+                </div>
+              </div>
+            </div>
+            <div class="card-chart">
+              <canvas baseChart [chartType]="'line'" [datasets]="item.chartData" [labels]="cardChart1Label"
+                [options]="cardChart1" [legend]="true">
+              </canvas>
+            </div>
+            <div class="d-flex justify-content-between align-item-center filter-wrapper">
+              <div></div>
+              <div *ngIf="item.range" class="d-flex align-items-baseline justify-content-start">
+                <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker>
+                  <mat-date-range-picker-actions  >
+                    <button mat-button matDateRangePickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+                  </mat-date-range-picker-actions>
+                </mat-date-range-picker>
+                <mat-date-range-input [max]="currentDate" [id]="i" [rangePicker]="picker"  >
+                  <input matStartDate placeholder="Start date">
+                  <input matEndDate placeholder="End date">
+                </mat-date-range-input>
+                <app-feather-icons style="margin-top:-10px;cursor: pointer;" class="tbl-fav-delete" (click)="item.range = false " icon="x-circle"></app-feather-icons>
+              </div>
+              <select name="query_stats" (change)="emitSelectEvent($event); filterValue === 'RANGE' ? item.range = true : item.range = false" *ngIf="!item.range" id="query_stats" class="filter-select">
+                <option value="TODAY">Todays</option>
+                <option value="LAST_7">Last 7 Days</option>
+                <option value="LAST_28">Last 28 Days</option>
+                <option value="LAST_90">Last 90 Days</option>
+                <option value="ALL">All</option>
+                <option value="RANGE">Range</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- #END# Widgets -->
+
+      <!-- CHART STARTED -->
+      <div class="row">
+        <!-- PIE CHART -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" [style]="item.chartStyle" *ngFor="let item of pieChartArray;let i=index" >
+          <div class="card">
+            <div class="header d-flex  justify-content-between align-items-center">
+              <h2>{{item.chartName}}</h2>
+              <div class="d-flex justify-content-between align-item-center filter-wrapper">
+                <div></div>
+                <div *ngIf="item.range" class="d-flex align-items-baseline justify-content-start">
+                  <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker>
+                    <mat-date-range-picker-actions  >
+                      <button mat-button matDateRangePickerCancel>Cancel</button>
+                      <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+                    </mat-date-range-picker-actions>
+                  </mat-date-range-picker>
+                  <mat-date-range-input [max]="currentDate" [id]="i" [rangePicker]="picker"  >
+                    <input matStartDate placeholder="Start date">
+                    <input matEndDate placeholder="End date">
+                  </mat-date-range-input>
+                  <app-feather-icons style="margin-top:-10px;cursor: pointer;" class="tbl-fav-delete" (click)="item.range = false " icon="x-circle"></app-feather-icons>
+                </div>
+                <select name="query_stats" (change)="emitSelectEvent($event); filterValue === 'RANGE' ? item.range = true : item.range = false" *ngIf="!item.range" id="query_stats" class="filter-select">
+                  <option value="TODAY">Todays</option>
+                  <option value="LAST_7">Last 7 Days</option>
+                  <option value="LAST_28">Last 28 Days</option>
+                  <option value="LAST_90">Last 90 Days</option>
+                  <option value="ALL">All</option>
+                  <option value="RANGE">Range</option>
+                </select>
+              </div>
+            </div>
+            <div class="body" >
+              <div nz-row>
+                <div nz-col nzSpan="12">
+                  <div [id]="'pieChart'+i" echarts [options]="item.chartData"  theme="macarons" class="demo-chart"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- COMMENTS -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="header">
+              <h2>Comments</h2>
+            </div>
+            <div class="body">
+              <div class="recent-comment" style="position: relative; max-height: 416px;" [perfectScrollbar]>
+                <div class="notice-board" *ngFor="let item of staticComments">
+                  <div class="title">{{makeInitials(item.name)}}</div>
+                  <div class="notice-body">
+                    <h6 class="notice-heading color-primary col-black">{{item.name}}</h6>
+                    <p>{{item.comment}}</p>
+                    <p class="comment-date">{{currentDate|date:'d MMM y | h:mm a '}}</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- BAR CHART -->
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12" [style]="item.chartStyle" *ngFor="let item of barChartsArray;let i=index" >
+          <div class="card">
+            <div class="header">
+              <h2>{{item.chartName}}</h2>
+            </div>
+            <div class="body">
+              <div nz-row>
+                <div nz-col nzSpan="12">
+                  <div [id]="'barChart'+i" echarts [options]="item.chartData" theme="macarons" class="demo-chart"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- FUNNEL CHART -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngFor="let item of funnelChartArray;let i=index" >
+          <div class="card">
+            <div class="header">
+              <h2>{{item.chartName}}</h2>
+            </div>
+            <div class="body">
+              <div nz-row>
+                <div nz-col nzSpan="12">
+                  <div [id]="'chart'+i" echarts [options]="item.chartData" theme="macarons" class="demo-chart"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- CHART END -->
+    </div>
+  </section>

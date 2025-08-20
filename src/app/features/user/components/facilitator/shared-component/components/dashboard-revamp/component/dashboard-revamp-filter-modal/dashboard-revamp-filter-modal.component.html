@@ -1,0 +1,250 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-18">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <div>
+      <div class="mb-4">
+        <h6>Hidden Cards</h6>
+        <div
+          class="topCards card mb-0"
+          style="padding: 12px 12px 4px 12px"
+          *ngIf="hiddenCardsArray?.length"
+        >
+          <div
+            class="tCard card p-2 mb-1"
+            [ngStyle]="{ 'background-color': card.iconBg, color: '#fff' }"
+            *ngFor="let card of hiddenCardsArray; let cardIndex = index"
+          >
+            <div class="d-flex align-items-center">
+              <i class="material-icons align-middle">{{ card?.icon }}</i>
+              <span class="cardHeading" style="margin-left: 8px"
+                ><b>{{ card?.name }}</b></span
+              >
+            </div>
+            <span class="mt-2 mb-2">{{ card?.value }}</span>
+
+            <mat-icon
+              class="hideIcon"
+              [matTooltip]="'Show Card'"
+              (click)="onClickCardShow(cardIndex)"
+              >visibility</mat-icon
+            >
+          </div>
+        </div>
+
+        <div class="noDataFound" *ngIf="!hiddenCardsArray?.length">
+          --No Data Found--
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <h6>Applied Filters</h6>
+        <hr />
+        <!-- <div class="mt-2 mb-2">
+          <h6>Updated Filter</h6>
+          <div class="filterListDiv" *ngIf="selectedUpdatedArray?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of selectedUpdatedArray; let i = index"
+              >{{ updatedNaming[item] }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!selectedUpdatedArray?.length">
+            --No Data Found--
+          </div>
+        </div> -->
+
+        <div class="mt-2 mb-2">
+          <h6>Date Range</h6>
+          <div style="height: 60px">
+            <div>
+              <span><b>Start Date: </b></span
+              >{{ (dateRange?.startDate | date : "medium") || "NIL" }}
+            </div>
+            <div>
+              <span><b>End Date: </b></span
+              >{{ (dateRange?.endDate | date : "medium") || "NIL" }}
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2 mb-2">
+          <h6>Duration Filter</h6>
+          <div style="height: 60px">
+            <div>
+              <span><b>Age From: </b></span>
+              <span *ngIf="!!ageFrom && !!ageDuration"
+                >{{ ageFrom }} {{ ageDuration }}</span
+              >
+              <span *ngIf="!ageFrom && !ageDuration">NIL</span>
+            </div>
+            <div>
+              <span><b>Age To: </b></span>
+              <span *ngIf="!!ageTo && !!ageDuration"
+                >{{ ageTo }} {{ ageDuration }}</span
+              >
+              <span *ngIf="!ageTo && !ageDuration">NIL</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2 mb-2">
+          <h6>Years Filter</h6>
+          <div class="filterListDiv" *ngIf="selectedYearArray?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of selectedYearArray; let i = index"
+              >{{ item }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!selectedYearArray?.length">
+            --No Data Found--
+          </div>
+        </div>
+        <div class="mt-2 mb-2">
+          <h6>Months Filter</h6>
+          <div class="filterListDiv" *ngIf="selectedMonthArray?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of selectedMonthArray; let i = index"
+              >{{ monthsNaming[item] }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!selectedMonthArray?.length">
+            --No Data Found--
+          </div>
+        </div>
+        <div class="mt-2 mb-2">
+          <h6>Quater Filter</h6>
+          <div class="filterListDiv" *ngIf="selectedQuaterArray?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of selectedQuaterArray; let i = index"
+              >{{ quaterNaming[item] }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!selectedQuaterArray?.length">
+            --No Data Found--
+          </div>
+        </div>
+        <div class="mt-2 mb-2">
+          <h6>Gender Filter</h6>
+          <div class="filterListDiv" *ngIf="selectedGenderArray?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of selectedGenderArray; let i = index"
+              >{{ genderNaming[item] }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!selectedGenderArray?.length">
+            --No Data Found--
+          </div>
+        </div>
+
+        <div class="mt-2 mb-2">
+          <h6>Hospital</h6>
+          <div class="filterListDivSelect" *ngIf="hospital?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of hospital; let i = index"
+              >{{ item?.name }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!hospital?.length">
+            --No Data Found--
+          </div>
+        </div>
+
+        <!-- <div class="mt-2 mb-2">
+          <h6>Doctor</h6>
+          <div class="filterListDivSelect" *ngIf="doctor?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of doctor; let i = index"
+              >{{ item?.name }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!doctor?.length">
+            --No Data Found--
+          </div>
+        </div> -->
+
+        <div class="mt-2 mb-2">
+          <h6>Country</h6>
+          <div class="filterListDivSelect" *ngIf="country?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of country; let i = index"
+              >{{ item }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!country?.length">
+            --No Data Found--
+          </div>
+        </div>
+
+        <div class="mt-2 mb-2">
+          <h6>Treatment</h6>
+          <div class="filterListDivSelect" *ngIf="treatment?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of treatment; let i = index"
+              >{{ item }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!treatment?.length">
+            --No Data Found--
+          </div>
+        </div>
+
+        <div class="mt-2 mb-2">
+          <h6>User</h6>
+          <div class="filterListDivSelect" *ngIf="user?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of user; let i = index"
+              >{{ item?.name }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!user?.length">--No Data Found--</div>
+        </div>
+
+        <div class="mt-2 mb-2">
+          <h6>Referral Partner</h6>
+          <div class="filterListDivSelect" *ngIf="referralPartner?.length">
+            <span
+              class="filterButton"
+              *ngFor="let item of referralPartner; let i = index"
+              >{{ item?.name }}</span
+            >
+          </div>
+          <div class="noDataFound" *ngIf="!referralPartner?.length">
+            --No Data Found--
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button mat-raised-button color="primary" (click)="closeDialog(true)">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

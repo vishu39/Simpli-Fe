@@ -1,0 +1,141 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <div class="p-4">
+      <form [formGroup]="opinionForm">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Hospital</mat-label>
+              <mat-select formControlName="hospitalName">
+                <mat-option
+                  (click)="onClickHospital(item)"
+                  [value]="item?.hospitalName"
+                  *ngFor="let item of opinionData"
+                  >{{ item.hospitalName | titlecase }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  opinionForm.controls['hospitalName'].hasError('required')
+                "
+              >
+                Hospital is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="recorded_audio p-3">
+          <h4>Recordings</h4>
+
+          <div *ngIf="!recorderData?.length" class="no_record_found">
+            No recording found
+          </div>
+
+          <ul *ngIf="recorderData?.length" class="ul">
+            <li
+              *ngFor="let recording of recorderData; let i = index"
+              class="list d-flex justify-content-between align-items-baseline"
+            >
+              <p class="mb-0">{{ recording?.name }}</p>
+              <div>
+                <button
+                  *ngIf="!isRecordingPlaying[i]"
+                  mat-icon-button
+                  (click)="playRecording(i)"
+                >
+                  <app-feather-icons
+                    class="tbl-fav-edit"
+                    icon="play"
+                  ></app-feather-icons>
+                </button>
+                <button
+                  *ngIf="isRecordingPlaying[i]"
+                  mat-icon-button
+                  (click)="stopPlaying(i)"
+                >
+                  <app-feather-icons
+                    class="tbl-fav-edit"
+                    icon="pause"
+                  ></app-feather-icons>
+                </button>
+                <button mat-icon-button (click)="stopPlaying()">
+                  <button mat-icon-button (click)="stopPlaying()">
+                    <mat-icon
+                      style="cursor: pointer; color: red"
+                      (click)="deleteRecording(recording)"
+                    >
+                      delete</mat-icon
+                    >
+                  </button>
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </form>
+
+      <div class="recorder mt-4">
+        <div class="action">
+          <button
+            (click)="startRecording()"
+            [disabled]="isRecording"
+            mat-flat-button
+            type="button"
+            matTooltipPosition="above"
+            matTooltip="Start Recording"
+            style="margin-right: 10px"
+          >
+            <app-feather-icons
+              class="tbl-fav-delete"
+              icon="mic"
+            ></app-feather-icons>
+            <span style="margin-left: 10px">Start Recording</span>
+          </button>
+
+          <button
+            (click)="stopRecording()"
+            [disabled]="!isRecording"
+            mat-flat-button
+            type="button"
+            matTooltipPosition="above"
+            matTooltip="Stop Recording"
+            style="margin-right: 10px"
+          >
+            <app-feather-icons
+              class="tbl-fav-delete"
+              icon="x-circle"
+            ></app-feather-icons>
+            <span style="margin-left: 10px">Stop Recording</span>
+          </button>
+
+          <button
+            [disabled]="!recorderData?.length"
+            (click)="submit()"
+            mat-flat-button
+            type="button"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+.list-container {
+  min-width: 290px;
+  max-width: 100%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
+  .notchDiv {
+    min-height: 25px;
+    display: flex;
+    justify-content: flex-end;
+    .notch {
+      width: 50px;
+      background-color: #e2f0fb;
+      padding: 0 8px;
+      border-top-right-radius: 12px;
+      border-top-left-radius: 12px;
+    }
+  }
+  .list-header {
+    background-color: #e2f0fb;
+    padding: 0.4rem 10px;
+    margin: 0 0 0.5rem 0;
+    border-radius: 10px;
+    h2 {
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      margin: 0;
+      padding: 0;
+    }
+    .count {
+      margin-left: 8px;
+      background-color: #1560bd;
+      color: white;
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+  }
+}
+
+.list {
+  width: 290px;
+  border: solid 1px #cccccc;
+  // height: 62vh;
+  height: 60vh;
+  overflow: scroll;
+  border-radius: 10px;
+  display: block;
+  background-color: transparent;
+  .list-content {
+    padding: 10px 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    background: transparent;
+    font-size: 14px;
+    border-radius: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    &:hover {
+      box-shadow: 1px 1px 5px #75757533;
+    }
+    &:focus-within {
+      border: 1px solid dodgerblue;
+    }
+    .content-header {
+      .name {
+        font-size: 1rem;
+        margin-bottom: 2px;
+        font-weight: 500;
+      }
+      .dec {
+        padding: 0 0 0 0;
+        p {
+          margin: 0;
+          font-size: 12px;
+        }
+      }
+      .other-details {
+        .content {
+          font-size: 0.9rem;
+          margin: 2px 0;
+        }
+      }
+    }
+  }
+  .add-box {
+    margin: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 2rem;
+  }
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  width: 75%;
+  line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
+.filter_active {
+  // background: rgb(197, 252, 233);
+  background: #6cb5f9;
+  color: black;
+}
+
+button {
+  outline: none;
+}
+
+::ng-deep .mat-button-focus-overlay {
+  display: none;
+}
+
+.redFlag {
+  cursor: pointer;
+  color: red;
+}
+.greenFlag {
+  cursor: pointer;
+  color: green;
+}
+
+.status {
+  padding: 0 0;
+
+  h4 {
+    display: inline-block;
+    background-color: #e2f0fb;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    border-radius: 10px;
+    padding: 5px 10px;
+  }
+}

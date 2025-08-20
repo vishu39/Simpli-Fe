@@ -1,0 +1,91 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background-color: #e2f0fb;
+    width: 100% !important;
+    height: auto;
+    .title {
+        font-size: clamp(1rem, 2vw, 1.3rem);
+        margin: 10px 0;
+        flex: 1 1 40%;
+    }
+    .desktop-header-buttons {
+        flex: 0 0 auto;
+        padding-left:10px;
+        margin-bottom: 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        overflow-x: auto;
+        border-radius: 10%;
+        &::-webkit-scrollbar {
+            width: 0px;
+        }
+        mat-fab:not([class*=mat-elevation-z]),
+        .mat-mini-fab:not([class*=mat-elevation-z]) {
+            box-shadow: none;
+        }
+        button {
+            margin-right: 12px;
+            transform: scale(88%) !important;
+        }
+    }
+    // .mobile {
+    //     flex: 0 0 10%;
+    //     .mobile-header-buttons {
+    //         margin-left: 1rem;
+    //         display: flex;
+    //         align-items: flex-start;
+    //         justify-content: flex-end;
+
+    //         button {
+    //             transform: scale(88%) !important;
+    //         }
+    //     }
+    // }
+}
+.details {
+    background-color: #ffffff;
+    border-radius: 10px;
+    border:1px solid #e2dfdf ;
+    padding: 1rem;
+    .heading{
+        h3{font-size:1.2rem;}
+        button{margin-top:-20px;}
+    }
+    .details-content {
+        border-top:1px solid #eed5d5;
+        display:grid;
+        grid-template-columns: repeat(4,1fr);
+        grid-template-rows: repeat(2,1fr);
+        div{
+            margin-top:14px;
+            border-radius:10px;
+            padding:0 14px;
+            h4{font-size:1rem;}
+            p{font-size:14px;color:#444;}
+        }
+        mat-tab-group{
+            width:100%;
+        }
+    }
+}
+
+.other-details {
+    background-color: #ffffff;
+    border-radius: 10px;
+    border:1px solid #e2dfdf ;
+    padding: 1rem;
+    height: auto;
+    .heading{h3{font-size:1.2rem;}button{margin-top:-20px;}}
+    .other-details-content {mat-tab-group{width:100%;}}
+}
+
+@media screen and (max-width:768px) {
+    .details-content{
+        grid-template-columns: 200px !important;
+    }
+}

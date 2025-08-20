@@ -1,0 +1,705 @@
+<section class="content">
+  <div class="content-block">
+    <div
+      class="block-header d-flex justify-content-between align-items-baseline mt-3 mb-3"
+    ></div>
+    <!-- <div class="row">
+            <div class="card card-statistic-2">
+
+            </div>
+        </div> -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-statistic-2">
+          <div class="body">
+            <div class="row row1 align-items-center">
+              <!-- First Two Fields (50%) -->
+              <div class="col-md-6 d-flex">
+                <div class="col-6 pe-2 pt-3">
+                  <mat-radio-group
+                    aria-label="Select an option"
+                    [(ngModel)]="selectedOption"
+                  >
+                    <mat-radio-button value="1">Last Updated</mat-radio-button>
+                    <mat-radio-button value="2">Query Updated</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div class="col-6 ps-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Select Date Range</mat-label>
+                    <mat-date-range-input
+                      [formGroup]="dateRangeForm"
+                      [rangePicker]="picker1"
+                    >
+                      <input
+                        matStartDate
+                        formControlName="start"
+                        placeholder="From Date"
+                        (focus)="picker1.open()"
+                      />
+                      <input
+                        matEndDate
+                        formControlName="end"
+                        placeholder="To Date"
+                        (focus)="picker1.open()"
+                      />
+                    </mat-date-range-input>
+                    <mat-date-range-picker #picker1></mat-date-range-picker>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Third Field (50%) -->
+              <div class="col-md-6">
+                <mat-slider min="200" max="500">
+                  <input value="300" matSliderStartThumb />
+                  <input value="400" matSliderEndThumb />
+                </mat-slider>
+              </div>
+            </div>
+            <div class="row-filters">
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Years</mat-label>
+                  <mat-select multiple [formControl]="yearControl">
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                    />
+
+                    <!-- Select All Checkbox -->
+                    <div class="other_option">
+                      <mat-checkbox (change)="selectAllyears($event)"
+                        >Select All</mat-checkbox
+                      >
+                    </div>
+                    <!-- Dynamic Hospital Options -->
+                    <mat-select-trigger>
+                      {{yearControl.value?.[0] || ''}}
+                      <span *ngIf="(yearControl.value?.length || 0) > 1">
+                        (+{{ (yearControl.value?.length || 0) - 1 }}
+                        {{
+                          yearControl.value?.length === 2 ? "other" : "others"
+                        }})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let year of years" [value]="year.value">
+                      {{ year.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <div class="multiple_select_custom">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Quarter</mat-label>
+                    <mat-select multiple [formControl]="quarterControl">
+                      <input
+                        class="searchInput"
+                        placeholder="search..."
+                        (keydown.space)="$event.stopPropagation()"
+                        matInput
+                      />
+
+                      <!-- Select All Checkbox -->
+                      <div class="other_option">
+                        <mat-checkbox (change)="selectAllQuarters($event)"
+                          >Select All</mat-checkbox
+                        >
+                      </div>
+                      <!-- Dynamic Hospital Options -->
+                      <mat-option
+                        *ngFor="let quarter of quarters"
+                        [value]="quarter.value"
+                      >
+                        {{ quarter.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <div class="multiple_select_custom">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Months</mat-label>
+                    <mat-select multiple [formControl]="monthControl">
+                      <input
+                        class="searchInput"
+                        placeholder="search..."
+                        (keydown.space)="$event.stopPropagation()"
+                        matInput
+                      />
+
+                      <!-- Select All Checkbox -->
+                      <div class="other_option">
+                        <mat-checkbox (change)="selectAllMonths($event)"
+                          >Select All</mat-checkbox
+                        >
+                      </div>
+                      <!-- Dynamic Hospital Options -->
+                      <mat-option
+                        *ngFor="let month of months"
+                        [value]="month.value"
+                      >
+                        {{ month.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Countrys</mat-label>
+                  <mat-select multiple [formControl]="countryControl">
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                    />
+
+                    <!-- Select All Checkbox -->
+                    <div class="other_option">
+                      <mat-checkbox (change)="selectAllcountrys($event)"
+                        >Select All</mat-checkbox
+                      >
+                    </div>
+                    <!-- Dynamic Hospital Options -->
+                    <mat-select-trigger>
+                      {{countryControl.value?.[0] || ''}}
+                      <span *ngIf="(countryControl.value?.length || 0) > 1">
+                        (+{{ (countryControl.value?.length || 0) - 1 }}
+                        {{
+                          countryControl.value?.length === 2
+                            ? "other"
+                            : "others"
+                        }})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option
+                      *ngFor="let country of countrys"
+                      [value]="country.value"
+                    >
+                      {{ country.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Gender</mat-label>
+                  <mat-select multiple [formControl]="genderControl">
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                    />
+
+                    <!-- Select All Checkbox -->
+                    <div class="other_option">
+                      <mat-checkbox (change)="selectAllgenders($event)"
+                        >Select All</mat-checkbox
+                      >
+                    </div>
+                    <!-- Dynamic Hospital Options -->
+                    <mat-select-trigger>
+                      {{genderControl.value?.[0] || ''}}
+                      <span *ngIf="(genderControl.value?.length || 0) > 1">
+                        (+{{ (genderControl.value?.length || 0) - 1 }}
+                        {{
+                          genderControl.value?.length === 2
+                            ? "other"
+                            : "others"
+                        }})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option
+                      *ngFor="let gender of genders"
+                      [value]="gender.value"
+                    >
+                      {{ gender.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Hospitals</mat-label>
+                  <mat-select multiple [formControl]="hospitalControl">
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                    />
+
+                    <!-- Select All Checkbox -->
+                    <div class="other_option">
+                      <mat-checkbox (change)="selectAllHospitals($event)"
+                        >Select All</mat-checkbox
+                      >
+                    </div>
+                    <!-- Dynamic Hospital Options -->
+                    <mat-select-trigger>
+                      {{hospitalControl.value?.[0] || ''}}
+                      <span *ngIf="(hospitalControl.value?.length || 0) > 1">
+                        (+{{ (hospitalControl.value?.length || 0) - 1 }}
+                        {{
+                          hospitalControl.value?.length === 2
+                            ? "other"
+                            : "others"
+                        }})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option
+                      *ngFor="let hospital of hospitals"
+                      [value]="hospital.value"
+                    >
+                      {{ hospital.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>User ID</mat-label>
+                  <mat-select multiple [formControl]="userControl">
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                    />
+
+                    <!-- Select All Checkbox -->
+                    <div class="other_option">
+                      <mat-checkbox (change)="selectAllUsers($event)"
+                        >Select All</mat-checkbox
+                      >
+                    </div>
+                    <!-- Dynamic Hospital Options -->
+                    <mat-select-trigger>
+                      {{userControl.value?.[0] || ''}}
+                      <span *ngIf="(userControl.value?.length || 0) > 1">
+                        (+{{ (userControl.value?.length || 0) - 1 }}
+                        {{
+                          userControl.value?.length === 2 ? "other" : "others"
+                        }})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let user of users" [value]="user.value">
+                      {{ user.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Treatments</mat-label>
+                  <mat-select multiple [formControl]="treatmentControl">
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                    />
+
+                    <!-- Select All Checkbox -->
+                    <div class="other_option">
+                      <mat-checkbox (change)="selectAllTreatments($event)"
+                        >Select All</mat-checkbox
+                      >
+                    </div>
+                    <!-- Dynamic Hospital Options -->
+                    <mat-select-trigger>
+                      {{treatmentControl.value?.[0] || ''}}
+                      <span *ngIf="(treatmentControl.value?.length || 0) > 1">
+                        (+{{ (treatmentControl.value?.length || 0) - 1 }}
+                        {{
+                          treatmentControl.value?.length === 2
+                            ? "other"
+                            : "others"
+                        }})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option
+                      *ngFor="let treatment of treatments"
+                      [value]="treatment.value"
+                    >
+                      {{ treatment.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Doctors</mat-label>
+                  <mat-select multiple [formControl]="doctorControl">
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                    />
+
+                    <!-- Select All Checkbox -->
+                    <div class="other_option">
+                      <mat-checkbox (change)="selectAllDoctors($event)"
+                        >Select All</mat-checkbox
+                      >
+                    </div>
+                    <!-- Dynamic Hospital Options -->
+                    <mat-select-trigger>
+                      {{doctorControl.value?.[0] || ''}}
+                      <span *ngIf="(doctorControl.value?.length || 0) > 1">
+                        (+{{ (doctorControl.value?.length || 0) - 1 }}
+                        {{
+                          doctorControl.value?.length === 2
+                            ? "other"
+                            : "others"
+                        }})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option
+                      *ngFor="let doctor of doctors"
+                      [value]="doctor.value"
+                    >
+                      {{ doctor.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Ref Partner</mat-label>
+                  <mat-select multiple [formControl]="partnerControl">
+                    <input
+                      class="searchInput"
+                      placeholder="search..."
+                      (keydown.space)="$event.stopPropagation()"
+                      matInput
+                    />
+
+                    <!-- Select All Checkbox -->
+                    <div class="other_option">
+                      <mat-checkbox (change)="selectAllPartners($event)"
+                        >Select All</mat-checkbox
+                      >
+                    </div>
+                    <!-- Dynamic Hospital Options -->
+                    <mat-select-trigger>
+                      {{partnerControl.value?.[0] || ''}}
+                      <span *ngIf="(partnerControl.value?.length || 0) > 1">
+                        (+{{ (partnerControl.value?.length || 0) - 1 }}
+                        {{
+                          partnerControl.value?.length === 2
+                            ? "other"
+                            : "others"
+                        }})
+                      </span>
+                    </mat-select-trigger>
+                    <mat-option
+                      *ngFor="let partner of partners"
+                      [value]="partner.value"
+                    >
+                      {{ partner.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div
+          class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12"
+          *ngFor="let item of widgetData; let i = index"
+        >
+          <div class="card card-statistic-2">
+            <div class="clearfix">
+              <div
+                class="card-icon shadow-primary"
+                [ngStyle]="{ 'background-color': item.iconBg, color: '#fff' }"
+                matTooltip="{{ item.desc }}"
+                matTooltipPosition="above"
+              >
+                <i class="material-icons align-middle">{{ item.icon }}</i>
+              </div>
+              <div class="card-right">
+                <div>
+                  <h5 [ngStyle]="{ color: item.iconBg }" class="float-end">
+                    {{ item.name }}
+                  </h5>
+                </div>
+                <div class="m-r-10 m-l-10">
+                  <h3
+                    *ngIf="!item?.isLoading"
+                    class="font-weight-bold float-end mb-0"
+                  >
+                    {{ item.value }}
+                  </h3>
+                  <mat-spinner
+                    *ngIf="item?.isLoading"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  ></mat-spinner>
+                </div>
+              </div>
+            </div>
+            <div class="card-chart">
+              <canvas
+                baseChart
+                [chartType]="'line'"
+                [datasets]="item.chartData"
+                [labels]="cardChart1Label"
+                [options]="cardChart1"
+                [legend]="true"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <!-- PIE CHART -->
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+        [style]="item.chartStyle"
+        *ngFor="let item of pieChartArray; let i = index"
+      >
+        <div class="card">
+          <div class="header d-flex justify-content-between align-items-center">
+            <h2>{{ item.chartName }}</h2>
+            <div
+              class="d-flex justify-content-between align-item-center filter-wrapper"
+            >
+              <div></div>
+              <div
+                *ngIf="item.range"
+                class="d-flex align-items-baseline justify-content-start"
+              >
+                <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker>
+                  <mat-date-range-picker-actions>
+                    <button mat-button matDateRangePickerCancel>Cancel</button>
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      matDateRangePickerApply
+                      (click)="applyDateRange(item.event)"
+                    >
+                      Apply
+                    </button>
+                  </mat-date-range-picker-actions>
+                </mat-date-range-picker>
+                <mat-date-range-input
+                  [max]="currentDate"
+                  [id]="i"
+                  [rangePicker]="picker"
+                >
+                  <input
+                    matStartDate
+                    [(ngModel)]="selectedDateRange.startDate"
+                    placeholder="Start date"
+                  />
+                  <input
+                    matEndDate
+                    [(ngModel)]="selectedDateRange.endDate"
+                    placeholder="End date"
+                  />
+                </mat-date-range-input>
+                <app-feather-icons
+                  style="margin-top: -10px; cursor: pointer"
+                  class="tbl-fav-delete"
+                  (click)="
+                    clearDateFilter(
+                      item,
+                      selectedDateRangeWidget[i],
+                      selectedDateRangePieChart[i],
+                      item.event
+                    )
+                  "
+                  icon="x-circle"
+                ></app-feather-icons>
+              </div>
+              <select
+                [disabled]="loadingChartsArray?.includes(true)"
+                name="query_stats"
+                (change)="
+                  emitSelectEvent($event, item.event);
+                  filterValue === 'RANGE'
+                    ? (item.range = true)
+                    : (item.range = false)
+                "
+                *ngIf="!item.range"
+                id="query_stats"
+                class="filter-select"
+                [(ngModel)]="item.selectedFilter"
+              >
+                <option value="last30">Last 30 Days</option>
+                <option value="today">Todays</option>
+                <option value="last7">Last 7 Days</option>
+                <option value="last90">Last 90 Days</option>
+                <option value="all">All</option>
+                <option value="RANGE">Range</option>
+              </select>
+            </div>
+          </div>
+          <div class="body">
+            <div nz-row>
+              <div nz-col nzSpan="12">
+                <div
+                  *ngIf="item.loading"
+                  class="d-flex justify-content-center align-items-center"
+                  style="height: 400px"
+                >
+                  <mat-spinner></mat-spinner>
+                </div>
+                <div *ngIf="!item.loading">
+                  <div
+                    [id]="'pieChart' + i"
+                    echarts
+                    [options]="item.chartData"
+                    theme="macarons"
+                    class="demo-chart"
+                    (chartClick)="onPieChartEvent($event, item, i)"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- COMMENTS -->
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Comments</h2>
+          </div>
+          <div class="body">
+            <!-- <div class="recent-comment" style="position: relative; max-height: 416px;" [perfectScrollbar]>
+                                  <div class="notice-board" *ngFor="let item of staticComments">
+                                      <div class="title">{{makeInitials(item.name)}}</div>
+                                      <div class="notice-body">
+                                          <h6 class="notice-heading color-primary col-red">{{item.name}}</h6>
+                                          <p>{{item.comment}}</p>
+                                          <p class="comment-date">{{currentDate|date:'d MMM y | h:mm a '}}</p>
+                                      </div>
+                                  </div>
+      
+                              </div> -->
+            <div style="position: relative; height: 416px">
+              <!-- <h1>Comming Soon</h1> -->
+              <!-- <app-comment-list></app-comment-list> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- BAR CHART -->
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+        [style]="item.chartStyle"
+        *ngFor="let item of barChartsArray; let i = index"
+      >
+        <div class="card">
+          <div class="header">
+            <h2>{{ item.chartName }}</h2>
+          </div>
+          <div class="body">
+            <div nz-row>
+              <div nz-col nzSpan="12">
+                <div
+                  *ngIf="item.loading"
+                  class="d-flex justify-content-center align-items-center"
+                  style="height: 400px"
+                >
+                  <mat-spinner></mat-spinner>
+                </div>
+
+                <div
+                  *ngIf="!item.loading"
+                  [id]="'barChart' + i"
+                  echarts
+                  [options]="item.chartData"
+                  theme="macarons"
+                  class="demo-chart"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FUNNEL CHART -->
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+        *ngFor="let item of funnelChartArray; let i = index"
+      >
+        <div class="card">
+          <div class="header">
+            <h2>{{ item.chartName }}</h2>
+          </div>
+          <div class="body">
+            <div nz-row>
+              <div
+                *ngIf="item.loading"
+                class="d-flex justify-content-center align-items-center"
+                style="height: 400px"
+              >
+                <mat-spinner></mat-spinner>
+              </div>
+              <div *ngIf="!item.loading" nz-col nzSpan="12">
+                <div
+                  [id]="'chart' + i"
+                  echarts
+                  [options]="item.chartData"
+                  theme="macarons"
+                  class="demo-chart"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Line Chart Start -->
+      <div
+        class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+        *ngFor="let item of lineChartsArray; let i = index"
+      >
+        <div class="card">
+          <div class="header">
+            <h2>{{ item.chartName }}</h2>
+          </div>
+          <div class="body">
+            <div nz-row>
+              <div
+                *ngIf="item.loading"
+                class="d-flex justify-content-center align-items-center"
+                style="height: 400px"
+              >
+                <mat-spinner></mat-spinner>
+              </div>
+              <div *ngIf="!item.loading" nz-col nzSpan="12">
+                <div
+                  [id]="'chart' + i"
+                  echarts
+                  [options]="item.chartData"
+                  theme="macarons"
+                  class="demo-chart"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Line Chart End -->
+    </div>
+  </div>
+</section>

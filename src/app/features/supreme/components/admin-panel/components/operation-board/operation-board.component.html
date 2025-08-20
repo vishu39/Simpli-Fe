@@ -1,0 +1,118 @@
+<section class="content">
+  <div class="content-block">
+    <div class="operation-board">
+      <div
+        class="operation-board-header d-flex justify-content-between align-items-center"
+      >
+        <div class="left">
+          <h2>Operation Board</h2>
+        </div>
+        <div class="right d-flex justify-content-end align-items-start">
+          <button mat-icon-button class="sm-fi-btn">
+            <app-feather-icons
+              class="tbl-fav-edit"
+              icon="message-square"
+            ></app-feather-icons>
+          </button>
+          <button mat-icon-button class="sm-fi-btn">
+            <app-feather-icons
+              class="tbl-fav-delete"
+              icon="bell"
+            ></app-feather-icons>
+          </button>
+        </div>
+      </div>
+      <div class="dashboard-wrapper hide-scrollbar" cdkDropListGroup>
+        <div class="list-container" *ngFor="let prop of operationDemo">
+          <div
+            class="list-header d-flex flex-wrap justify-content-between align-items-baseline"
+          >
+            <div
+              class="d-flex mt-2 justify-content-between align-items-baseline"
+            >
+              <h2>{{ prop.title }}</h2>
+              <div class="count">{{ prop.listData.length }}</div>
+            </div>
+            <div class="d-flex">
+              <button
+                class="add-btn"
+                *ngFor="let btn of prop.buttons"
+                [color]="btn.color"
+                mat-icon-button
+              >
+                <mat-icon>{{ btn.icon }}</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div
+            cdkDropList
+            [cdkDropListData]="prop.listData"
+            class="list hide-scrollbar"
+            (cdkDropListDropped)="drop($event)"
+          >
+            <div
+              class="list-content"
+              *ngFor="let item of prop.listData"
+              cdkDrag
+            >
+              <div class="content-header">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <p class="wrapped-text name">{{ item.name }}</p>
+                  <app-feather-icons
+                    style="cursor: pointer"
+                    [matMenuTriggerFor]="menu"
+                    class="header-dropdown"
+                    class="tbl-fav-delete"
+                    icon="more-horizontal"
+                  ></app-feather-icons>
+                  <mat-menu #menu="matMenu"> </mat-menu>
+                </div>
+                <div (click)="dialog(item, prop.title)">
+                  <div class="dec">
+                    <p>Partner Name: {{ item.partnerName }}</p>
+                    <p>Treatment: {{ item.treatment || "NIL" }}</p>
+                    <p>Country: {{ item.country }}</p>
+                  </div>
+                  <div
+                    class="d-flex justify-content-start align-items-center other-details"
+                  >
+                    <div class="d-flex content" style="margin-right: 10px">
+                      <app-feather-icons
+                        class="tbl-fav-delete icon"
+                        icon="message-square"
+                      ></app-feather-icons>
+                      <div class="count">{{ items.length }}</div>
+                    </div>
+                    <div class="d-flex content">
+                      <app-feather-icons
+                        class="tbl-fav-edit icon"
+                        icon="flag"
+                      ></app-feather-icons>
+                      <div class="count">P{{ item.priority }}</div>
+                    </div>
+                  </div>
+                  <div class="other-details mt-2">
+                    <div
+                      class="content"
+                      *ngIf="prop.title !== 'Upcoming Arrival'"
+                    >
+                      Due Date: {{ currentDate | date : "short" }}
+                    </div>
+                    <div
+                      class="content"
+                      *ngIf="prop.title === 'Upcoming Arrival'"
+                    >
+                      Arrival Date: {{ currentDate | date : "short" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,97 @@
+<div class="p-4" *ngIf="!requestData?.status && !isLoading">
+    <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+            <app-request-details [patientData]="patientData" [requestData]="requestData" type="opinion"
+                (patchForm)="patchForm($event)">
+                <div class="details mt-3 ">
+                    <span class="d-flex justify-content-between align-items-baseline status heading">
+                        <h3>Assign Doctor</h3>
+                        <button mat-icon-button (click)="panelOpenState = !panelOpenState;">
+                            <i [class]="panelOpenState ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                        </button>
+                    </span>
+                    <div *ngIf="panelOpenState">
+                        <form [formGroup]="assignHospitalForm">
+                            <div class="row mt-4">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Hospital</mat-label>
+                                        <input matInput type="text" formControlName="hospitalName">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Doctor Name</mat-label>
+                                        <mat-select formControlName="doctorName">
+                                            <input class="searchInput" placeholder="search..."
+                                            (keydown.space)="$event.stopPropagation()" matInput
+                                            (keyup)="searchDoctor($event.target.value)">
+                                            <div class="other_option" *ngIf="!doctorsList?.length">
+                                                No results
+                                            </div>
+                                            <mat-option (click)="onClickDoctor(list)"
+                                                *ngFor="let list of doctorsList" [value]="list?.name">
+                                                {{list?.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="
+                                            assignHospitalForm.controls['doctorName'].hasError('required')
+                                              ">
+                                            Doctor is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="assignHospitalForm.get('doctorName')?.value==='Other'"
+                                    class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Other Doctor Name</mat-label>
+                                        <input matInput type="text" formControlName="otherDoctorName">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                                    <mat-form-field class="example-full-width" appearance="outline">
+                                        <mat-label>Email To</mat-label>
+                                        <input (keypress)="spaceRestrict($event)" matInput type="text" formControlName="emailTo">
+                                        <mat-error *ngIf="
+                                assignHospitalForm.controls['emailTo'].hasError('pattern')
+                                  ">
+                                            Please enter valid email
+                                        </mat-error>
+                                        <mat-error *ngIf="
+                                assignHospitalForm.controls['emailTo'].hasError('required')
+                                  ">
+                                            Email to is requied field
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                                    <div class="example-button-row justify-end">
+                                        <button mat-raised-button color="primary"
+                                            [disabled]="allPendingOpinionRequest.length>0" (click)="submit()"
+                                            type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </app-request-details>
+        </div>
+
+        <!-- right section -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngIf="!!requestData">
+            <app-add-details-opinion [patientData]="patientData" [requestData]="requestData"
+                (refetch)="getOpinionRequestByHospitalOpenLink()" [isEdit]="isEdit" [dataForEdit]="dataForEdit">
+            </app-add-details-opinion>
+        </div>
+    </div>
+</div>
+
+<mat-spinner *ngIf="isLoading" class="mx-auto mb-2 mt-2" [diameter]="30">
+</mat-spinner>
+
+<div *ngIf="requestData?.status && !isLoading">
+    <app-complete-page [message]="'Opinion submitted successfully'"></app-complete-page>
+</div>

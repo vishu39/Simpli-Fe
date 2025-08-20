@@ -1,0 +1,156 @@
+<div>
+  <div *ngIf="!isAiLoading">
+    <form [formGroup]="opdForm" class="m-4">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hospital</mat-label>
+            <mat-select formControlName="hospitalName">
+              <div
+                class="other_option"
+                *ngIf="!request?.length && !isLoadingRequest"
+              >
+                No results
+              </div>
+              <ng-container>
+                <mat-option
+                  (click)="onClickHospital(item)"
+                  *ngFor="let item of request"
+                  [value]="item?.hospitalName"
+                >
+                  {{ item?.hospitalName }}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+            <mat-error
+              *ngIf="opdForm.controls['hospitalName'].hasError('required')"
+            >
+              Hospital is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Received At</mat-label>
+            <input
+              matTooltip="For tasks received via email or WhatsApp, enter the date and time received; if editing is disabled, it’s auto-captured."
+              matInput
+              [owlDateTime]="dt"
+              [owlDateTimeTrigger]="dt"
+              formControlName="receivedAt"
+            />
+            <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+              >today</mat-icon
+            >
+            <owl-date-time
+              hour12Timer="true"
+              #dt
+              pickerType="both"
+            ></owl-date-time>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Doctor Name</mat-label>
+            <mat-select formControlName="doctorName">
+              <input
+                class="searchInput"
+                placeholder="search..."
+                (keydown.space)="$event.stopPropagation()"
+                matInput
+                (keyup)="searchDoctor($event.target.value)"
+              />
+              <div class="other_option" *ngIf="!doctorsList?.length">
+                No results
+              </div>
+              <mat-option *ngFor="let list of doctorsList" [value]="list?.name">
+                {{ list?.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="opdForm.controls['doctorName'].hasError('required')"
+            >
+              Doctor name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div
+          *ngIf="opdForm.get('doctorName')?.value === 'Other'"
+          class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        >
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Other Doctor Name</mat-label>
+            <input matInput type="text" formControlName="otherDoctorName" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>OPD At</mat-label>
+            <input
+              matInput
+              [owlDateTime]="odt"
+              [owlDateTimeTrigger]="odt"
+              formControlName="opdAt"
+            />
+            <mat-icon matSuffix [owlDateTimeTrigger]="odt" class="date-icon"
+              >today</mat-icon
+            >
+            <owl-date-time
+              hour12Timer="true"
+              #odt
+              pickerType="both"
+            ></owl-date-time>
+            <mat-error *ngIf="opdForm.controls['opdAt'].hasError('required')">
+              OPD At is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Meeting Link</mat-label>
+            <input
+              matInput
+              formControlName="meetingLink"
+              (keypress)="spaceRestrict($event)"
+            />
+            <mat-error
+              *ngIf="opdForm.controls['meetingLink'].hasError('pattern')"
+            >
+              Please enter a valid meeting link
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Payment Link</mat-label>
+            <input
+              matInput
+              formControlName="paymentLink"
+              (keypress)="spaceRestrict($event)"
+            />
+            <mat-error
+              *ngIf="opdForm.controls['paymentLink'].hasError('pattern')"
+            >
+              Please enter a valid payment link
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div
+    style="
+      height: calc(100vh - 290px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    "
+    *ngIf="isAiLoading"
+  >
+    AI is fetching details from Email...
+  </div>
+</div>

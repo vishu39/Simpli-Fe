@@ -1,0 +1,415 @@
+<div>
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 msl-3 font-17">
+            {{ title }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form
+      class="register-form m-4"
+      [formGroup]="doctorForm"
+      (ngSubmit)="formSubmit()"
+    >
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+          <!-- <mat-card> -->
+          <div class="mt-4">
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Name</mat-label>
+                  <input matInput type="text" formControlName="name" />
+                  <mat-error
+                    *ngIf="doctorForm.controls['name'].hasError('required')"
+                  >
+                    Name is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Slug</mat-label>
+                  <input matInput type="text" formControlName="slug" />
+                  <mat-error
+                    *ngIf="doctorForm.controls['slug'].hasError('required')"
+                  >
+                    Slug is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Designation</mat-label>
+                  <input matInput type="text" formControlName="designation" />
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Qualification</mat-label>
+                  <input matInput type="text" formControlName="qualification" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2">
+                <div class="multiple_select_custom">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Hospital</mat-label>
+                    <mat-select
+                      multiple
+                      formControlName="hospital"
+                      msInfiniteScroll
+                      (infiniteScroll)="onInfiniteScrollHospital()"
+                      [compareWith]="compareObjects"
+                    >
+                      <input
+                        class="searchInput"
+                        placeholder="search..."
+                        (keydown.space)="$event.stopPropagation()"
+                        matInput
+                        (keyup)="searchHospital($event.target.value)"
+                      />
+                      <div
+                        class="other_option"
+                        *ngIf="!hospitalData?.length && !isLoadingHospital"
+                      >
+                        No results
+                      </div>
+
+                      <div class="other_option" *ngIf="hospitalData?.length">
+                        <mat-checkbox (change)="selectAllHospital($event)"
+                          >Select All
+                        </mat-checkbox>
+                      </div>
+
+                      <mat-spinner
+                        *ngIf="isLoadingHospitalSelectAll"
+                        class="mx-auto mb-2 mt-2"
+                        [diameter]="30"
+                      >
+                      </mat-spinner>
+
+                      <ng-container *ngIf="!isLoadingHospitalSelectAll">
+                        <mat-option
+                          (click)="
+                            onClickHospital({
+                              _id: item._id,
+                              name: item.name
+                            })
+                          "
+                          *ngFor="let item of hospitalData"
+                          [value]="{
+                            _id: item._id,
+                            name: item.name
+                          }"
+                        >
+                          {{ item.name }}
+                        </mat-option>
+                      </ng-container>
+
+                      <mat-spinner
+                        *ngIf="isLoadingHospital && !isLoadingHospitalSelectAll"
+                        class="mx-auto mb-2 mt-2"
+                        [diameter]="30"
+                      >
+                      </mat-spinner>
+                    </mat-select>
+                    <div class="chip_section" [perfectScrollbar]>
+                      <mat-chip-list>
+                        <mat-chip *ngFor="let item of hospitalItems">
+                          {{ item.name }}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </div>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div
+                class="col-xl-2 col-lg-2 col-md-2 col-sm-12 mb-2 d-flex align-items-end"
+              >
+                <mat-slide-toggle class="mb-4" formControlName="featured"
+                  >Featured
+                </mat-slide-toggle>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Email Id</mat-label>
+                  <input matInput formControlName="emailId" />
+                  <mat-icon matSuffix>mail</mat-icon>
+                  <mat-error
+                    *ngIf="doctorForm.get('emailId').hasError('pattern')"
+                  >
+                    Please enter a valid email address
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Contact</mat-label>
+                  <ngx-mat-intl-tel-input
+                    formControlName="contact"
+                    [enablePlaceholder]="true"
+                    [enableSearch]="true"
+                    [preferredCountries]="['in']"
+                  ></ngx-mat-intl-tel-input>
+
+                  <!-- <mat-error
+                      *ngIf="doctorForm.controls['contact'].hasError('required')"
+                      >
+                      Contact is required
+                    </mat-error> -->
+                  <mat-error
+                    *ngIf="
+                      doctorForm.controls['contact']?.errors
+                        ?.validatePhoneNumber
+                    "
+                    >Invalid contact</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row"></div>
+            <div class="row">
+              <h5 class="mb-3">Expertise</h5>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                <ckeditor
+                  [editor]="Editor"
+                  formControlName="expertise"
+                ></ckeditor>
+              </div>
+            </div>
+            <div class="row">
+              <h5 class="mb-3">Service Offered</h5>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                <ckeditor
+                  [editor]="Editor"
+                  formControlName="serviceOffered"
+                ></ckeditor>
+              </div>
+            </div>
+            <div class="row">
+              <h5 class="mb-3">Experience</h5>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                <ckeditor
+                  [editor]="Editor"
+                  formControlName="experience"
+                ></ckeditor>
+              </div>
+            </div>
+            <div class="row">
+              <h5 class="mb-3">Highlights</h5>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-4">
+                <ckeditor
+                  [editor]="Editor"
+                  formControlName="highlights"
+                ></ckeditor>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Rating</mat-label>
+                  <input matInput type="number" formControlName="rating" />
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Experience Year</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="experienceYear"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- image uploader -->
+            <div class="row">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Image</mat-label>
+                  <ngx-mat-file-input
+                    style="display: none"
+                    accept=".png, .jpg, .jpeg"
+                    name="image"
+                    (change)="selectImage($event)"
+                  >
+                  </ngx-mat-file-input>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <div>
+                      <span *ngFor="let file of imageFile; let i = index">
+                        <span
+                          >{{ file?.name
+                          }}<span *ngIf="i < imageFile?.length - 1">, </span>
+                        </span>
+                      </span>
+                    </div>
+                    <mat-icon style="transform: translateY(-5px)"
+                      >upload</mat-icon
+                    >
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- file && uploaded file -->
+
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2"
+                *ngIf="imageFile?.length"
+              >
+                <div class="mb-2">
+                  <h6>Image</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="imageFile"
+                      [filePreviewList]="imagePreviewUrls"
+                      [type]="'fileUploader'"
+                      [remove]="true"
+                      [className]="'col-12'"
+                      (onDelete)="deleteImage($event, 'upload')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2"
+                *ngIf="!!image"
+              >
+                <div class="mb-2">
+                  <h6>Uploaded Image</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="[image]"
+                      [filePreviewList]="[image]"
+                      [type]="'fileUploaded'"
+                      [remove]="true"
+                      [className]="'col-12'"
+                      (onDelete)="deleteImage($event, 'uploaded')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- file uploader -->
+            <div class="row">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Profile</mat-label>
+                  <ngx-mat-file-input
+                    style="display: none"
+                    accept=".pdf"
+                    name="image"
+                    (change)="uploadProfile($event)"
+                  >
+                  </ngx-mat-file-input>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: space-between;
+                    "
+                  >
+                    <div>
+                      <span *ngFor="let file of profileFile; let i = index">
+                        <span
+                          >{{ file?.name
+                          }}<span *ngIf="i < profileFile?.length - 1">, </span>
+                        </span>
+                      </span>
+                    </div>
+                    <mat-icon style="transform: translateY(-5px)"
+                      >upload</mat-icon
+                    >
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- file && uploaded file -->
+
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2"
+                *ngIf="profileFile?.length"
+              >
+                <div class="mb-2">
+                  <h6>Profile</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="profileFile"
+                      [filePreviewList]="profilePreviewUrls"
+                      [type]="'fileUploader'"
+                      [remove]="true"
+                      [className]="'col-12'"
+                      (onDelete)="deleteProfile($event, 'upload')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2"
+                *ngIf="!!profile"
+              >
+                <div class="mb-2">
+                  <h6>Uploaded Profile</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="[profile]"
+                      [filePreviewList]="[profile]"
+                      [type]="'fileUploaded'"
+                      [remove]="true"
+                      [className]="'col-12'"
+                      (onDelete)="deleteProfile($event, 'uploaded')"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- </mat-card> -->
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

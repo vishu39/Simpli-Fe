@@ -1,0 +1,133 @@
+<section class="content">
+  <div class="content-block">
+    <div class="row mt-5">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card p-3">
+          <div *ngIf="!isEmailLoading">
+            <div class="head">
+              <button
+                (click)="navigateback()"
+                mat-icon-button
+                aria-label="Example icon-button with a heart icon"
+              >
+                <mat-icon>keyboard_backspace</mat-icon>
+              </button>
+              <!-- <button
+                (click)="reload()"
+                mat-icon-button
+                aria-label="Example icon-button with a heart icon"
+              >
+                <mat-icon>refresh</mat-icon>
+              </button> -->
+
+              <div class="btnDiv">
+                <button mat-flat-button color="primary" (click)="replyToAll()">
+                  Reply To All
+                </button>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  (click)="openAddPatientModal()"
+                >
+                  Actions
+                </button>
+                <!-- <button mat-flat-button color="primary">Pre Intemation</button>
+                <button mat-flat-button color="primary">OPD</button>
+                <button mat-flat-button color="primary">
+                  Proforma Invoice
+                </button>
+                <button mat-flat-button color="primary">Opinion</button>
+                <button mat-flat-button color="primary">
+                  Patient Confirmation
+                </button>
+                <button mat-flat-button color="primary">VIL</button> -->
+              </div>
+            </div>
+            <div class="subject mb-4 mt-2">
+              <h4>{{ emailData?.subject }}</h4>
+            </div>
+            <div class="midDiv">
+              <div class="name">
+                <span class="avatar">
+                  {{
+                    getNameFromMail(emailData?.from) | slice : 0 : 2 | uppercase
+                  }}
+                </span>
+                <div>
+                  <div>
+                    <b>{{ getNameFromMail(emailData?.from) }}</b>
+                  </div>
+                  <p style="font-size: 13px; color: #5e5e5e; display: flex">
+                    {{ emailData?.to || "NIL" }}
+                    <mat-icon
+                      style="width: 15%"
+                      class="downArrow"
+                      #tooltipButton
+                      id="tooltipButton"
+                      (click)="showTooltip(tooltipButton)"
+                      >arrow_drop_down</mat-icon
+                    >
+                  </p>
+                </div>
+              </div>
+              <div class="date" style="font-size: 13px; color: #5e5e5e">
+                {{ emailData?.date | date : "EEE, MMM d, hh:mm a" }}
+                ({{ emailData?.date | timeago : "live" }})
+              </div>
+            </div>
+            <div class="bodddy" style="padding-left: 52px">
+              <div *ngIf="emailData?.html !== 'false'">
+                <div [innerHTML]="emailData?.html | safeHtml"></div>
+              </div>
+
+              <div *ngIf="emailData?.html === 'false'">
+                {{ emailData?.text }}
+              </div>
+            </div>
+            <hr />
+            <div
+              style="padding-left: 52px"
+              *ngIf="emailData?.attachment?.length > 0"
+              class="attachments"
+            >
+              <h6 class="mb-4 mt-2">
+                {{ emailData?.attachment?.length }} Attachments
+              </h6>
+              <app-global-image-preview
+                [fileList]="emailData?.attachment"
+                [filePreviewList]="emailData?.attachment"
+                [type]="'fileUploaded'"
+                [remove]="false"
+              ></app-global-image-preview>
+            </div>
+          </div>
+          <div
+            style="
+              height: 500px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+            *ngIf="isEmailLoading"
+          >
+            <mat-spinner [diameter]="30"></mat-spinner>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="overlayVisible">
+    <app-email-fetch-overlay
+      [emailData]="emailData"
+      (overlayClose)="closeOverlay()"
+    ></app-email-fetch-overlay>
+  </div>
+
+  <div *ngIf="replyToAllVisible">
+    <app-reply-to-all
+      [emailData]="emailData"
+      (overlayClose)="closeReplyToAll()"
+    ></app-reply-to-all>
+  </div>
+</section>

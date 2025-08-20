@@ -1,0 +1,37 @@
+<div class="addContainer">
+    <div class="modalHeader">
+        <div class="editRowModal">
+            <div class="modalHeader clearfix">
+                <div class="modal-about">
+                    <div class="font-weight-bold p-t-5 font-17">
+                        {{dialogTitle}}</div>
+                </div>
+            </div>
+        </div>
+        <button mat-icon-button (click)="closeDialog(false)" aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <hr />
+    <ng-container class="topSelect">
+        <mat-radio-group [(ngModel)]="selected" class="_radio hide-scrollbar" style="width: 100%">
+            <mat-radio-button style="margin-right:10px;" *ngFor="let option of radioGroup"
+                (change)="selectChange(option?.value)" [value]="option?.value">{{option?.name}}</mat-radio-button>
+        </mat-radio-group>
+    </ng-container>
+    <hr />
+    <div mat-dialog-content>
+        <div *ngIf="selected==='proformaInvoice'">
+            <shared-dowload-proforma [patientData]="patientData"></shared-dowload-proforma>
+        </div>
+        <div *ngIf="selected==='confirmation'">
+            <shared-dowload-confirmation [patientData]="patientData"></shared-dowload-confirmation>
+        </div>
+        <div *ngIf="selected==='vil'">
+            <shared-dowload-vil [patientData]="patientData"></shared-dowload-vil>
+        </div>
+        <div *ngIf="selected==='opinion'">
+            <shared-download-opinion [patientData]="patientData"></shared-download-opinion>
+        </div>
+    </div>
+</div>

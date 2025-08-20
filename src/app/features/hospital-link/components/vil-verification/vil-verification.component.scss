@@ -1,0 +1,29 @@
+.verification_failed_container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .icon {
+    color: red;
+    width: 130px;
+    height: 130px;
+    margin-bottom: 10px;
+  }
+  .text {
+    font-size: 25px;
+    font-weight: 500;
+  }
+}
+
+.verification_success_container {
+  .icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 16px;
+  }
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

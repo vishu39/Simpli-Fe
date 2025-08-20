@@ -1,0 +1,223 @@
+<div class="left">
+  <div class="card">
+    <div class="header">
+      <h1 class="title wrapped-text" style="text-transform: capitalize">
+        <span [matTooltip]="patientData?.name" matTooltipPosition="left">{{
+          patientData?.name
+        }}</span>
+      </h1>
+      <div>
+        <button
+          style="color: white; background-color: red; margin-right: 8px"
+          *ngIf="decodedToken?.customerType === 'hospital'"
+          mat-icon-button
+          (click)="openRecordModal()"
+        >
+          <mat-icon>mic_none</mat-icon>
+        </button>
+        <button mat-icon-button (click)="logout()">
+          <mat-icon>power_settings_new</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- top details -->
+    <div class="details mt-3">
+      <span
+        class="d-flex justify-content-between align-items-baseline status heading"
+      >
+        <h3>Patient Details</h3>
+        <button mat-icon-button (click)="changeExpansionMode('details')">
+          <i
+            [class]="
+              openedExpansion === 'details'
+                ? 'fas fa-chevron-up'
+                : 'fas fa-chevron-down'
+            "
+          ></i>
+        </button>
+      </span>
+      <div class="details-content" *ngIf="openedExpansion === 'details'">
+        <div>
+          <h4 class="wrapped-text">Name</h4>
+          <p style="text-transform: capitalize">{{ patientData?.name }}</p>
+        </div>
+        <div>
+          <h4>Country</h4>
+          <p>{{ patientData?.country }}</p>
+        </div>
+        <div>
+          <h4>Gender</h4>
+          <p style="text-transform: capitalize">
+            {{
+              patientData?.gender ? (patientData?.gender | titlecase) : "NIL"
+            }}
+          </p>
+        </div>
+        <div>
+          <h4>Age</h4>
+          <p>
+            {{ patientData?.age ? patientData?.age : "NIL" }}
+            {{ patientData?.ageDuration | titlecase }}
+          </p>
+        </div>
+        <div>
+          <h4>Treatment</h4>
+          <p>{{ patientData?.treatment || "NIL" }}</p>
+        </div>
+
+        <div>
+          <h4>Remark</h4>
+          <p>{{ patientData?.remarks || "NIL" }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="decodedToken?.customerType === 'hospital'">
+      <div class="other-details mt-3" style="height: auto">
+        <span
+          class="d-flex justify-content-between align-items-baseline status heading"
+        >
+          <h3>Recordings</h3>
+          <button mat-icon-button (click)="changeExpansionMode('recordings')">
+            <i
+              [class]="
+                openedExpansion === 'recordings'
+                  ? 'fas fa-chevron-up'
+                  : 'fas fa-chevron-down'
+              "
+            ></i>
+          </button>
+        </span>
+        <div
+          class="other-details-content"
+          *ngIf="openedExpansion === 'recordings'"
+        >
+          <app-treating-doc-recoring
+            [patientData]="patientData"
+          ></app-treating-doc-recoring>
+        </div>
+      </div>
+    </div>
+
+    <!-- tabs -->
+    <div class="other-details mt-3" style="height: auto">
+      <span
+        class="d-flex justify-content-between align-items-baseline status heading"
+      >
+        <h3>Other Details</h3>
+        <button mat-icon-button (click)="changeExpansionMode('tabs')">
+          <i
+            [class]="
+              openedExpansion === 'tabs'
+                ? 'fas fa-chevron-up'
+                : 'fas fa-chevron-down'
+            "
+          ></i>
+        </button>
+      </span>
+      <div class="other-details-content" *ngIf="openedExpansion === 'tabs'">
+        <mat-tab-group>
+          <mat-tab *ngFor="let item of tabs" [label]="item?.name">
+            <ng-template matTabContent>
+              <div class="p-3">
+                <div *ngIf="item?.value === 'medicalHistory'">
+                  <div class="card p-3">
+                    {{ patientData?.medicalHistory || "NIL" }}
+                  </div>
+                </div>
+
+                <div *ngIf="item?.value === 'reports'" class="mt-4">
+                  <div *ngIf="patientData?.report?.length">
+                    <div class="mt-3">
+                      <app-global-image-preview
+                        [fileList]="patientData?.report"
+                        [filePreviewList]="patientData?.report"
+                        [type]="'fileUploaded'"
+                        [remove]="false"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="!patientData?.report?.length"
+                    class="mt-4"
+                    style="text-align: center"
+                  >
+                    --No Data Found--
+                  </div>
+                </div>
+
+                <div *ngIf="type === 'opinion'">
+                  <div *ngIf="item?.value === 'opinionReceived'">
+                    <app-doctor-opinion-received
+                      (patchOpinionForm)="patchOpinionForm($event)"
+                    ></app-doctor-opinion-received>
+                  </div>
+                  <div *ngIf="item?.value === 'opinionPending'">
+                    <app-doctor-opinion-pending></app-doctor-opinion-pending>
+                  </div>
+                  <div *ngIf="item?.value === 'opinionRequest'">
+                    <app-opinion-request-details
+                      [requestData]="requestData"
+                      [patientData]="patientData"
+                    ></app-opinion-request-details>
+                  </div>
+                </div>
+
+                <div *ngIf="type === 'opd'">
+                  <div *ngIf="item?.value === 'opdRequest'">
+                    <app-opd-request-details
+                      [requestData]="requestData"
+                      [patientData]="patientData"
+                    ></app-opd-request-details>
+                  </div>
+                </div>
+
+                <div *ngIf="type === 'vil'">
+                  <div *ngIf="item?.value === 'vilRequest'">
+                    <app-vil-request-details
+                      [requestData]="requestData"
+                      [patientData]="patientData"
+                    ></app-vil-request-details>
+                  </div>
+                </div>
+
+                <div *ngIf="type === 'proforma'">
+                  <div *ngIf="item?.value === 'proformaInvoce'">
+                    <app-proforma-request-details
+                      [requestData]="requestData"
+                      [patientData]="patientData"
+                    ></app-proforma-request-details>
+                  </div>
+                </div>
+
+                <div *ngIf="type === 'confirmation'">
+                  <div *ngIf="item?.value === 'patientConfirmation'">
+                    <app-confirmation-request-details
+                      [requestData]="requestData"
+                      [patientData]="patientData"
+                    ></app-confirmation-request-details>
+                  </div>
+                </div>
+
+                <div *ngIf="item?.value === 'opinionPendingDoc'">
+                  <app-treating-doc-pending-opinion
+                    [patientData]="patientData"
+                  ></app-treating-doc-pending-opinion>
+                </div>
+
+                <div *ngIf="item?.value === 'opinionAddedDoc'">
+                  <app-treating-doc-added-opinion
+                    [patientData]="patientData"
+                  ></app-treating-doc-added-opinion>
+                </div>
+              </div>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+
+    <ng-content></ng-content>
+  </div>
+</div>

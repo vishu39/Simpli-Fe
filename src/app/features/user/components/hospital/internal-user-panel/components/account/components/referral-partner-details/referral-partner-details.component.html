@@ -1,0 +1,150 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="'Account'"
+        [active_item]="'Referral Partner Details'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <mat-spinner
+            *ngIf="isLoading"
+            class="mx-auto mb-2 mt-2"
+            [diameter]="30"
+          >
+          </mat-spinner>
+          <div class="body" *ngIf="!isLoading">
+            <form
+              class="m-4 mt-0"
+              [formGroup]="referralPartnerDetailsForm"
+              (ngSubmit)="formSubmit()"
+            >
+              <div class="row">
+                <div class="mt-4">
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2">
+                      <app-global-image-preview
+                        [fileList]="fileList"
+                        [filePreviewList]="filePreviewUrls"
+                        [type]="'fileUploader'"
+                        [remove]="false"
+                        [className]="'col-6'"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Upload Logo</mat-label>
+                    <ngx-mat-file-input
+                      accept=".png,.jpg,.jpeg"
+                      formControlName="logo"
+                      (change)="onFileSelected($event)"
+                    >
+                    </ngx-mat-file-input>
+                    <mat-icon matSuffix>upload</mat-icon>
+                    <mat-error
+                      *ngIf="
+                        referralPartnerDetailsForm.controls['logo'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Logo is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2">
+                    <div
+                      class="mb-2"
+                      *ngIf="!!referralPartnerDetailsData?.logo"
+                    >
+                      <h6>Uploaded Data</h6>
+                      <div class="mt-4">
+                        <app-global-image-preview
+                          [fileList]="[referralPartnerDetailsData?.logo]"
+                          [filePreviewList]="[referralPartnerDetailsData?.logo]"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'col-6'"
+                        ></app-global-image-preview>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" formArrayName="address" class="mb-0">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <div
+                    class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-0"
+                    *ngFor="
+                      let item of referralPartnerDetailsForm.get('address')[
+                        'controls'
+                      ];
+                      let i = index
+                    "
+                  >
+                    <div [formGroupName]="i">
+                      <h6>
+                        Address Line {{ i + 1 }}
+                        <button
+                          *ngIf="i > 0"
+                          type="button"
+                          mat-icon-button
+                          (click)="removeAddress(i)"
+                          class="tbl-action-btn form_array_delete_icon"
+                        >
+                          <app-feather-icons
+                            [icon]="'trash-2'"
+                            [class]="'tbl-fav-delete'"
+                          >
+                          </app-feather-icons>
+                        </button>
+                      </h6>
+
+                      <mat-form-field
+                        class="example-full-width"
+                        appearance="outline"
+                      >
+                        <mat-label>Address</mat-label>
+                        <input matInput type="text" formControlName="line" />
+
+                        <mat-error
+                          *ngIf="item.controls['line'].hasError('required')"
+                        >
+                          Address line is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <button
+                    (click)="addAddress()"
+                    type="button"
+                    lass="btn-space"
+                    mat-raised-button
+                    color="primary"
+                  >
+                    Add Address Line
+                  </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <button class="btn-space" mat-raised-button color="primary">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

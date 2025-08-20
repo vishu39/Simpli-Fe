@@ -1,0 +1,388 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 msl-3 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="closeDialog(false)" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="m-4" [formGroup]="customerForm" (ngSubmit)="customerFormSubmit()">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Customer Type</mat-label>
+            <mat-select (selectionChange)="customerTypeChange($event)" formControlName="customerType">
+              <mat-option *ngFor="let item of customerTypeData" [value]="item">
+                {{ item | titlecase }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+                        customerForm.controls['customerType'].hasError(
+                          'required'
+                        )
+                      ">
+              Customer type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" *ngIf="
+                    this.customerForm.get('customerType').value == 'hospital'
+                  ">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hospital Type</mat-label>
+            <mat-select (selectionChange)="hospitalTypeChange()" formControlName="hospitalType">
+              <mat-option *ngFor="let item of hospitalTypeData" [value]="item">
+                {{ item }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+                        customerForm.controls['hospitalType'].hasError(
+                          'required'
+                        )
+                      ">
+              Hospital type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline" *ngIf="
+                      this.customerForm.get('customerType').value ==
+                      'facilitator'
+                    ">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name" />
+            <mat-error *ngIf="customerForm.controls['name'].hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" appearance="outline" *ngIf="
+                      this.customerForm.get('hospitalType').value ==
+                      'hospitalGroup'
+                    ">
+            <mat-label>Hospital Group</mat-label>
+            <mat-select [compareWith]="compareFn" formControlName="name">
+              <input class="searchInput" placeholder="search..." (keydown.space)="$event.stopPropagation()" matInput
+                (keyup)="searchGroup($event.target.value)" />
+              <mat-option *ngIf="!groupData?.length">
+                No results
+              </mat-option>
+              <mat-option *ngFor="let item of groupData" [value]="item">
+                {{ item.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="customerForm.controls['name'].hasError('required')">
+              Hospital group is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width" appearance="outline" *ngIf="
+                      this.customerForm.get('hospitalType').value ==
+                      'hospitalUnit'
+                    ">
+            <mat-label>Hospital Unit</mat-label>
+            <mat-select [compareWith]="compareFn" formControlName="name">
+              <input class="searchInput" placeholder="search..." (keydown.space)="$event.stopPropagation()" matInput
+                (keyup)="searchHospital($event.target.value)" />
+              <mat-option *ngIf="!hospitalData?.length">
+                No results
+              </mat-option>
+              <mat-option *ngFor="let item of hospitalData" [value]="item">
+                {{ item.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="customerForm.controls['name'].hasError('required')">
+              Hospital unit is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Billing Address</mat-label>
+            <input matInput type="text" formControlName="billingAddress" />
+            <mat-error *ngIf="
+                        customerForm.controls['billingAddress'].hasError('required')
+                      ">
+              Billing address is required
+            </mat-error>
+
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" *ngIf="!customerData">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Product Family</mat-label>
+            <mat-select (selectionChange)="productFamilyChange()" formControlName="productFamily">
+              <mat-option *ngIf="!productFamilyData?.length">
+                No results
+              </mat-option>
+              <mat-option *ngFor="let item of productFamilyData"  [value]="item?.item_family?.id">
+                {{ item?.item_family?.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+                        customerForm.controls['productFamily'].hasError('required')
+                      ">
+                      Product family is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" *ngIf="!customerData">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Plan</mat-label>
+            <mat-select [disabled]="!this.customerForm.value.productFamily" (selectionChange)="planCurrencyChange()" formControlName="plan">
+              <mat-option *ngIf="!plansData?.length">
+                No results
+              </mat-option>
+              <mat-option *ngFor="let item of plansData" [value]="item?.item">
+                {{ item?.item?.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+                        customerForm.controls['plan'].hasError('required')
+                      ">
+              Plan is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" *ngIf="!customerData">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Plan Currency</mat-label>
+            <mat-select [disabled]="!this.customerForm.value.plan.id" (selectionChange)="planCurrencyChange()" formControlName="planCurrency">
+              <mat-option *ngIf="!planCurrencyData?.length">
+                No results
+              </mat-option>
+              <mat-option *ngFor="let item of planCurrencyData"  [value]="item?.currency?.currency_code">
+                {{ item?.currency?.currency_code }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+                        customerForm.controls['planCurrency'].hasError('required')
+                      ">
+                      Plan currency is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" *ngIf="!customerData">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Plan Price</mat-label>
+            <mat-select  [disabled]="!this.customerForm.value.plan.id || !this.customerForm.value.planCurrency" formControlName="planPrice">
+              <mat-option *ngIf="!planPriceData?.length">
+                No results
+              </mat-option>
+              <mat-option *ngFor="let item of planPriceData"  [value]="item?.item_price?.id">
+                {{ item?.item_price?.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+                        customerForm.controls['planPrice'].hasError('required')
+                      ">
+                      Plan price is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="emailId" (keypress)="spaceRestrict($event)" />
+            <mat-error *ngIf="
+                        customerForm.controls['emailId'].hasError('required')
+                      ">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="
+                        customerForm.controls['emailId'].hasError('pattern')
+                      ">
+              Invalid email address</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label> Password</mat-label>
+            <input matInput type="password" formControlName="password" (keypress)="spaceRestrict($event)" />
+            <mat-error *ngIf="
+                        customerForm.controls['password'].hasError('required')
+                      ">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="
+                        customerForm.controls['password'].hasError('minlength')
+                      ">
+              Password must be at least 8 characters</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label> DB Name</mat-label>
+            <input matInput
+              matTooltip="Database names can only contain alphanumeric characters (A-Z, a-z, 0-9), hyphens (-), and underscores (_)"
+              type="text" formControlName="dbName" (keypress)="spaceRestrict($event)" />
+            <mat-error *ngIf="
+                        customerForm.controls['dbName'].hasError('required')
+                      ">
+              DB name is required
+            </mat-error>
+            <mat-error *ngIf="
+                        customerForm.controls['dbName'].hasError('pattern')
+                      ">
+              Invalid DB name</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Bucket Name</mat-label>
+            <input matInput
+              matTooltip="Bucket names can contain only lowercase letters, numbers, hyphens (-), and periods (.). They must start and end with a lowercase letter or number and can be between 3 and 63 characters in length"
+              type="text" formControlName="bucketName" (keypress)="spaceRestrict($event)" />
+            <mat-error *ngIf="
+                        customerForm.controls['bucketName'].hasError('required')
+                      ">
+              Bucket name is required
+            </mat-error>
+            <mat-error *ngIf="
+            customerForm.controls['bucketName'].hasError('pattern')
+          ">
+              Invalid bucket name</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact</mat-label>
+            <ngx-mat-intl-tel-input
+              formControlName="contact"
+              [enablePlaceholder]="true"
+              [enableSearch]="true"
+              [preferredCountries]="['in']"
+            ></ngx-mat-intl-tel-input>
+
+            <mat-error
+            *ngIf="customerForm.controls['contact'].hasError('required')"
+            >
+            Contact is required
+          </mat-error>
+          <mat-error
+          *ngIf="customerForm.controls['contact']?.errors?.validatePhoneNumber"
+          >Invalid contact</mat-error
+          >
+        </mat-form-field>
+          <!-- <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Contact</mat-label>
+            <input matInput type="number" formControlName="contact" (keypress)="spaceRestrict($event)" />
+            <mat-error *ngIf="
+                        customerForm.controls['contact'].hasError('required')
+                      ">
+              Contact is required
+            </mat-error>
+            <mat-error *ngIf="
+                        customerForm.controls['contact'].hasError('pattern')
+                      ">
+              Invalid contact</mat-error>
+          </mat-form-field> -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Country</mat-label>
+            <mat-select formControlName="country" msInfiniteScroll (infiniteScroll)="onInfiniteScrollCountry()">
+              <input class="searchInput" placeholder="search..." (keydown.space)="$event.stopPropagation()" matInput
+                (keyup)="searchCountry($event.target.value)">
+              <div class="other_option" *ngIf="!countryData?.length && !isLoadingCountry">
+                No results
+              </div>
+              <mat-option *ngIf="countryData.indexOf(customerForm.get('country').value)<0" hidden
+                [value]="customerForm.get('country').value">
+                {{customerForm.get('country').value}}</mat-option>
+              <mat-option *ngFor="let item of countryData" [value]="item.name"> {{item.name}}
+              </mat-option>
+              <mat-spinner *ngIf="isLoadingCountry" class="mx-auto mb-2 mt-2" [diameter]="30">
+              </mat-spinner>
+
+            </mat-select>
+            <mat-error *ngIf="customerForm.controls['country'].hasError('required')">
+              Country is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>City</mat-label>
+            <mat-select formControlName="city" msInfiniteScroll (infiniteScroll)="onInfiniteScrollCity()">
+              <input class="searchInput" placeholder="search..." (keydown.space)="$event.stopPropagation()" matInput
+                (keyup)="searchCity($event.target.value)">
+              <div class="other_option" *ngIf="!cityData?.length && !isLoadingCity">
+                No results
+              </div>
+              <mat-option *ngIf="cityData.indexOf(customerForm.get('city').value)<0" hidden
+                [value]="customerForm.get('city').value">
+                {{customerForm.get('city').value}}</mat-option>
+              <mat-option *ngFor="let item of cityData" [value]="item.name"> {{item.name}}
+              </mat-option>
+              <mat-spinner *ngIf="isLoadingCity" class="mx-auto mb-2 mt-2" [diameter]="30">
+              </mat-spinner>
+
+            </mat-select>
+            <mat-error *ngIf="customerForm.controls['city'].hasError('required')">
+              City is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+   
+      </div>
+
+      <div class="row">
+        
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role">
+              <mat-option *ngFor="let item of roleData" [value]="item._id">{{ item.roleName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="customerForm.controls['role'].hasError('required')">
+              Role is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-slide-toggle class="mt-3" formControlName="onPremise">On Premise</mat-slide-toggle>
+          <mat-slide-toggle style="margin-left:20px" class="mt-3" formControlName="onPremiseDB">On Premise DB</mat-slide-toggle>
+          <mat-slide-toggle style="margin-left:20px" class="mt-3" formControlName="blocked">Blocked</mat-slide-toggle>
+
+        </div>
+     
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Aggregator</mat-label>
+            <mat-select multiple formControlName="aggregator">
+              <input class="searchInput" placeholder="search..." (keydown.space)="$event.stopPropagation()" matInput
+                (keyup)="searchFacilitator($event.target.value)" />
+              <mat-option *ngIf="!facilitatorData?.length">
+                No results
+              </mat-option>
+              <mat-option *ngFor="let item of facilitatorData" [value]="item._id">
+                {{ item.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,234 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Patient'"
+        [active_item]="'All Patient'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <!-- <div class="col-10"> -->
+                    <ul class="header-buttons-left ms-0">
+                      <li class="dropdown">
+                        <h2>
+                          <strong>Patients</strong>
+                        </h2>
+                      </li>
+                      <li class="dropdown m-l-20">
+                        <label for="search-input"
+                          ><i class="material-icons search-icon"
+                            >search</i
+                          ></label
+                        >
+                        <input
+                          placeholder="Search"
+                          type="text"
+                          (keyup)="search($event.target.value)"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                        />
+
+                        <mat-form-field class="status_dropdown">
+                          <mat-label>Status</mat-label>
+                          <mat-select
+                            [(ngModel)]="patientParams.status"
+                            (selectionChange)="changeStatus($event)"
+                          >
+                            <mat-option value="open">Open</mat-option>
+                            <mat-option value="close">Close</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </li>
+                      <li>
+                        <!-- *ngIf="showFilterArray?.includes(tokenData?.userType)" -->
+                        <button
+                          [ngClass]="isFilterActive ? 'filter_active' : ''"
+                          [matTooltip]="'Filter Patient'"
+                          mat-icon-button
+                          (click)="openFilterModal()"
+                        >
+                          <mat-icon>tune</mat-icon>
+                        </button>
+                      </li>
+                    </ul>
+                    <!-- </div> -->
+                    <!-- <div class="col-2"> -->
+                    <ul class="header-buttons">
+                      <li>
+                        <div class="m-l-10" matTooltip="Add">
+                          <button
+                            mat-mini-fab
+                            color="primary"
+                            (click)="addPatient('Add Patient')"
+                          >
+                            <mat-icon class="col-white">add</mat-icon>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                    <!-- </div> -->
+                  </div>
+                </div>
+              </div>
+              <mat-table #table [dataSource]="patientData" class="mat-cell">
+                <ng-container matColumnDef="createdAt">
+                  <mat-header-cell *matHeaderCellDef
+                    >Created At</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.createdAt | date : "medium" }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row.name }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="gender">
+                  <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row.gender ? (row.gender | titlecase) : "NIL" }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="country">
+                  <mat-header-cell *matHeaderCellDef>Country</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row.country }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="age">
+                  <mat-header-cell *matHeaderCellDef>Age</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row.age ? row.age : "NIL" }}
+                    {{ row.ageDuration | titlecase }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="treatment">
+                  <mat-header-cell *matHeaderCellDef>Treatment</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row.treatment ? row.treatment : "NIL" }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="emailId">
+                  <mat-header-cell *matHeaderCellDef>Email Id</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <span class="ellipsis">{{
+                      row.emailId ? row.emailId : "NIL"
+                    }}</span>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="contact">
+                  <mat-header-cell *matHeaderCellDef>Contact</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row.contact ? row.contact : "NIL" }}</mat-cell
+                  >
+                </ng-container>
+
+                <ng-container
+                  matColumnDef="closedDate"
+                  *ngIf="patientParams.status === 'close'"
+                >
+                  <mat-header-cell *matHeaderCellDef
+                    >Closed Date</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.closedDate | date : "medium" }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container
+                  matColumnDef="closedReason"
+                  *ngIf="patientParams.status === 'close'"
+                >
+                  <mat-header-cell *matHeaderCellDef
+                    >Closed Reason</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.closedReason }}</mat-cell
+                  >
+                </ng-container>
+
+                <!-- actions -->
+                <ng-container matColumnDef="action">
+                  <mat-header-cell class="pr-0" *matHeaderCellDef
+                    >Action</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row; let i = index" class="pr-0">
+                    <button
+                      mat-icon-button
+                      [matMenuTriggerFor]="menu"
+                      aria-label="Example icon-button with a menu"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button
+                        (click)="editPatient('Edit Patient', row)"
+                        mat-menu-item
+                      >
+                        <span>Edit Patient</span>
+                      </button>
+                      <button
+                        *ngIf="patientParams.status !== 'close'"
+                        (click)="closeQuery('Close Query', row._id)"
+                        mat-menu-item
+                      >
+                        <span>Close Query</span>
+                      </button>
+                      <button
+                        *ngIf="patientParams.status === 'close'"
+                        (click)="openQuery(row._id)"
+                        mat-menu-item
+                      >
+                        <span>Open Query</span>
+                      </button>
+                      <button (click)="deletePatient(row._id)" mat-menu-item>
+                        <span>Delete Patient</span>
+                      </button>
+                    </mat-menu>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
+                </mat-row>
+              </mat-table>
+
+              <div
+                *ngIf="!isDataLoading && patientData.data?.length === 0"
+                class="no-results"
+              >
+                No results
+              </div>
+
+              <div class="table_loader" *ngIf="isDataLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <mat-paginator
+                (page)="onPaginateChange($event)"
+                [length]="totalElement"
+                [pageSize]="patientParams.limit"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

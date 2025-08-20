@@ -1,0 +1,171 @@
+<div class="box-wrapper">
+  <div class="header">
+    <p class="mb-1">Hospital Sent</p>
+    <app-feather-icons
+      style="cursor: pointer"
+      (click)="isHospital = !isHospital"
+      class="chevron-icon"
+      [icon]="isHospital ? 'chevron-up' : 'chevron-down'"
+    ></app-feather-icons>
+  </div>
+  <div class="box-container hide-scrollbar">
+    <div class="content" *ngIf="isHospital">
+      <!-- tabs -->
+      <div class="tabs hide-scrollbar">
+        <div
+          *ngIf="title !== 'On Ground Patient' && title !== 'Upcoming Arrival'"
+          [ngClass]="activeTab === 'opinion' ? 'tab active' : 'tab'"
+          (click)="onTabChange('opinion')"
+        >
+          Opinion Request
+        </div>
+        <div
+          *ngIf="title !== 'On Ground Patient' && title !== 'Upcoming Arrival'"
+          [ngClass]="activeTab === 'opd' ? 'tab active' : 'tab'"
+          (click)="onTabChange('opd')"
+        >
+          OPD Request
+        </div>
+        <div
+          *ngIf="title !== 'On Ground Patient' && title !== 'Upcoming Arrival'"
+          [ngClass]="activeTab === 'vil' ? 'tab active' : 'tab'"
+          (click)="onTabChange('vil')"
+        >
+          VIL Request
+        </div>
+        <div
+          *ngIf="title !== 'Pending Query'"
+          [ngClass]="activeTab === 'patient' ? 'tab active' : 'tab'"
+          (click)="onTabChange('patient')"
+        >
+          Patient confirmation
+        </div>
+        <div
+          *ngIf="
+            title !== 'Pending Query' &&
+            title !== 'On Ground Patient' &&
+            title !== 'Upcoming Arrival'
+          "
+          [ngClass]="activeTab === 'pre' ? 'tab active' : 'tab'"
+          (click)="onTabChange('pre')"
+        >
+          Pre Intimation
+        </div>
+        <div
+          *ngIf="title !== 'On Ground Patient' && title !== 'Upcoming Arrival'"
+          [ngClass]="activeTab === 'proforma' ? 'tab active' : 'tab'"
+          (click)="onTabChange('proforma')"
+        >
+          Proforma Invoice
+        </div>
+      </div>
+
+      <!-- tab details -->
+      <div class="detailBox hide-scrollbar">
+        <div *ngIf="activeTab === 'opinion'">
+          <div class="main" *ngIf="allOpinionRequest?.length">
+            <div *ngFor="let data of allOpinionRequest">
+              <span class="chip text">{{ data?.hospitalName }} </span>
+            </div>
+          </div>
+          <div
+            *ngIf="isOpinionLoading && !allOpinionRequest?.length"
+            class="spinner_loader"
+          >
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+          <div
+            *ngIf="!isOpinionLoading && !allOpinionRequest?.length"
+            class="no_data_found"
+          >
+            --No Data Found--
+          </div>
+        </div>
+        <div *ngIf="activeTab === 'opd'">
+          <div class="main" *ngIf="allOpdRequest?.length">
+            <div *ngFor="let data of allOpdRequest">
+              <span class="chip text">{{ data?.hospitalName }} </span>
+            </div>
+          </div>
+          <div
+            *ngIf="isOpdLoading && !allOpdRequest?.length"
+            class="spinner_loader"
+          >
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+          <div
+            *ngIf="!isOpdLoading && !allOpdRequest?.length"
+            class="no_data_found"
+          >
+            --No Data Found--
+          </div>
+        </div>
+        <div *ngIf="activeTab === 'vil'">
+          <div class="main" *ngIf="allVilRequest?.length">
+            <div *ngFor="let data of allVilRequest">
+              <span class="chip text">{{ data?.hospitalName }} </span>
+            </div>
+          </div>
+          <div *ngIf="!allVilRequest?.length" class="no_data_found">
+            --No Data Found--
+          </div>
+        </div>
+        <div *ngIf="activeTab === 'patient'">
+          <div class="main" *ngIf="allPatientConfirmationRequest?.length">
+            <div *ngFor="let data of allPatientConfirmationRequest">
+              <span class="chip text">{{ data?.hospitalName }} </span>
+            </div>
+          </div>
+          <div
+            *ngIf="!allPatientConfirmationRequest?.length"
+            class="no_data_found"
+          >
+            --No Data Found--
+          </div>
+        </div>
+        <div *ngIf="activeTab === 'pre'">
+          <div class="main" *ngIf="allPreIntemationRequest?.length">
+            <div *ngFor="let data of allPreIntemationRequest">
+              <span class="chip text">{{ data?.hospitalName }} </span>
+            </div>
+          </div>
+          <div
+            *ngIf="isPreLoading && !allPreIntemationRequest?.length"
+            class="spinner_loader"
+          >
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+          <div
+            *ngIf="!isPreLoading && !allPreIntemationRequest?.length"
+            class="no_data_found"
+          >
+            --No Data Found--
+          </div>
+        </div>
+        <div *ngIf="activeTab === 'proforma'">
+          <div class="main" *ngIf="allProformaRequest?.length">
+            <div *ngFor="let data of allProformaRequest">
+              <span class="chip text">{{ data?.hospitalName }} </span>
+            </div>
+          </div>
+          <div
+            *ngIf="isProformaLoading && !allProformaRequest?.length"
+            class="spinner_loader"
+          >
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+          <div
+            *ngIf="!isProformaLoading && !allProformaRequest?.length"
+            class="no_data_found"
+          >
+            --No Data Found--
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

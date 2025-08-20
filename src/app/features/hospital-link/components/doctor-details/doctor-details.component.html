@@ -1,0 +1,44 @@
+<div
+  class="p-4"
+  *ngIf="
+    (!requestData?.status && !isLoading) ||
+    tokenDecode?.customerType === 'hospital'
+  "
+>
+  <div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+      <app-request-details
+        [patientData]="patientData"
+        [requestData]="requestData"
+        [decodedToken]="tokenDecode"
+        (refetch)="getRefetch()"
+      >
+      </app-request-details>
+    </div>
+
+    <!-- right section -->
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngIf="!!requestData">
+      <app-add-doctor-details
+        [patientData]="patientData"
+        [requestData]="requestData"
+        [decodedToken]="tokenDecode"
+        (refetch)="getRefetch()"
+      ></app-add-doctor-details>
+    </div>
+  </div>
+</div>
+
+<mat-spinner *ngIf="isLoading" class="mx-auto mb-2 mt-2" [diameter]="30">
+</mat-spinner>
+
+<div
+  *ngIf="
+    requestData?.status &&
+    !isLoading &&
+    tokenDecode?.customerType !== 'hospital'
+  "
+>
+  <app-complete-page
+    [message]="'Doctor opinion submitted successfully'"
+  ></app-complete-page>
+</div>

@@ -1,0 +1,19 @@
+.textPass {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  width: 90%;
+  line-clamp: 1;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
+.hospital {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  width: 100%;
+  line-clamp: 2;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}

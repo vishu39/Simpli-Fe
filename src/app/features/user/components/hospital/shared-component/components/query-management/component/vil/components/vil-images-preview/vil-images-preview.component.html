@@ -1,0 +1,157 @@
+<!-- if image is coming from signed url -->
+<div class="row" *ngIf="type === 'fileUploaded'">
+  <div
+    [ngClass]="
+      className
+        ? className
+        : 'col-xs-6 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4'
+    "
+    *ngFor="let file of fileList; let i = index"
+  >
+    <div class="imageBox">
+      <div class="imageHeader">
+        <a
+          *ngIf="
+            !file?.type?.includes('application') ||
+            file?.type === 'application/pdf'
+          "
+          class="m-0"
+          [matTooltip]="file?.originalname"
+          (click)="openLightBox($event, fileList, file)"
+        >
+          <b class="cursor_pointer">Open File</b>
+        </a>
+
+        <a
+          class="text"
+          *ngIf="
+            file?.type?.includes('application') &&
+            file?.type !== 'application/pdf'
+          "
+          [matTooltip]="file?.name"
+          >{{ file?.name }}</a
+        >
+
+        <mat-icon
+          style="cursor: pointer"
+          (click)="downloadImage(file?.url, file?.originalname)"
+        >
+          open_in_new
+        </mat-icon>
+      </div>
+      <div class="imageCenter">
+        <!-- for other images -->
+        <img
+          [src]="file?.url"
+          *ngIf="file?.type?.includes('image')"
+          class="image"
+        />
+        <!-- for other pdf -->
+        <iframe
+          [src]="file?.url | safeUrl"
+          *ngIf="file?.type === 'application/pdf'"
+          class="image"
+        ></iframe>
+      </div>
+      <div class="action_div">
+        <span *ngIf="remove">
+          <mat-icon
+            style="cursor: pointer"
+            class="icon"
+            (click)="removeFile(i)"
+          >
+            delete</mat-icon
+          >
+        </span>
+      </div>
+    </div>
+  </div>
+  <app-detailed-lightbox
+    [isLightbox]="isLightBox"
+    [lightBoxData]="lightBoxData"
+    *ngIf="isLightBox"
+    (lightBoxEvent)="closeLightBox($event)"
+  >
+    <div class="card">
+      <shared-edit-vil
+        [vilData]="vilData"
+        [patientData]="patientData"
+        [isPreviewer]="true"
+        (refetch)="refetch()"
+      ></shared-edit-vil>
+    </div>
+    <!-- <div>
+      <h5>Passport Details</h5>
+      <div class="row mt-2">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div><b>Patient Name</b></div>
+          <div>{{ patientData?.name }}</div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div><b>Passport Number</b></div>
+          <div>{{ patientData?.passportNumber }}</div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div><b>Appointment Date</b></div>
+          <div>
+            {{
+              vilData?.appointmentDate
+                ? (vilData?.appointmentDate | date : "medium")
+                : "NIL"
+            }}
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div><b>Doctor Name</b></div>
+          <div>{{ vilData?.doctorName || "NIL" }}</div>
+        </div>
+      </div>
+
+      <div *ngIf="vilData?.attendantDetails?.length" class="row mt-5">
+        <h5>Attendant Details</h5>
+        <div *ngFor="let attendant of vilData?.attendantDetails; let i = index">
+          <p class="mt-2">
+            <b>Attendant {{ i + 1 }}</b>
+          </p>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div><b>Name</b></div>
+              <div>{{ attendant?.name || "NIL" }}</div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div><b>Passport Number</b></div>
+              <div>{{ attendant?.passportNumber || "NIL" }}</div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div><b>Country</b></div>
+              <div>{{ attendant?.country }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5" *ngIf="vilData?.donorDetails?.length">
+        <h5>Donor Details</h5>
+        <div *ngFor="let donor of vilData?.donorDetails; let i = index">
+          <p class="mt-2">
+            <b>Donor {{ i + 1 }}</b>
+          </p>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div><b>Name</b></div>
+              <div>{{ donor?.name || "NIL" }}</div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div><b>Passport Number</b></div>
+              <div>{{ donor?.passportNumber || "NIL" }}</div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+              <div><b>Country</b></div>
+              <div>{{ donor?.country }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </app-detailed-lightbox>
+</div>

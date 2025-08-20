@@ -1,0 +1,194 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Account'"
+        [active_item]="'Query View Setting'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+        <div class="card">
+          <div class="body">
+            <div id="mail-nav">
+              <div class="list-results" *ngIf="internalUserData.length">
+                <ul id="mail-folders">
+                  <li
+                    *ngFor="let item of internalUserData; let i = index"
+                    class="cursor_pointer"
+                    [ngClass]="{ active: item.active === true }"
+                  >
+                    <a (click)="onActive(item, i)">{{ item.name }} </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="isInternalUserLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <div
+                class="d-flex justify-content-center align-items-center"
+                *ngIf="!isInternalUserLoading && !internalUserData.length"
+                class="text-secondary text-center"
+              >
+                -- No Data Found --
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+        <div class="card p-3 mt-2">
+          <div
+            *ngIf="(selectedQueryViewData || onSelectNav) && !isSettingLoading"
+          >
+            <div class="card-title m-0">
+              <div class="row mb-0">
+                <div class="col-md-3">
+                  <button
+                    type="button"
+                    [disabled]="zoneButtomStatus"
+                    (click)="addQueryViewSetting('Add Zone')"
+                    class="btn btn-success waves-effect"
+                  >
+                    Add Zone
+                  </button>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div
+              *ngIf="!selectedQueryViewData && onSelectNav"
+              class="text-secondary text-center"
+            >
+              -- No Data Found --
+            </div>
+
+            <div class="card-body pt-0 px-0" *ngIf="selectedQueryViewData">
+              <div class="d-flex justify-content-between">
+                <p class="fs-20 m-0 text-primary">
+                  {{
+                    selectedQueryViewData?.internalUser?.name
+                      ? selectedQueryViewData?.internalUser?.name
+                      : "NIL"
+                  }}
+                  <button
+                    mat-icon-button
+                    (click)="deleteQueryViewSetting(selectedQueryViewData?._id)"
+                    class="tbl-action-btn"
+                  >
+                    <app-feather-icons
+                      [icon]="'trash-2'"
+                      [class]="'tbl-fav-delete'"
+                    >
+                    </app-feather-icons></button
+                  ><span> </span>
+                </p>
+
+                <p class="m-0 text-secondary text-end">
+                  {{ selectedQueryViewData?.createdAt | date : "medium" }}
+                </p>
+              </div>
+              <div
+                class="row"
+                *ngFor="let item of selectedQueryViewData.zone; let i = index"
+              >
+                <div class="col-md-4">
+                  <p class="mt-3 h6">
+                    Zone Name
+                    <button mat-icon-button class="tbl-action-btn">
+                      <app-feather-icons
+                        [icon]="'edit'"
+                        (click)="editQueryViewSetting('Edit Zone', i)"
+                        [class]="'tbl-fav-edit'"
+                      ></app-feather-icons>
+                    </button>
+                    <button
+                      *ngIf="selectedQueryViewData.zone.length > 1"
+                      mat-icon-button
+                      (click)="deleteZone(i)"
+                      class="tbl-action-btn"
+                    >
+                      <app-feather-icons
+                        [icon]="'trash-2'"
+                        [class]="'tbl-fav-delete'"
+                      >
+                      </app-feather-icons>
+                    </button>
+                  </p>
+                  <ul class="w-100">
+                    <li class="text-secondary">
+                      {{ item.name }}
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-md-4">
+                  <p class="mt-3 h6">Country</p>
+                  <ul *ngIf="item.country?.length" class="detail-list w-100">
+                    <li
+                      *ngFor="let item1 of item.country"
+                      class="text-secondary"
+                    >
+                      {{ item1 }}
+                    </li>
+                  </ul>
+                  <span class="text-secondary" *ngIf="!item.country?.length"
+                    >NIL</span
+                  >
+                </div>
+                <div class="col-md-4">
+                  <p class="mt-3 h6">Treatment</p>
+                  <ul *ngIf="item.treatment?.length" class="detail-list w-100">
+                    <li
+                      *ngFor="let item1 of item.treatment"
+                      class="text-secondary"
+                    >
+                      {{ item1 }}
+                    </li>
+                  </ul>
+                  <span class="text-secondary" *ngIf="!item.treatment?.length"
+                    >NIL</span
+                  >
+                </div>
+                <div class="col-md-4">
+                  <p class="mt-3 h6">Own Referral Partner</p>
+                  <ul
+                    *ngIf="item.ownReferralPartner?.length"
+                    class="detail-list w-100"
+                  >
+                    <li
+                      *ngFor="let item2 of item.ownReferralPartner"
+                      class="text-secondary"
+                    >
+                      {{ item2?.name }}
+                    </li>
+                  </ul>
+                  <span
+                    class="text-secondary"
+                    *ngIf="!item.ownReferralPartner?.length"
+                    >NIL</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isSettingLoading">
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+
+          <div
+            *ngIf="!selectedQueryViewData && !onSelectNav && !isSettingLoading"
+            class="text-secondary text-center"
+          >
+            -- No Data Found --
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

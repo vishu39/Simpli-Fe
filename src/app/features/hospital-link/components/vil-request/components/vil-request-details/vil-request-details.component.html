@@ -1,0 +1,208 @@
+<div class="m-2">
+  <ng-container *ngIf="requests?.length">
+    <div *ngFor="let request of requests" class="mb-3">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <p class="mb-0">
+                <b>{{ request?.hospitalName }}</b>
+              </p>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <div class="p-3 pb-0">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                "
+              >
+                <h5>Patient Details</h5>
+              </div>
+            </div>
+            <div class="p-3">
+              <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Patient Name</b></div>
+                  <div>{{ patientData?.name }}</div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Passport Number</b></div>
+                  <div>{{ patientData?.passportNumber }}</div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Appointment Date</b></div>
+                  <div>
+                    {{
+                      request?.appointmentDate
+                        ? (request?.appointmentDate | date : "medium")
+                        : "NIL"
+                    }}
+                  </div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Doctor Name</b></div>
+                  <div>{{ request?.doctorName || "NIL" }}</div>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Created At</b></div>
+                  <div>{{ request?.createdAt | date : "medium" }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="p-3">
+              <div><b>Patient Passport</b></div>
+              <div class="row">
+                <div *ngIf="request?.patientPassport?.length" class="mt-4">
+                  <app-global-image-preview
+                    [fileList]="request?.patientPassport"
+                    [filePreviewList]="request?.patientPassport"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+            </div>
+
+            <!-- for attendant -->
+            <div *ngIf="request?.attendantDetails?.length" class="p-3">
+              <div class="row">
+                <h5>Attendant Details</h5>
+                <div
+                  *ngFor="
+                    let attendant of request?.attendantDetails;
+                    let i = index
+                  "
+                >
+                  <p class="mt-4">
+                    <b>Attendant {{ i + 1 }}</b>
+                  </p>
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Name</b></div>
+                      <div>{{ attendant?.name || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Passport Number</b></div>
+                      <div>{{ attendant?.passportNumber || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Country</b></div>
+                      <div>{{ attendant?.country }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="p-3" *ngIf="request?.attendantPassport.length">
+              <div><b>Attendant Passport</b></div>
+              <div class="mt-3">
+                <app-global-image-preview
+                  [fileList]="request?.attendantPassport"
+                  [filePreviewList]="request?.attendantPassport"
+                  [type]="'fileUploaded'"
+                  [remove]="false"
+                ></app-global-image-preview>
+              </div>
+            </div>
+            <!-- for donor -->
+            <div *ngIf="request?.donorDetails?.length" class="p-3">
+              <div class="row">
+                <h5>Donor Details</h5>
+                <div *ngFor="let donor of request?.donorDetails; let i = index">
+                  <p class="mt-4">
+                    <b>Donor {{ i + 1 }}</b>
+                  </p>
+                  <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Name</b></div>
+                      <div>{{ donor?.name || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Passport Number</b></div>
+                      <div>{{ donor?.passportNumber || "NIL" }}</div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                      <div><b>Country</b></div>
+                      <div>{{ donor?.country }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="p-3" *ngIf="request?.donorPassport.length">
+              <div><b>Donor Passport</b></div>
+              <div class="mt-3">
+                <app-global-image-preview
+                  [fileList]="request?.donorPassport"
+                  [filePreviewList]="request?.donorPassport"
+                  [type]="'fileUploaded'"
+                  [remove]="false"
+                ></app-global-image-preview>
+              </div>
+            </div>
+            <!-- Embasy Details -->
+            <div class="p-3">
+              <div class="row">
+                <h5>Embassy Details</h5>
+                <div class="row mt-4">
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Embassy Name</b></div>
+                    <div>{{ request?.embassy?.name || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Address Line 1</b></div>
+                    <div>{{ request?.embassy?.addressLine1 || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Address Line 2</b></div>
+                    <div>{{ request?.embassy?.addressLine2 || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Address Line 3</b></div>
+                    <div>{{ request?.embassy?.addressLine3 || "NIL" }}</div>
+                  </div>
+
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Address Letter To 1</b></div>
+                    <div>{{ request?.embassy?.addressLetterTo1 || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Address Letter To 2</b></div>
+                    <div>{{ request?.embassy?.addressLetterTo2 || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Email To 1</b></div>
+                    <div>{{ request?.embassy?.emailTo1 || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Email To 2</b></div>
+                    <div>{{ request?.embassy?.emailTo2 || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Email CC 1</b></div>
+                    <div>{{ request?.embassy?.emailCc1 || "NIL" }}</div>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                    <div><b>Email CC 2</b></div>
+                    <div>{{ request?.embassy?.emailCc2 || "NIL" }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end -->
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </ng-container>
+  <div class="card m-4 p-3" *ngIf="!requests?.length">
+    <div style="text-align: center">--No Data Found--</div>
+  </div>
+</div>

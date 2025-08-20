@@ -1,0 +1,120 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="'Account'"
+        [active_item]="'Follow Up Setting'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngIf="!isLoading" class="card p-3">
+          <!-- <div class="p-3">
+            <h4 class="mb-3">Mode</h4>
+            <div class="cardToggleDiv pb-0">
+              <div
+                *ngFor="let mode of modeArray; let i = index"
+                class="card p-3"
+                style="
+                  width: 100%;
+                  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+                    0 1px 3px rgba(0, 0, 0, 0.06);
+                "
+              >
+                <h5>{{ mode?.title }}</h5>
+                <div>
+                  <mat-slide-toggle
+                    [(ngModel)]="mode.isActive"
+                    (change)="onToggleModeChange($event, i)"
+                  >
+                  </mat-slide-toggle>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <form [formGroup]="eventForm">
+            <div *ngIf="eventArrayForm?.value?.length > 0" class="row p-3 pt-1">
+              <h4 class="mb-3">Events</h4>
+              <div class="cardToggleDiv" formArrayName="event">
+                <div
+                  class="card p-3"
+                  style="
+                    width: 100%;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+                      0 1px 3px rgba(0, 0, 0, 0.06);
+                  "
+                  *ngFor="let item of eventArrayForm.controls; let i = index"
+                >
+                  <div [formGroupName]="i">
+                    <h5 class="mb-4">{{ eventArrayForm?.value[i]?.name }}</h5>
+
+                    <div class="mb-4">
+                      <!-- <h6>Select Mode</h6> -->
+                      <mat-slide-toggle
+                      style="margin-right: 20px;"
+                        formControlName="auto"
+                        (change)="onToggleModeChange($event, i,'auto')"
+                      >
+                        Auto
+                      </mat-slide-toggle>
+
+                      <mat-slide-toggle
+                        formControlName="popUp"
+                        (change)="onToggleModeChange($event, i,'popUp')"
+                      >
+                        Popup
+                      </mat-slide-toggle>
+                    </div>
+
+                    <div>
+                      <mat-form-field
+                        class="example-full-width"
+                        appearance="outline"
+                      >
+                        <mat-label>Time (Hour)</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          formControlName="time"
+                          (keypress)="spaceRestrict($event)"
+                        />
+                        <mat-error
+                          *ngIf="item?.controls['time'].hasError('pattern')"
+                        >
+                          Time must be a positive number starting from 1
+                          without decimal
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="p-3 pt-1" *ngIf="eventArrayForm?.value?.length > 0">
+              <button
+                type="button"
+                (click)="submit()"
+                mat-raised-button
+                color="primary"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+
+          <div
+            *ngIf="!eventArrayForm?.value?.length"
+            class="card p-4 d-flex align-items-center justify-content-center"
+          >
+            --No Data Found--
+          </div>
+        </div>
+
+        <div class="card p-3" *ngIf="isLoading">
+          <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

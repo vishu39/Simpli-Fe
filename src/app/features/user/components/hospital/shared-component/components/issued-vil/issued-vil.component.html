@@ -1,0 +1,190 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Issued VIL'"
+        [active_item]="'All Issued VIL'"
+      ></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive">
+              <div class="materialTableHeader">
+                <div class="row">
+                  <div class="col-8">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="dropdown">
+                        <h2>
+                          <strong>Issued VIL</strong>
+                        </h2>
+                      </li>
+                      <li class="dropdown m-l-20">
+                        <label for="search-input"
+                          ><i class="material-icons search-icon"
+                            >search</i
+                          ></label
+                        >
+                        <input
+                          placeholder="Search"
+                          type="text"
+                          (keyup)="search($event.target.value)"
+                          class="browser-default search-field"
+                          aria-label="Search box"
+                        />
+                      </li>
+                      <li style="margin-left: 8px">
+                        <button
+                          [matTooltip]="'Issued VIL Filter'"
+                          [ngClass]="isFilterSelected ? 'filter_active' : ''"
+                          (click)="openFilterModal()"
+                          mat-icon-button
+                        >
+                          <mat-icon>tune</mat-icon>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col-4">
+                    <ul class="header-buttons">
+                      <li></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <mat-table #table [dataSource]="issuedVilData" class="mat-cell">
+                <ng-container matColumnDef="downloadAt">
+                  <mat-header-cell *matHeaderCellDef
+                    >Download At</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row.createdAt | date : "medium" }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef
+                    >Hospital Name</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{ row?.hospitalName }}</mat-cell
+                  >
+                </ng-container>
+
+                <ng-container matColumnDef="userName">
+                  <mat-header-cell *matHeaderCellDef>User Name</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row?.userName }}</mat-cell
+                  >
+                </ng-container>
+
+                <ng-container matColumnDef="userType">
+                  <mat-header-cell *matHeaderCellDef>User Type</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row?.userType | titlecase }}</mat-cell
+                  >
+                </ng-container>
+                <ng-container matColumnDef="referenceNo">
+                  <mat-header-cell *matHeaderCellDef
+                    >Reference No</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    <div class="matTableEmailIdWordBreak">
+                      {{ row.referenceNo }}
+                    </div>
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="patientName">
+                  <mat-header-cell *matHeaderCellDef
+                    >Patient name</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">
+                    {{
+                      row?.patient?.name
+                        ? (row?.patient?.name | titlecase)
+                        : "NIL"
+                    }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="country">
+                  <mat-header-cell *matHeaderCellDef>Country</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{ row?.patient?.country || "NIL" }}</mat-cell
+                  >
+                </ng-container>
+
+                <ng-container matColumnDef="treatment">
+                  <mat-header-cell *matHeaderCellDef>Treatment</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    {{
+                      row?.patient?.treatment ? row?.patient?.treatment : "NIL"
+                    }}</mat-cell
+                  >
+                </ng-container>
+
+                <!-- actions -->
+                <ng-container matColumnDef="vilLetter">
+                  <mat-header-cell class="pr-0" *matHeaderCellDef
+                    >VIL Letter</mat-header-cell
+                  >
+                  <mat-cell
+                    *matCellDef="let row"
+                    class="d-flex justify-content-start"
+                  >
+                    <button
+                      matTooltip="Download VIL"
+                      matTooltipPosition="right"
+                      mat-icon-button
+                      (click)="onClickDownload(row?.vilLetter)"
+                      color="primary"
+                    >
+                      <app-feather-icons
+                        [icon]="'download'"
+                      ></app-feather-icons>
+                    </button>
+                  </mat-cell>
+                  <!-- <mat-cell *matCellDef="let row">
+                    <a (click)="onClickDownload(row?.vilLetter)" mat-button
+                      >Download</a
+                    >
+                  </mat-cell> -->
+                </ng-container>
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                  [style.cursor]="'pointer'"
+                  matRipple
+                >
+                </mat-row>
+              </mat-table>
+
+              <div
+                *ngIf="!isDataLoading && issuedVilData.data?.length === 0"
+                class="no-results"
+              >
+                No results
+              </div>
+
+              <div class="table_loader" *ngIf="isDataLoading">
+                <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+                </mat-spinner>
+              </div>
+
+              <mat-paginator
+                (page)="onPaginateChange($event)"
+                [length]="totalElement"
+                [pageSize]="issuedParams.limit"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+              >
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

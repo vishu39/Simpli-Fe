@@ -1,0 +1,21 @@
+.flex{
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+.m-search{
+  position: relative;
+  width:auto;
+  max-width: 195px;
+  padding: 0.2rem 1rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  border: 1px solid rgb(221, 221, 221);
+  width:calc(100vw - 35vw);
+  &:disabled{
+    cursor: not-allowed;
+  }
+}
+.sm-search{
+  background:dodgerblue;
+}

@@ -1,0 +1,143 @@
+.dashboardContainer {
+  display: flex;
+  gap: 10px;
+  position: relative;
+  padding: 35px 0 10px 6px;
+  .filterDiv {
+    min-width: 300px;
+    max-width: 300px;
+    height: calc(100vh - 80px);
+    overflow-y: scroll;
+    position: sticky;
+    top: 70px;
+    margin: 0;
+  }
+  .chartsDiv {
+    flex: 1;
+    min-width: 500px;
+    .topCards {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      width: 100%;
+      overflow: scroll;
+      // position: sticky;
+      // top: 90px;
+      // z-index: 999;
+      .tCard {
+        min-width: 225px;
+        max-width: 350px;
+        min-height: 80px;
+        position: relative;
+      }
+      .hideIcon {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+    }
+    .charts {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 49.9%);
+      justify-content: space-between;
+      gap: 2px;
+      .chartDivvv {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.full-width {
+  grid-column: span 2; /* will span both columns */
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+  margin-left: 16px;
+}
+
+.mat-radio-button.mat-radio-checked {
+  background: #ffffff;
+}
+
+.overlayButtonDiv {
+  position: fixed;
+  top: 67px;
+  right: 25px;
+  z-index: 999;
+  .filterIcon {
+    background-color: #1560bd;
+    color: white;
+    margin-right: 4px;
+    border: 1px solid white;
+  }
+}
+
+.filterBtnDiv {
+  display: flex;
+  gap: 2px;
+  row-gap: 4px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid lightgrey;
+  padding: 6px 12px;
+}
+
+.filterButton {
+  // background-color: #ebfaff;
+  background-color: #e2d4d454;
+  padding: 4px 12px;
+  // border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  border-top-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border: 0.5px solid black;
+}
+
+.selectedButton {
+  background-color: #1560bd !important;
+  color: white !important;
+}
+
+::ng-deep apx-chart {
+  width: 100% !important;
+  display: block;
+}
+
+.chartFullWidth {
+  grid-column: span 2 !important;
+}
+
+.grix1x3{
+        width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 33.2%);
+      justify-content: space-between;
+      // gap: 2px;
+}
+
+.apexcharts-series path {
+  transition: transform 0.2s ease;
+}
+.apexcharts-series path:hover {
+  transform: scale(1.05);
+}
+
+
+.hideIconCharts {
+  cursor: pointer;
+  font-size: 18px;
+  margin: 2px;
+  // color: rgb(67, 153, 70);
+  color: red;
+}
+
+.white-spinner circle {
+  stroke: white !important;
+}

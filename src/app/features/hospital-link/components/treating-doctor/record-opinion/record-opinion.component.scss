@@ -1,0 +1,35 @@
+.center_recorder_class {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(224, 224, 224);
+  border-radius: 10px;
+}
+
+.recorded_audio {
+  border: 1px solid rgb(224, 224, 224);
+  border-radius: 10px;
+  .no_record_found {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(224, 224, 224);
+  }
+  .ul {
+    height: 200px;
+    padding-right: 5px;
+    overflow-y: scroll;
+    .list {
+      border-bottom: 1px solid rgb(224, 224, 224);
+    }
+  }
+}
+
+.recorder {
+  .action {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

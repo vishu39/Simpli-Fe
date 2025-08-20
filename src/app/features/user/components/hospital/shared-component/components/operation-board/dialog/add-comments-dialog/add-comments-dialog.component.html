@@ -1,0 +1,1358 @@
+<div class="operation-dialog-wrapper">
+  <div class="header d-flex justify-content-between align-items-baseline">
+    <div class="left font-weight-bold p-t-5 font-17">
+      Operation Board / {{ data.title }}
+    </div>
+    <div class="right">
+      <button
+        mat-icon-button
+        *ngIf="data?.title !== 'Finance'"
+        [matMenuTriggerFor]="menu"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu class="my-class" #menu="matMenu">
+        <button
+          *ngIf="
+            data?.title === 'Upcoming Arrival' ||
+            data?.title === 'On Ground Patient'
+          "
+          mat-menu-item
+          (click)="addHospitalUHIDForm()"
+        >
+          Add Hospital UHID
+        </button>
+        <button
+          *ngIf="
+            data?.title === 'Upcoming Arrival' ||
+            data?.title === 'On Ground Patient'
+          "
+          mat-menu-item
+          (click)="addPatientItineraryForm()"
+        >
+          Add Patient Itinerary
+        </button>
+        <button
+          *ngIf="
+            data?.title !== 'Follow Up Query' &&
+            data?.title !== 'Completed Query'
+          "
+          mat-menu-item
+          (click)="addCommentField('completed')"
+        >
+          Move to completed
+        </button>
+        <button
+          *ngIf="
+            data?.title !== 'Upcoming Arrival' &&
+            data?.title !== 'On Ground Patient' &&
+            data?.title !== 'Follow Up Query' &&
+            data?.title !== 'Completed Query'
+          "
+          mat-menu-item
+          (click)="addCommentField('both')"
+        >
+          Move to completed and finance
+        </button>
+        <button
+          *ngIf="data?.title === 'Completed Query'"
+          mat-menu-item
+          (click)="addCommentField('finance')"
+        >
+          Move to finance
+        </button>
+        <button
+          *ngIf="
+            data?.title === 'Follow Up Query' ||
+            data?.title === 'Upcoming Arrival' ||
+            data?.title === 'Pending Query'
+          "
+          mat-menu-item
+          (click)="openFollowUp()"
+        >
+          Add Follow Up
+        </button>
+
+        <button
+          *ngIf="data?.title === 'Follow Up Query'"
+          mat-menu-item
+          (click)="closeFollowUp()"
+        >
+          Close Follow Up
+        </button>
+      </mat-menu>
+
+      <button (click)="close()" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div
+    *ngIf="
+      !showCommentField &&
+      !showPatientItineraryForm &&
+      !showHospitalUHIDForm &&
+      !showFollowUpField &&
+      !showCloseFollowUpField
+    "
+    mat-dialog-content
+    class="content d-flex flex-wrap justify-content-start align-items-start hide-scrollbar"
+  >
+    <div class="left">
+      <div class="main-details">
+        <div style="display: flex; align-items: center" class="mb-3">
+          <div class="title" style="margin-right: 8px">
+            {{ querryData?.name | slice : 0 : 2 | uppercase }}
+          </div>
+          <h4 class="mb-0">
+            {{ querryData?.name | titlecase }}
+            <app-feather-icons
+              *ngIf="
+                data?.title === 'On Ground Patient' ||
+                data?.title === 'Pending Query'
+              "
+              [matTooltip]="
+                querryData?.statusAdded
+                  ? data?.title === 'On Ground Patient'
+                    ? 'Daily status already added for today'
+                    : 'Query status already added for today'
+                  : data?.title === 'On Ground Patient'
+                  ? 'Please add pending daily status'
+                  : 'Please add pending query status'
+              "
+              matTooltipPosition="right"
+              [ngClass]="querryData?.statusAdded ? 'greenFlag' : 'redFlag'"
+              icon="flag"
+            ></app-feather-icons>
+          </h4>
+        </div>
+
+        <span
+          class="d-flex justify-content-between align-items-baseline status mb-2"
+        >
+          <h4>{{ querryData?.currentStatus?.at(-1)?.status || "NIL" }}</h4>
+        </span>
+
+        <!-- Finance status -->
+        <div
+          *ngIf="data?.title === 'Finance' && querryData?.financeStatus?.length"
+          class="d-flex mt-1 mb-3"
+          style="color: red"
+        >
+          <b style="margin-right: 4px">Comment: </b>
+          <div class="text">
+            {{ querryData?.financeStatus?.at(-1)?.comment || "NIL" }}
+          </div>
+        </div>
+        <!-- comment status -->
+        <div
+          *ngIf="
+            data?.title === 'Completed Query' &&
+            querryData?.completedStatus?.length
+          "
+          class="d-flex mt-1 mb-3"
+          style="color: red"
+        >
+          <b style="margin-right: 4px">Comment: </b>
+          <div class="text">
+            {{ querryData?.completedStatus?.at(-1)?.comment || "NIL" }}
+          </div>
+        </div>
+        <p>
+          Partner Name:
+          {{
+            querryData?.referralPartnerName
+              ? querryData?.referralPartnerName
+              : "NIL"
+          }}
+        </p>
+        <p class="d-flex">
+          Treatment:
+          <span class="text" style="margin-left: 4px">{{
+            querryData?.treatment || "NIL"
+          }}</span>
+        </p>
+        <p>Country: {{ querryData?.country }}</p>
+      </div>
+      <div class="comments-section">
+        <div
+          class="header_com d-flex justify-content-between align-items-center"
+        >
+          <h6>Comments</h6>
+          <app-feather-icons
+            style="cursor: pointer"
+            (click)="isComments = !isComments"
+            class="chevron-icon"
+            [icon]="isComments ? 'chevron-up' : 'chevron-down'"
+          ></app-feather-icons>
+        </div>
+        <div class="comment_div">
+          <!-- <div class="search_div">
+            <input
+              class="search_comment"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchComment($event.target.value)"
+            />
+          </div> -->
+          <mat-form-field appearance="outline" class="example-full-width mt-2">
+            <mat-label>Search</mat-label>
+            <input
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchComment($event.target.value)"
+            />
+          </mat-form-field>
+
+          <div
+            #scrollMe
+            class="comments"
+            infiniteScroll
+            [infiniteScrollDistance]="0.5"
+            [scrollWindow]="false"
+            (scrolledUp)="onInfiniteScrollComment()"
+          >
+            <div *ngIf="chatArray?.length">
+              <mat-spinner
+                *ngIf="isCommentLoading"
+                class="mx-auto mb-2 mt-2"
+                [diameter]="30"
+              ></mat-spinner>
+              <div
+                *ngFor="let chat of chatArray"
+                [ngClass]="
+                  isDark()
+                    ? 'com comment_is_Dark mb-3'
+                    : 'com comment_is_Light mb-3'
+                "
+              >
+                <div class="comment-message">
+                  <div class="chat_and_file">
+                    <!-- <h4>{{ chat?.userName | titlecase }}</h4> -->
+                    <div *ngIf="chat?.mention?.length" class="mention_div mb-2">
+                      <div *ngFor="let item of chat?.mention; let i = index">
+                        <span>
+                          <span class="chip">
+                            {{ "@" + item?.userName }}
+                            <span *ngIf="item?.userType">-</span>
+                            {{ item?.userType | titlecase }}</span
+                          >
+                        </span>
+                      </div>
+                    </div>
+                    <p class="mb-1">
+                      {{ chat?.message }}
+                    </p>
+
+                    <div class="d-flex mt-2">
+                      <b style="margin-right: 4px">From: </b>
+                      <div class="text">{{ chat?.userName | titlecase }}</div>
+                    </div>
+                    <div class="d-flex mt-2">
+                      <b style="margin-right: 4px">Sent Date: </b>
+                      <div class="text">
+                        {{ chat?.createdAt | date : "dd/MM/yyyy" }}
+                      </div>
+                    </div>
+
+                    <div class="mt-3" *ngIf="chat?.file?.length">
+                      <h6>Uploaded Files</h6>
+                      <div class="mt-3">
+                        <app-global-image-preview
+                          [fileList]="chat?.file"
+                          [filePreviewList]="chat?.file"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'col-6 mb-2'"
+                        ></app-global-image-preview>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="d-flex align-items-center justify-content-between"
+                  style="width: 100%; color: #555"
+                >
+                  <div></div>
+                  <p class="mb-0" style="margin-left: 8px">
+                    {{ chat?.createdAt | date : " h:mm a " }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="isCommentLoading && !chatArray?.length"
+              class="loader_center"
+            >
+              <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+              </mat-spinner>
+            </div>
+
+            <div
+              class="not_found"
+              *ngIf="!isCommentLoading && !chatArray?.length"
+            >
+              --No Comment Found--
+            </div>
+          </div>
+
+          <div *ngIf="isComments" class="add_form">
+            <form class="comment-box" [formGroup]="commentForm">
+              <div class="main">
+                <div class="comment-div">
+                  <div class="multiple_select_custom">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Mention</mat-label>
+                      <mat-select
+                        multiple
+                        formControlName="selectedUser"
+                        [compareWith]="compareObjects"
+                      >
+                        <input
+                          class="searchInput"
+                          placeholder="search..."
+                          (keydown.space)="$event.stopPropagation()"
+                          matInput
+                          (keyup)="searchUser($event.target.value)"
+                        />
+                        <div
+                          class="other_option"
+                          *ngIf="!userData?.length && !iseUserLoading"
+                        >
+                          No results
+                        </div>
+
+                        <div class="other_option" *ngIf="userData?.length">
+                          <mat-checkbox
+                            #selectAllCheckbox
+                            (change)="selectAllUser($event)"
+                            >Select All
+                          </mat-checkbox>
+                        </div>
+
+                        <mat-spinner
+                          *ngIf="isUserLoadingAll"
+                          class="mx-auto mb-2 mt-2"
+                          [diameter]="30"
+                        >
+                        </mat-spinner>
+
+                        <ng-container *ngIf="!isUserLoadingAll">
+                          <mat-option
+                            (click)="onClickUser(item)"
+                            *ngFor="let item of userData"
+                            [value]="item"
+                          >
+                            {{ item?.name }}
+                            <span *ngIf="item?.userType">-</span>
+                            {{ item?.userType | titlecase }}
+                          </mat-option>
+                        </ng-container>
+
+                        <mat-spinner
+                          *ngIf="iseUserLoading && !isUserLoadingAll"
+                          class="mx-auto mb-2 mt-2"
+                          [diameter]="30"
+                        >
+                        </mat-spinner>
+                      </mat-select>
+                      <div class="chip_section" [perfectScrollbar]>
+                        <mat-chip-list (click)="$event.stopPropagation()">
+                          <mat-chip
+                            *ngFor="
+                              let item of commentForm?.get('selectedUser')
+                                ?.value;
+                              let i = index
+                            "
+                          >
+                            <span style="margin-right: 16px"
+                              >{{ "@" + item?.name }}
+                              <span *ngIf="item?.userType">-</span>
+                              {{ item?.userType | titlecase }}</span
+                            >
+                            <button
+                              matChipRemove
+                              (click)="removeSelecteduser(i)"
+                            >
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip>
+                        </mat-chip-list>
+                      </div>
+                      <mat-error
+                        *ngIf="
+                          commentForm?.controls['selectedUser']?.hasError(
+                            'required'
+                          )
+                        "
+                      >
+                        Mention is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <mat-form-field
+                    appearance="outline"
+                    class="example-full-width"
+                  >
+                    <mat-label>Comment</mat-label>
+                    <textarea
+                      (input)="onInputChange($event)"
+                      formControlName="comment"
+                      matInput
+                      [rows]="5"
+                      style="resize: none"
+                      maxlength="500"
+                    ></textarea>
+                    <mat-error
+                      *ngIf="
+                        commentForm?.controls['comment']?.hasError('required')
+                      "
+                    >
+                      Comment is required
+                    </mat-error>
+                    <mat-hint align="end"
+                      >{{ commentForm?.get("comment")?.value?.length || 0 }} /
+                      500</mat-hint
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mb-2 uploaded_div" *ngIf="fileList.length">
+                <div class="uploaded_files">
+                  <h6>Uploaded Files</h6>
+                  <div class="mt-4">
+                    <app-global-image-preview
+                      [fileList]="fileList"
+                      [filePreviewList]="fileList"
+                      [type]="'fileUploader'"
+                      [remove]="true"
+                      (onDelete)="deleteFiles($event)"
+                      [className]="'col-6 mb-2'"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="d-flex justify-content-end align-items-center flex-wrap"
+              >
+                <div
+                  class="d-flex justify-content-start align-items-center"
+                  style="margin-right: 8px"
+                >
+                  <button
+                    mat-icon-button
+                    type="button"
+                    matTooltipPosition="above"
+                    matTooltip="Attach Files"
+                  >
+                    <label for="attachment">
+                      <app-feather-icons
+                        class="tbl-fav-edit"
+                        icon="paperclip"
+                      ></app-feather-icons>
+                    </label>
+                  </button>
+                  <input
+                    style="display: none"
+                    type="file"
+                    name="attachment"
+                    id="attachment"
+                    multiple="true"
+                    accept="image/*,video/*,audio/*,application/*"
+                    (change)="onFileChange($event)"
+                  />
+
+                  <button
+                    (click)="startRecording()"
+                    *ngIf="!isRecording"
+                    mat-icon-button
+                    type="button"
+                    class="sm-fi-btn"
+                    matTooltipPosition="above"
+                    matTooltip="Start Recording"
+                  >
+                    <app-feather-icons
+                      class="tbl-fav-delete"
+                      icon="mic"
+                    ></app-feather-icons>
+                  </button>
+                  <button
+                    (click)="stopRecording()"
+                    class="d-flex align-items-baseline justify-content-between"
+                    *ngIf="isRecording"
+                    mat-flat-button
+                    type="button"
+                    matTooltipPosition="above"
+                    matTooltip="Stop Recording"
+                  >
+                    <app-feather-icons
+                      class="tbl-fav-delete"
+                      icon="x-circle"
+                    ></app-feather-icons>
+                    <span style="margin-left: 10px">Stop Recording</span>
+                  </button>
+                </div>
+                <button
+                  mat-flat-button
+                  type="button"
+                  color="warn"
+                  (click)="onSubmit()"
+                >
+                  Comment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- right side div -->
+    <div class="right d-flex hide-scrollbar">
+      <div class="docs-wrapper">
+        <!-- reports -->
+        <div class="box-wrapper">
+          <div class="header">
+            <h4>Reports</h4>
+            <app-feather-icons
+              style="cursor: pointer"
+              (click)="isReports = !isReports"
+              class="chevron-icon"
+              [icon]="isReports ? 'chevron-up' : 'chevron-down'"
+            ></app-feather-icons>
+          </div>
+          <div class="box-container hide-scrollbar">
+            <div
+              class="content"
+              *ngIf="isReports && patientData?.report?.length"
+            >
+              <div class="box card">
+                <app-global-image-preview
+                  [fileList]="patientData?.report"
+                  [filePreviewList]="patientData?.report"
+                  [type]="'fileUploaded'"
+                  [remove]="false"
+                  [className]="'col-6 mb-2'"
+                ></app-global-image-preview>
+              </div>
+            </div>
+          </div>
+          <div
+            class="no_data_found"
+            *ngIf="!patientData?.report?.length && isReports"
+          >
+            --No Data Found--
+          </div>
+        </div>
+        <!-- Passport -->
+        <div class="box-wrapper">
+          <div class="header">
+            <h4>Passport</h4>
+            <app-feather-icons
+              style="cursor: pointer"
+              (click)="isPassport = !isPassport"
+              class="chevron-icon"
+              [icon]="isPassport ? 'chevron-up' : 'chevron-down'"
+            ></app-feather-icons>
+          </div>
+          <div class="box-container hide-scrollbar">
+            <div *ngIf="vilData?.length">
+              <div *ngFor="let item of vilData">
+                <div class="content hide-scrollbar" *ngIf="isPassport">
+                  <div class="box card mb-2">
+                    <div class="card p-2">
+                      <h6>{{ item?.hospitalName }}</h6>
+                      <div>
+                        <p class="mb-0">Passport</p>
+                        <app-global-image-preview
+                          [fileList]="item?.patientPassport"
+                          [filePreviewList]="item?.patientPassport"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'col-6 mb-2'"
+                        ></app-global-image-preview>
+                      </div>
+
+                      <div *ngIf="item?.attendantPassport?.length">
+                        <p class="mb-0">Attendant Passport</p>
+                        <app-global-image-preview
+                          [fileList]="item?.attendantPassport"
+                          [filePreviewList]="item?.attendantPassport"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'col-6 mb-2'"
+                        ></app-global-image-preview>
+                      </div>
+
+                      <div *ngIf="item?.donorPassport?.length">
+                        <p class="mb-0">Donor Passport</p>
+                        <app-global-image-preview
+                          [fileList]="item?.donorPassport"
+                          [filePreviewList]="item?.donorPassport"
+                          [type]="'fileUploaded'"
+                          [remove]="false"
+                          [className]="'col-6 mb-2'"
+                        ></app-global-image-preview>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isVilLoading && isPassport">
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+
+          <div
+            class="no_data_found"
+            *ngIf="!isVilLoading && !vilData?.length && isPassport"
+          >
+            --No Data Found--
+          </div>
+        </div>
+        <!-- Tickets -->
+        <div class="box-wrapper">
+          <div class="header">
+            <h4>Tickets</h4>
+            <app-feather-icons
+              style="cursor: pointer"
+              (click)="isTickets = !isTickets"
+              class="chevron-icon"
+              [icon]="isTickets ? 'chevron-up' : 'chevron-down'"
+            ></app-feather-icons>
+          </div>
+          <div class="box-container hide-scrollbar">
+            <div *ngIf="patientConfirmationData?.length">
+              <div *ngFor="let item of patientConfirmationData">
+                <div class="content hide-scrollbar" *ngIf="isTickets">
+                  <div
+                    class="box card mt-2 mb-2"
+                    *ngIf="item?.ticket?.length > 0"
+                  >
+                    <h6>{{ item?.hospitalName }}</h6>
+                    <app-global-image-preview
+                      [fileList]="item?.ticket"
+                      [filePreviewList]="item?.ticket"
+                      [type]="'fileUploaded'"
+                      [remove]="false"
+                      [className]="'col-6 mb-2'"
+                    ></app-global-image-preview>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isPatientLoading && isTickets">
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+
+          <div
+            class="no_data_found"
+            *ngIf="
+              !isPatientLoading && !patientConfirmationData?.length && isTickets
+            "
+          >
+            --No Data Found--
+          </div>
+        </div>
+        <!-- Patient Itinerary -->
+        <div
+          *ngIf="
+            data?.title === 'Upcoming Arrival' ||
+            data?.title === 'On Ground Patient'
+          "
+          class="box-wrapper"
+        >
+          <div class="header">
+            <h4>Patient Itinerary</h4>
+            <app-feather-icons
+              style="cursor: pointer"
+              (click)="isItinerary = !isItinerary"
+              class="chevron-icon"
+              [icon]="isItinerary ? 'chevron-up' : 'chevron-down'"
+            ></app-feather-icons>
+          </div>
+          <div class="box-container hide-scrollbar">
+            <div *ngIf="patientItineraryData?.length" class="mt-2">
+              <div *ngFor="let item of patientItineraryData">
+                <div class="content hide-scrollbar" *ngIf="isItinerary">
+                  <div class="box card mb-2">
+                    <div class="copy_header">
+                      <h6 class="mb-0">{{ item?.hospitalName }}</h6>
+                      <span>
+                        <mat-icon
+                          class="icon"
+                          style="margin-right: 8px"
+                          [matTooltip]="textCopied ? 'Copied' : 'Copy'"
+                          (click)="copyData(item)"
+                          >file_copy</mat-icon
+                        >
+                        <mat-icon class="icon" (click)="editPi(item)"
+                          >edit</mat-icon
+                        >
+                      </span>
+                    </div>
+                    <hr />
+                    <div class="row mt-1">
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Hospital UHID</b></div>
+                        <div>{{ item?.hospitalUHID || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Flight Name</b></div>
+                        <div>{{ item?.flightName || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Flight Number</b></div>
+                        <div>{{ item?.flightNo || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Doctor Name</b></div>
+                        <div>{{ item?.doctorName || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Appointment Date</b></div>
+                        <div>
+                          {{
+                            (item?.appointmentDate | date : "medium") || "NIL"
+                          }}
+                        </div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Arrival Date</b></div>
+                        <div>
+                          {{ (item?.arrivalDate | date : "medium") || "NIL" }}
+                        </div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Driver Name</b></div>
+                        <div>{{ item?.driverName || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Driver Number</b></div>
+                        <div>{{ item?.driverNumber || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Pickup Location</b></div>
+                        <div>{{ item?.pickUpLocation || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Drop Location</b></div>
+                        <div>{{ item?.dropLocation || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Hotel Name</b></div>
+                        <div>{{ item?.hotelName || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Hotel Location</b></div>
+                        <div>{{ item?.hotelLocation || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Hotel Map Link</b></div>
+                        <div>{{ item?.hotelMapLink || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Pickup Required</b></div>
+                        <div>
+                          {{ (item?.pickupRequired ? "Yes" : "No") || "NIL" }}
+                        </div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Car Details</b></div>
+                        <div>{{ item?.carDetails || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Car Type</b></div>
+                        <div>{{ item?.carType || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Sim Card</b></div>
+                        <div>{{ item?.simCard || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Remarks</b></div>
+                        <div>{{ item?.remarks || "NIL" }}</div>
+                      </div>
+                      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                        <div><b>Created At</b></div>
+                        <div>
+                          {{ (item?.createdAt | date : "medium") || "NIL" }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mt-2" *ngIf="!!item?.coordinatorPhoto">
+                      <h6>Coordinator Photo</h6>
+                      <app-global-image-preview
+                        [fileList]="[item?.coordinatorPhoto]"
+                        [filePreviewList]="[item?.coordinatorPhoto]"
+                        [type]="'fileUploaded'"
+                        [remove]="false"
+                        [className]="'col-12'"
+                      ></app-global-image-preview>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isPatientItineraryLoading && isItinerary">
+            <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
+            </mat-spinner>
+          </div>
+
+          <div
+            class="no_data_found"
+            *ngIf="
+              !isPatientItineraryLoading &&
+              !patientItineraryData?.length &&
+              isItinerary
+            "
+          >
+            --No Data Found--
+          </div>
+        </div>
+
+        <!-- hospital Sent -->
+        <app-hospital-sent
+          [queryData]="querryData"
+          [title]="data?.title"
+          [allVilRequest]="allVilRequest"
+          [allPatientConfirmationRequest]="allPatientConfirmationRequest"
+        ></app-hospital-sent>
+
+        <!-- operation status -->
+        <div
+          *ngIf="
+            data?.title === 'Pending Query' ||
+            data?.title === 'On Ground Patient' ||
+            data?.title === 'Finance' ||
+            data?.title === 'Completed Query'
+          "
+        >
+          <shared-operation-status
+            [title]="data?.title"
+            [querryData]="querryData"
+          ></shared-operation-status>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showCommentField" mat-dialog-content>
+    <mat-form-field appearance="outline" class="example-full-width mt-3">
+      <mat-label>Comment</mat-label>
+      <textarea
+        class="text-area"
+        [formControl]="actionComment"
+        matInput
+        [rows]="5"
+        style="resize: none"
+        #message
+        maxlength="500"
+      ></textarea>
+      <mat-hint align="end">{{ message.value.length }} / 500</mat-hint>
+    </mat-form-field>
+
+    <div>
+      <button
+        mat-flat-button
+        color="warn"
+        style="margin-right: 8px"
+        (click)="back()"
+      >
+        Back
+      </button>
+      <button mat-flat-button color="primary" (click)="actionSubmit()">
+        Submit
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="showPatientItineraryForm" mat-dialog-content>
+    <form [formGroup]="patientItineraryForm" class="m-3">
+      <div class="row">
+        <div
+          *ngIf="!isPiEdit"
+          class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        >
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Hospital</mat-label>
+            <mat-select formControlName="hospitalName">
+              <mat-option
+                [value]="item?.hospitalName"
+                *ngFor="let item of freshPatientConfirmationData"
+                (click)="onSelectHospital(item)"
+                >{{ item?.hospitalName | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                patientItineraryForm?.controls['hospitalName']?.hasError(
+                  'required'
+                )
+              "
+            >
+              Hospital Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- input field if edit -->
+        <div
+          *ngIf="isPiEdit"
+          class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+        >
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hospital</mat-label>
+            <input matInput formControlName="hospitalName" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Pickup Required</mat-label>
+            <mat-select formControlName="pickupRequired">
+              <mat-option [value]="true">Yes </mat-option>
+              <mat-option [value]="false">No </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hospital UHID</mat-label>
+            <input matInput type="text" formControlName="hospitalUHID" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Flight Name</mat-label>
+            <input matInput type="text" formControlName="flightName" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Flight Number</mat-label>
+            <input matInput type="text" formControlName="flightNo" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Sim Card</mat-label>
+            <input matInput type="text" formControlName="simCard" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hotel Name</mat-label>
+            <input matInput type="text" formControlName="hotelName" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hotel Location</mat-label>
+            <input matInput type="text" formControlName="hotelLocation" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hotel Map Link</mat-label>
+            <input matInput type="text" formControlName="hotelMapLink" />
+            <mat-error
+              *ngIf="
+                patientItineraryForm?.controls['hotelMapLink']?.hasError(
+                  'pattern'
+                )
+              "
+            >
+              Please enter a valid hospital map link
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Car Details</mat-label>
+            <input matInput type="text" formControlName="carDetails" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label> Car Type</mat-label>
+            <input matInput type="text" formControlName="carType" />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field
+          class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2"
+          appearance="outline"
+        >
+          <mat-label>Arrival Date And Time</mat-label>
+          <input
+            matInput
+            [owlDateTime]="dt"
+            [owlDateTimeTrigger]="dt"
+            formControlName="arrivalDate"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="dt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #dt
+            pickerType="both"
+          ></owl-date-time>
+          <mat-error
+            *ngIf="
+              patientItineraryForm?.controls['arrivalDate'].hasError('required')
+            "
+          >
+            Arrival Date is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2"
+          appearance="outline"
+        >
+          <mat-label>Appointment Date</mat-label>
+          <input
+            matInput
+            [owlDateTime]="dt1"
+            [owlDateTimeTrigger]="dt1"
+            formControlName="appointmentDate"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="dt1" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #dt1
+            pickerType="both"
+          ></owl-date-time>
+        </mat-form-field>
+
+        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Doctor Name</mat-label>
+            <input matInput type="text" formControlName="doctorName" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Driver Name</mat-label>
+            <input matInput type="text" formControlName="driverName" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Driver Number</mat-label>
+            <ngx-mat-intl-tel-input
+              formControlName="driverNumber"
+              [enablePlaceholder]="true"
+              [enableSearch]="true"
+              [preferredCountries]="['in']"
+            ></ngx-mat-intl-tel-input>
+            <mat-error
+              *ngIf="
+                patientItineraryForm.controls['contact']?.errors
+                  ?.validatePhoneNumber
+              "
+              >Invalid contact</mat-error
+            >
+          </mat-form-field>
+          <!-- <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Driver Number</mat-label>
+            <input matInput type="number" formControlName="driverNumber" />
+            <mat-error
+              *ngIf="
+                patientItineraryForm?.controls['driverNumber']?.hasError(
+                  'pattern'
+                )
+              "
+            >
+              Invalid contact</mat-error
+            >
+          </mat-form-field> -->
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Pickup Location</mat-label>
+            <input matInput type="text" formControlName="pickUpLocation" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Drop Location</mat-label>
+            <input matInput type="text" formControlName="dropLocation" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div
+          class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2"
+          *ngIf="!!piEditObj?.coordinatorPhoto"
+        >
+          <h6>Uploaded File</h6>
+          <app-global-image-preview
+            [fileList]="[piEditObj?.coordinatorPhoto]"
+            [filePreviewList]="[piEditObj?.coordinatorPhoto]"
+            [type]="'fileUploaded'"
+            [className]="'col-12'"
+            [remove]="false"
+          ></app-global-image-preview>
+        </div>
+        <div
+          class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2"
+          *ngIf="piFile?.length"
+        >
+          <h6>File</h6>
+          <app-global-image-preview
+            [fileList]="piFile"
+            [filePreviewList]="piFile"
+            [type]="'fileUploader'"
+            [className]="'col-12'"
+            [remove]="false"
+          ></app-global-image-preview>
+        </div>
+      </div>
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Coordinator Photo</mat-label>
+        <ngx-mat-file-input
+          style="display: none"
+          accept=".png, .jpg, .jpeg, .pdf"
+          name="file"
+          formControlName="file"
+          (change)="onFileUploaded($event)"
+        >
+        </ngx-mat-file-input>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <div>
+            <span *ngFor="let file of piFile; let i = index">
+              <span
+                >{{ file?.name
+                }}<span *ngIf="i < piFile?.length - 1">, </span></span
+              >
+            </span>
+          </div>
+          <mat-icon style="transform: translateY(-5px)">upload</mat-icon>
+        </div>
+      </mat-form-field>
+
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Remarks</mat-label>
+          <textarea
+            matInput
+            type="textarea"
+            formControlName="remarks"
+            placeholder="Remarks"
+          ></textarea>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <button
+          mat-flat-button
+          color="warn"
+          style="margin-right: 8px"
+          (click)="backPI()"
+        >
+          Back
+        </button>
+        <button mat-flat-button color="primary" (click)="actionSubmit()">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="showHospitalUHIDForm" mat-dialog-content>
+    <form [formGroup]="patientItineraryForm" class="m-3">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Select Hospital</mat-label>
+            <mat-select formControlName="hospitalName">
+              <mat-option
+                [value]="item?.hospitalName"
+                *ngFor="let item of freshPatientConfirmationDataForUHID"
+                (click)="onSelectHospitalForUHID(item)"
+                >{{ item?.hospitalName | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                patientItineraryForm?.controls['hospitalName']?.hasError(
+                  'required'
+                )
+              "
+            >
+              Hospital Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Hospital UHID</mat-label>
+            <input matInput type="text" formControlName="hospitalUHID" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div>
+        <button
+          mat-flat-button
+          color="warn"
+          style="margin-right: 8px"
+          (click)="backUHID()"
+        >
+          Back
+        </button>
+        <button mat-flat-button color="primary" (click)="actionSubmit()">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="showFollowUpField" mat-dialog-content>
+    <form
+      [formGroup]="followUpForm"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+      "
+    >
+      <div style="width: 50%">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Follow Up Date</mat-label>
+          <input
+            matInput
+            [owlDateTime]="fdt"
+            [owlDateTimeTrigger]="fdt"
+            formControlName="followUpDate"
+          />
+          <mat-icon matSuffix [owlDateTimeTrigger]="fdt" class="date-icon"
+            >today</mat-icon
+          >
+          <owl-date-time
+            hour12Timer="true"
+            #fdt
+            pickerType="both"
+          ></owl-date-time>
+
+          <mat-error
+            *ngIf="followUpForm?.controls['followUpDate']?.hasError('required')"
+          >
+            Follow Up Date is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <button
+          mat-flat-button
+          color="warn"
+          style="margin-right: 8px"
+          (click)="backFollowup()"
+        >
+          Back
+        </button>
+        <button mat-flat-button color="primary" (click)="addFollowUp()">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="showCloseFollowUpField" mat-dialog-content>
+    <form
+      [formGroup]="closeFollowUpFormGroup"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+      "
+    >
+      <h4 class="mb-2">Are you sure you want to close followup?</h4>
+      <div style="width: 60%">
+        <mat-form-field appearance="outline" class="example-full-width mt-4">
+          <mat-label>Comment</mat-label>
+          <textarea
+            class="text-area"
+            formControlName="comment"
+            matInput
+            [rows]="5"
+            style="resize: none"
+            #message
+            maxlength="500"
+          ></textarea>
+          <mat-hint align="end">{{ message.value.length }} / 500</mat-hint>
+
+          <mat-error
+            *ngIf="
+              closeFollowUpFormGroup?.controls['comment']?.hasError('required')
+            "
+          >
+            Comment is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <button
+          style="margin-right: 8px"
+          mat-flat-button
+          color="primary"
+          (click)="submitCloseFollowUp()"
+        >
+          Yes
+        </button>
+        <button mat-flat-button color="warn" (click)="backCloseFollowup()">
+          No
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

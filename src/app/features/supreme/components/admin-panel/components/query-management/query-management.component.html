@@ -1,0 +1,35 @@
+<section class="content">
+    <div class="content-block">
+        <div class="query-management-container">
+            <div class="query-toolbar mb-4">
+                <app-toolbar (toolbarEvent)="queryEventHandler($event)"></app-toolbar>
+            </div>
+            <div class="main-section d-flex gap-4 align-items-start justify-content-start">
+                <div class="left">
+                    <div class="list-toolbar d-flex justify-content-end">
+                        <button class="action" color="accent" matTooltip="sort" (click)="direction = !direction" mat-icon-button>
+                            <i [class]="direction ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+                            <mat-icon>sort</mat-icon>
+                        </button>
+                        <button (click)="filterDialog()" class="action" color="accent" matTooltip="filter" mat-icon-button>
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                    <div class="list-wrapper">
+                       <app-list-item></app-list-item>
+                       <app-list-item></app-list-item> 
+                       <app-list-item></app-list-item> 
+                       <app-list-item></app-list-item> 
+                       <app-list-item></app-list-item> 
+                       <app-list-item></app-list-item> 
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="query-wrapper">
+                        <app-query (queryEvent)="queryEventHandler($event)"></app-query>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
