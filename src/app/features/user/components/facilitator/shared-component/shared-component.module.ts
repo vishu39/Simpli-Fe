@@ -180,8 +180,11 @@ import { OperationEntriesComponent } from "./components/finance-module/operation
 import { OperationEntriesDetailsTabsComponent } from "./components/finance-module/operation-settings/operation-entries-right-details/operation-entries-details-tabs/operation-entries-details-tabs.component";
 import { OperationEntriesRightDetailsComponent } from "./components/finance-module/operation-settings/operation-entries-right-details/operation-entries-right-details.component";
 import { MasterDataEntriesComponent } from "./components/finance-module/master-settings/master-data-entries/master-data-entries.component";
-import { MasterSettingRightDetailsComponent } from "./components/finance-module/master-settings/master-setting-right-details/master-setting-right-details.component";
-import { MasterSettingDetailsTabsComponent } from "./components/finance-module/master-settings/master-setting-right-details/master-setting-details-tabs/master-setting-details-tabs.component";
+import { MasterAddCompanyComponent } from "./components/finance-module/master-settings/components/master-add-company/master-add-company.component";
+import { MasterAddHospitalPayoutComponent } from "./components/finance-module/master-settings/components/master-add-hospital-payout/master-add-hospital-payout.component";
+import { MasterAddPartnerPayoutComponent } from "./components/finance-module/master-settings/components/master-add-partner-payout/master-add-partner-payout.component";
+import { MasterAddSalesIncentivesComponent } from "./components/finance-module/master-settings/components/master-add-sales-incentives/master-add-sales-incentives.component";
+import { MasterDataViewDocsComponent } from './components/finance-module/master-settings/dialog/master-data-view-docs/master-data-view-docs.component';
 
 @NgModule({
   declarations: [
@@ -358,8 +361,11 @@ import { MasterSettingDetailsTabsComponent } from "./components/finance-module/m
     OperationEntriesRightDetailsComponent,
     OperationEntriesDetailsTabsComponent,
     MasterDataEntriesComponent,
-    MasterSettingRightDetailsComponent,
-    MasterSettingDetailsTabsComponent,
+    MasterAddCompanyComponent,
+    MasterAddHospitalPayoutComponent,
+    MasterAddPartnerPayoutComponent,
+    MasterAddSalesIncentivesComponent,
+    MasterDataViewDocsComponent,
   ],
   imports: [
     CommonModule,

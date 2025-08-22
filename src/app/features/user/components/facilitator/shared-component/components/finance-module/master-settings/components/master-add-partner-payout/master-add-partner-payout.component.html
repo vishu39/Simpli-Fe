@@ -1,0 +1,302 @@
+<div>
+  <h4>{{ selectedMasterOption?.name }}</h4>
+
+  <div class="topActionDiv mt-4 mb-2">
+    <button
+      color="primary"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="onClickAction('Add')"
+    >
+      +Add
+    </button>
+    <button
+      color="secondary"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="exportMasterDataCSV()"
+    >
+      Export
+    </button>
+    <button
+      color="warn"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="onReload()"
+    >
+      Refresh
+    </button>
+  </div>
+
+  <div class="tableDiv mt-4">
+    <div class="tableHeaderDiv">
+      <div class="first">
+        <h5>Partner Payouts</h5>
+        <!-- <span>
+          <button
+            [matTooltip]="'Filter Email'"
+            [ngClass]="
+              selectedEmailFetchList?.length > 0 ? 'filter_active' : ''
+            "
+            (click)="openFilterModal()"
+            mat-icon-button
+          >
+            <mat-icon>tune</mat-icon>
+          </button>
+        </span> -->
+      </div>
+
+      <div class="pagination m-0">
+        <p class="mb-0">
+          {{ dataParams?.page }} - {{ totalNumberOfPages }} of
+          {{ totalElement }}
+        </p>
+        <div>
+          <div class="email-btn-group">
+            <button
+              [disabled]="dataParams?.page <= 1"
+              (click)="prev()"
+              mat-icon-button
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>navigate_before</mat-icon>
+            </button>
+            <button
+              [disabled]="dataParams?.page === totalNumberOfPages"
+              (click)="next()"
+              mat-icon-button
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>navigate_next</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tableContainer hide-scrollbar">
+      <table *ngIf="arrayData?.length">
+        <colgroup>
+          <col style="width: 80px" />
+          <col style="width: 200px" />
+          <col style="width: 150px" />
+          <col style="width: 100px" />
+          <col style="width: 100px" />
+          <col style="width: 100px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 100px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>S No.</th>
+            <th>Referral Partner</th>
+            <th>Hospital Name</th>
+            <th>GST Applicable</th>
+            <th>OP</th>
+            <th>IP</th>
+            <th>Invoice Category</th>
+            <th>Calculation Bills</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- ✅ Data rows -->
+          <ng-container>
+            <tr *ngFor="let company of arrayData; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ company.referralPartnerName }}</td>
+              <td>{{ company.hospitalName }}</td>
+              <td>{{ company.gstApplicable }}</td>
+              <td>{{ company.op }}</td>
+              <td>{{ company.ip }}</td>
+              <td>{{ getNameForInvoiceCategory(company.invoiceCategory) }}</td>
+              <td>{{ getNameForCalcBill(company.calculationBills) }}</td>
+              <td>{{ company.notes }}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <!-- <mat-icon
+                    style="color: blue; cursor: pointer"
+                    [matTooltip]="'View Docs'"
+                    >remove_red_eye</mat-icon
+                  > -->
+                  <mat-icon
+                    style="color: green; cursor: pointer"
+                    [matTooltip]="'Edit Company'"
+                    (click)="onClickAction('Edit', company)"
+                    >edit</mat-icon
+                  >
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <div *ngIf="isArrayDataLoading" class="divCenter">
+        <mat-spinner [diameter]="30"></mat-spinner>
+      </div>
+
+      <div *ngIf="!arrayData?.length && !isArrayDataLoading" class="divCenter">
+        --No Data Found--
+      </div>
+    </div>
+  </div>
+
+  <div class="formDiv mt-4" *ngIf="isActionTabVisible">
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          ><b>{{ actionTitle }}</b></mat-panel-title
+        >
+      </mat-expansion-panel-header>
+      <form class="p-3" [formGroup]="formGroup">
+        <div class="row">
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Referral Partner</mat-label>
+              <mat-select formControlName="referralPartnerName">
+                <mat-option
+                  [value]="item?.referralPartnerName"
+                  *ngFor="let item of freshPatientConfirmationDataForUHID"
+                  (click)="onSelectPartner(item)"
+                  >{{ item?.referralPartnerName | titlecase }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  formGroup?.controls['referralPartnerName']?.hasError(
+                    'required'
+                  )
+                "
+              >
+                Referral Partner is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Hospital</mat-label>
+              <mat-select formControlName="hospitalName">
+                <mat-option
+                  [value]="item?.hospitalName"
+                  *ngFor="let item of freshPatientConfirmationDataForUHID"
+                  (click)="onSelectHospitalForUHID(item)"
+                  >{{ item?.hospitalName | titlecase }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  formGroup?.controls['hospitalName']?.hasError('required')
+                "
+              >
+                Hospital Name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Gst Applicable</mat-label>
+              <mat-select formControlName="gstApplicable">
+                <mat-option [value]="item" *ngFor="let item of gstOption"
+                  >{{ item | titlecase }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="formGroup.controls['gstApplicable'].hasError('required')"
+              >
+                Gst Applicable is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>OP</mat-label>
+              <input matInput formControlName="op" />
+              <mat-error *ngIf="formGroup.controls['op'].hasError('required')">
+                OP is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>IP</mat-label>
+              <input matInput formControlName="ip" />
+              <mat-error *ngIf="formGroup.controls['ip'].hasError('required')">
+                IP is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Invoice Category</mat-label>
+              <mat-select formControlName="invoiceCategory">
+                <mat-option
+                  [value]="item?.value"
+                  *ngFor="let item of invoiceArray"
+                  >{{ item?.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['invoiceCategory'].hasError('required')
+                "
+              >
+                Invoice Category is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Calculation Bill</mat-label>
+              <mat-select formControlName="calculationBills">
+                <mat-option
+                  [value]="item?.value"
+                  *ngFor="let item of calculationBillsArray"
+                  >{{ item?.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['calculationBills'].hasError('required')
+                "
+              >
+                Calculation Bill is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Notes</mat-label>
+              <textarea matInput formControlName="notes"></textarea>
+              <mat-error
+                *ngIf="formGroup.controls['notes'].hasError('required')"
+              >
+                Notes is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <button mat-raised-button color="primary">Submit</button>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </div>
+</div>

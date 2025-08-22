@@ -16,7 +16,14 @@ export class FinanceModuleService {
     { name: "Final Bills" },
   ];
 
-  tabsForMasterData: any[] = [{ name: "Medical History" }, { name: "Reports" }];
+  tabsForMasterData: any[] = [
+    { name: "Medical History" },
+    { name: "Reports" },
+    { name: "Company Master" },
+    { name: "Hospital Payout Master" },
+    { name: "Partner Payout Master" },
+    { name: "Sales Incentive Master" },
+  ];
 
   queryButtons: any[] = [
     {

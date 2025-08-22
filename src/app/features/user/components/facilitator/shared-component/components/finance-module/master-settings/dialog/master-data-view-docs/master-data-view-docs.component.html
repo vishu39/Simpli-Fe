@@ -1,0 +1,107 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <div class="m-4">
+      <div *ngIf="selectedMasterOption?.value === 'companyMaster'">
+        <div class="mb-4">
+          <b>{{ selectedMasterOption?.name }}</b>
+        </div>
+
+        <div class="row">
+          <div
+            *ngIf="
+              !inputData.gstCertificate &&
+              !inputData.registrationCertificate &&
+              !inputData.panCertificate &&
+              !inputData.signingAuthorityImage
+            "
+            class="divCenter"
+          >
+            --No Data Found--
+          </div>
+
+          <div
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4"
+            *ngIf="!!inputData.gstCertificate"
+          >
+            <h6>Uploaded GST Certificate</h6>
+            <div class="mt-4">
+              <app-global-image-preview
+                [fileList]="[inputData.gstCertificate]"
+                [filePreviewList]="[inputData.gstCertificate]"
+                [type]="'fileUploaded'"
+                [remove]="false"
+                [className]="'img_width_100'"
+              ></app-global-image-preview>
+            </div>
+          </div>
+
+          <div
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4"
+            *ngIf="!!inputData.registrationCertificate"
+          >
+            <h6>Uploaded Registration Certificate</h6>
+            <div class="mt-4">
+              <app-global-image-preview
+                [fileList]="[inputData.registrationCertificate]"
+                [filePreviewList]="[inputData.registrationCertificate]"
+                [type]="'fileUploaded'"
+                [remove]="false"
+                [className]="'img_width_100'"
+              ></app-global-image-preview>
+            </div>
+          </div>
+
+          <div
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4"
+            *ngIf="!!inputData.panCertificate"
+          >
+            <h6>Uploaded Pan Card</h6>
+            <div class="mt-4">
+              <app-global-image-preview
+                [fileList]="[inputData.panCertificate]"
+                [filePreviewList]="[inputData.panCertificate]"
+                [type]="'fileUploaded'"
+                [remove]="false"
+                [className]="'img_width_100'"
+              ></app-global-image-preview>
+            </div>
+          </div>
+
+          <div
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4"
+            *ngIf="!!inputData.signingAuthorityImage"
+          >
+            <h6>Uploaded Signing Authority Image</h6>
+            <div class="mt-4">
+              <app-global-image-preview
+                [fileList]="[inputData.signingAuthorityImage]"
+                [filePreviewList]="[inputData.signingAuthorityImage]"
+                [type]="'fileUploaded'"
+                [remove]="false"
+                [className]="'img_width_100'"
+              ></app-global-image-preview>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

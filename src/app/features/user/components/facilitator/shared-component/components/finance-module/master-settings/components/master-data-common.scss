@@ -1,0 +1,86 @@
+.topActionDiv {
+  display: flex;
+  gap: 12px;
+}
+
+.tableDiv {
+  border: 1px solid lightgrey;
+  border-radius: 8px;
+  .tableHeaderDiv {
+    padding: 8px;
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .tableContainer {
+    height: 400px;
+    overflow-y: auto;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* ensures equal column widths */
+  border: 1px solid lightgrey;
+}
+
+thead {
+  border-bottom: 1px solid lightgrey;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #1560bd; /* Make sure header has a background */
+  color: white;
+  z-index: 1; /* Keep it above other rows */
+}
+
+th {
+  padding: 12px 8px;
+  border: 1px solid lightgrey;
+}
+
+td {
+  padding: 12px 8px;
+  border: 1px solid lightgrey;
+
+  word-wrap: break-word;
+  word-break: break-word; /* ensures breaking for long words */
+  white-space: normal; /* allows wrapping */
+  overflow-wrap: break-word;
+}
+
+table tr:nth-child(even) {
+  background-color: rgb(242, 240, 240);
+}
+
+.first {
+  display: flex;
+  align-items: center;
+  /* padding-left: 8px; */
+  gap: 8px;
+  row-gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pagination {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.divCenter {
+  text-align: center;
+  font-style: italic;
+  color: #666;
+  border-bottom: 1px solid lightgrey;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -58,17 +58,17 @@ import { DownloadFollowUpComponent } from "./dialogs/download-follow-up/download
 import { QueryManagementCheckDetailsComponent } from "./query-management/component/query-management-check-details/query-management-check-details.component";
 import { QueryManagementEmailDetailsComponent } from "./query-management/component/query-management-email-details/query-management-email-details.component";
 import { PotentialTreatmentModalComponent } from "./dialogs/potential-treatment-modal/potential-treatment-modal.component";
-import { AddHospitalUhidComponent } from "./finance-module/component/add-hospital-uhid/add-hospital-uhid.component";
-import { UploadBillingDocComponent } from "./finance-module/component/upload-billing-doc/upload-billing-doc.component";
-import { UploadEstimatesComponent } from "./finance-module/component/upload-estimates/upload-estimates.component";
-import { AdmissionDischargeTrackerComponent } from "./finance-module/component/admission-discharge-tracker/admission-discharge-tracker.component";
-import { UploadFinalBillComponent } from "./finance-module/component/upload-final-bill/upload-final-bill.component";
+import { AddHospitalUhidComponent } from "./finance-module/component/operation-setting/add-hospital-uhid/add-hospital-uhid.component";
+import { UploadBillingDocComponent } from "./finance-module/component/operation-setting/upload-billing-doc/upload-billing-doc.component";
+import { UploadEstimatesComponent } from "./finance-module/component/operation-setting/upload-estimates/upload-estimates.component";
+import { AdmissionDischargeTrackerComponent } from "./finance-module/component/operation-setting/admission-discharge-tracker/admission-discharge-tracker.component";
+import { UploadFinalBillComponent } from "./finance-module/component/operation-setting/upload-final-bill/upload-final-bill.component";
 import { FinanceModulePatientListComponent } from "./finance-module/finance-module-patient-list/finance-module-patient-list.component";
 import { FinanceModuleToolbarComponent } from "./finance-module/finance-module-toolbar/finance-module-toolbar.component";
-import { FinanceBillingViewDocBillsComponent } from "./finance-module/component/finance-billing-view-doc-bills/finance-billing-view-doc-bills.component";
-import { FinanceBillingViewEstimateBillsComponent } from "./finance-module/component/finance-billing-view-estimate-bills/finance-billing-view-estimate-bills.component";
-import { FinanceBillingViewAdmissionTrackerDetailsComponent } from "./finance-module/component/finance-billing-view-admission-tracker-details/finance-billing-view-admission-tracker-details.component";
-import { FinanceBillingViewFinalBillsComponent } from "./finance-module/component/finance-billing-view-final-bills/finance-billing-view-final-bills.component";
+import { FinanceBillingViewDocBillsComponent } from "./finance-module/component/operation-setting/finance-billing-view-doc-bills/finance-billing-view-doc-bills.component";
+import { FinanceBillingViewEstimateBillsComponent } from "./finance-module/component/operation-setting/finance-billing-view-estimate-bills/finance-billing-view-estimate-bills.component";
+import { FinanceBillingViewAdmissionTrackerDetailsComponent } from "./finance-module/component/operation-setting/finance-billing-view-admission-tracker-details/finance-billing-view-admission-tracker-details.component";
+import { FinanceBillingViewFinalBillsComponent } from "./finance-module/component/operation-setting/finance-billing-view-final-bills/finance-billing-view-final-bills.component";
 
 const COMPONENT = [
   FileUploadComponent,

@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
-import { AddHospitalUhidComponent } from "src/app/shared/components/finance-module/component/add-hospital-uhid/add-hospital-uhid.component";
-import { AdmissionDischargeTrackerComponent } from "src/app/shared/components/finance-module/component/admission-discharge-tracker/admission-discharge-tracker.component";
-import { UploadBillingDocComponent } from "src/app/shared/components/finance-module/component/upload-billing-doc/upload-billing-doc.component";
-import { UploadEstimatesComponent } from "src/app/shared/components/finance-module/component/upload-estimates/upload-estimates.component";
-import { UploadFinalBillComponent } from "src/app/shared/components/finance-module/component/upload-final-bill/upload-final-bill.component";
+import { AddHospitalUhidComponent } from "src/app/shared/components/finance-module/component/operation-setting/add-hospital-uhid/add-hospital-uhid.component";
+import { AdmissionDischargeTrackerComponent } from "src/app/shared/components/finance-module/component/operation-setting/admission-discharge-tracker/admission-discharge-tracker.component";
+import { UploadBillingDocComponent } from "src/app/shared/components/finance-module/component/operation-setting/upload-billing-doc/upload-billing-doc.component";
+import { UploadEstimatesComponent } from "src/app/shared/components/finance-module/component/operation-setting/upload-estimates/upload-estimates.component";
+import { UploadFinalBillComponent } from "src/app/shared/components/finance-module/component/operation-setting/upload-final-bill/upload-final-bill.component";
 import { SMToolBar } from "src/app/smvt-framework/interfaces/sm-framework-defaults";
 import { CommonService } from "src/app/smvt-framework/services/common.service";
 

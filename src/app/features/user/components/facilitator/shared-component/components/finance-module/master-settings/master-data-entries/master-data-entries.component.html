@@ -1,72 +1,56 @@
 <section class="content">
   <div class="content-block">
-    <div class="finance-container">
-      <div class="query-toolbar mb-4">
-        <global-shared-finance-module-toolbar
-          (toolbarEvent)="queryEventHandler({ mode: 'Add_Query' })"
-          (searchEvent)="searchEventHandler($event)"
-        >
-          <!-- *ngIf="showFilterArray?.includes(tokenData?.userType)" -->
-          <!-- <button
-            [ngClass]="isFilterActive ? 'filter_active' : ''"
-            [matTooltip]="'Filter Patient'"
-            mat-icon-button
-            (click)="openFilterModal()"
-          >
-            <mat-icon>tune</mat-icon>
-          </button> -->
-        </global-shared-finance-module-toolbar>
-      </div>
+    <div class="grid1x2">
+      <div class="left">
+        <div class="card p-3 m-0">
+          <h4>Master Setting</h4>
 
-      <div
-        class="main-section d-flex gap-4 align-items-start justify-content-start"
-      >
-        <div class="left">
-          <div
-            class="list-wrapper hide-scrollbar"
-            infiniteScroll
-            [infiniteScrollDistance]="0.5"
-            [infiniteScrollThrottle]="30"
-            (scrolled)="onInfiniteScrollPatient()"
-            [scrollWindow]="false"
-          >
-            <global-shared-finance-module-patient-list
-              [isLoadingPatient]="isLoadingPatient"
-              [selectedQueryId]="selectedQueryId"
-              (selectedQuery)="selectedQuery($event)"
-              [patientList]="patientList"
-              [uhidCode]="uhidCode"
-            >
-            </global-shared-finance-module-patient-list>
+          <div *ngFor="let item of masterOptionsArray" class="mt-2">
             <div
-              [ngClass]="!patientList?.length ? 'loader_center' : ''"
-              *ngIf="isLoadingPatient"
+              (click)="onClickMasterOption(item)"
+              [ngClass]="
+                item?.isSelected ? 'fieldOptions isSelected' : 'fieldOptions'
+              "
             >
-              <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
-              </mat-spinner>
+              <mat-icon class="masterOptionIcon">{{ item?.icon }}</mat-icon>
+              {{ item?.name }}
             </div>
           </div>
         </div>
-        <div class="right">
-          <div class="query-wrapper">
-            <div
-              *ngIf="!queryData && !queryLoading"
-              style="height: 100%; display: grid; place-items: center"
-            >
-              No Query Selected
-            </div>
-            <div
-              *ngIf="queryLoading"
-              style="height: 100%; display: grid; place-items: center"
-            >
-              <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30">
-              </mat-spinner>
-            </div>
-            <app-master-setting-right-details
-              *ngIf="!!queryData && !queryLoading"
-              [queryData]="queryData"
-              (queryEvent)="queryEventHandler($event)"
-            ></app-master-setting-right-details>
+      </div>
+      <div class="right">
+        <div class="card p-3 m-0">
+          <div
+            *ngIf="selectedMasterOption?.value === 'companyMaster'"
+            style="height: 100%"
+          >
+            <shared-master-add-company
+              [selectedMasterOption]="selectedMasterOption"
+            ></shared-master-add-company>
+          </div>
+          <div
+            *ngIf="selectedMasterOption?.value === 'hospitalPayoutMaster'"
+            style="height: 100%"
+          >
+            <shared-master-add-hospital-payout
+              [selectedMasterOption]="selectedMasterOption"
+            ></shared-master-add-hospital-payout>
+          </div>
+          <div
+            *ngIf="selectedMasterOption?.value === 'partnerPayoutMaster'"
+            style="height: 100%"
+          >
+            <shared-master-add-partner-payout
+              [selectedMasterOption]="selectedMasterOption"
+            ></shared-master-add-partner-payout>
+          </div>
+          <div
+            *ngIf="selectedMasterOption?.value === 'salesIncentiveMaster'"
+            style="height: 100%"
+          >
+            <shared-master-add-sales-incentives
+              [selectedMasterOption]="selectedMasterOption"
+            ></shared-master-add-sales-incentives>
           </div>
         </div>
       </div>

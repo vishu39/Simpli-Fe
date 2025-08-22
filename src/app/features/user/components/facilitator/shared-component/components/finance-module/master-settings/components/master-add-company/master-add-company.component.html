@@ -1,0 +1,574 @@
+<div>
+  <h4>{{ selectedMasterOption?.name }}</h4>
+
+  <div class="topActionDiv mt-4 mb-2">
+    <button
+      color="primary"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="onClickAction('Add')"
+    >
+      +Add
+    </button>
+    <button
+      color="secondary"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="exportMasterDataCSV()"
+    >
+      Export
+    </button>
+    <button
+      color="warn"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="onReload()"
+    >
+      Refresh
+    </button>
+  </div>
+
+  <div class="tableDiv mt-4">
+    <div class="tableHeaderDiv">
+      <div class="first">
+        <h5>Compnies</h5>
+        <!-- <span>
+          <button
+            [matTooltip]="'Filter Email'"
+            [ngClass]="
+              selectedEmailFetchList?.length > 0 ? 'filter_active' : ''
+            "
+            (click)="openFilterModal()"
+            mat-icon-button
+          >
+            <mat-icon>tune</mat-icon>
+          </button>
+        </span> -->
+      </div>
+
+      <div class="pagination m-0">
+        <p class="mb-0">
+          {{ companyParams?.page }} - {{ totalNumberOfPages }} of
+          {{ totalElementCompany }}
+        </p>
+        <div>
+          <div class="email-btn-group">
+            <button
+              [disabled]="companyParams?.page <= 1"
+              (click)="prev()"
+              mat-icon-button
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>navigate_before</mat-icon>
+            </button>
+            <button
+              [disabled]="companyParams?.page === totalNumberOfPages"
+              (click)="next()"
+              mat-icon-button
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>navigate_next</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tableContainer hide-scrollbar">
+      <table *ngIf="companyData?.length">
+        <colgroup>
+          <col style="width: 80px" />
+          <col style="width: 200px" />
+          <col style="width: 150px" />
+          <col style="width: 150px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 100px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>S No.</th>
+            <th>Company Name</th>
+            <th>GST Applicable</th>
+            <th>Currency</th>
+            <th>Email</th>
+            <th>Contact</th>
+            <th>Payment Terms</th>
+            <th>GST No</th>
+            <th>Registration No</th>
+            <th>Company Pan No</th>
+            <th>Signing Authority Name</th>
+            <th>Signing Authority Designation</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- ✅ Data rows -->
+          <ng-container>
+            <tr *ngFor="let company of companyData; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ company.companyName }}</td>
+              <td>{{ company.gstApplicable }}</td>
+              <td>{{ company.currency?.code }}</td>
+              <td>{{ company.email }}</td>
+              <td>{{ company.contact }}</td>
+              <td>{{ company.paymentTerms }}</td>
+              <td>{{ company.gstNo }}</td>
+              <td>{{ company.registrationNo }}</td>
+              <td>{{ company.companyPanNo }}</td>
+              <td>{{ company.signingAuthorityName }}</td>
+              <td>{{ company.signingAuthorityDesignation }}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <mat-icon
+                    style="color: blue; cursor: pointer"
+                    [matTooltip]="'View Docs'"
+                    (click)="openViewModal(company)"
+                    >remove_red_eye</mat-icon
+                  >
+                  <mat-icon
+                    style="color: green; cursor: pointer"
+                    [matTooltip]="'Edit Company'"
+                    (click)="onClickAction('Edit', company)"
+                    >edit</mat-icon
+                  >
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <div *ngIf="isCompanyDataLoading" class="divCenter">
+        <mat-spinner [diameter]="30"></mat-spinner>
+      </div>
+
+      <div
+        *ngIf="!companyData?.length && !isCompanyDataLoading"
+        class="divCenter"
+      >
+        --No Data Found--
+      </div>
+    </div>
+  </div>
+
+  <div class="formDiv mt-4" *ngIf="isActionTabVisible">
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          ><b>{{ actionTitle }}</b></mat-panel-title
+        >
+      </mat-expansion-panel-header>
+      <form class="p-3" [formGroup]="formGroup">
+        <div class="row">
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Company Name</mat-label>
+              <input matInput formControlName="companyName" />
+              <mat-error
+                *ngIf="formGroup.controls['companyName'].hasError('required')"
+              >
+                Company Name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Gst Applicable</mat-label>
+              <mat-select formControlName="gstApplicable">
+                <mat-option [value]="item" *ngFor="let item of gstOption"
+                  >{{ item | titlecase }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="formGroup.controls['gstApplicable'].hasError('required')"
+              >
+                Gst Applicable is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Currency</mat-label>
+              <mat-select
+                formControlName="currency"
+                [compareWith]="compareCurrencyObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCurrency($event.target.value)"
+                />
+                <div class="other_option" *ngIf="!currencyArray?.length">
+                  No results
+                </div>
+
+                <mat-option
+                  (click)="onClickCurrency(currency)"
+                  *ngFor="let currency of currencyArray"
+                  [value]="currency"
+                >
+                  {{ currency?.code }} - {{ currency?.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="formGroup.controls['currency'].hasError('required')"
+              >
+                Select Currency is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" />
+              <mat-error
+                *ngIf="formGroup.controls['email'].hasError('required')"
+              >
+                Email is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Contact</mat-label>
+              <ngx-mat-intl-tel-input
+                formControlName="contact"
+                [enablePlaceholder]="true"
+                [enableSearch]="true"
+                [preferredCountries]="['in']"
+              ></ngx-mat-intl-tel-input>
+
+              <mat-error
+                *ngIf="formGroup.controls['contact'].hasError('required')"
+              >
+                Contact is required
+              </mat-error>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['contact']?.errors?.validatePhoneNumber
+                "
+                >Invalid contact</mat-error
+              >
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Payments Terms</mat-label>
+              <input matInput formControlName="paymentTerms" />
+              <mat-error
+                *ngIf="formGroup.controls['paymentTerms'].hasError('required')"
+              >
+                Payments Terms is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Gst/Vat Number</mat-label>
+              <input matInput formControlName="gstNo" />
+              <mat-error
+                *ngIf="formGroup.controls['gstNo'].hasError('required')"
+              >
+                Gst/Vat Number is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Registration No</mat-label>
+              <input matInput formControlName="registrationNo" />
+              <mat-error
+                *ngIf="
+                  formGroup.controls['registrationNo'].hasError('required')
+                "
+              >
+                Registration No is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Pan Number</mat-label>
+              <input matInput formControlName="companyPanNo" />
+              <mat-error
+                *ngIf="formGroup.controls['companyPanNo'].hasError('required')"
+              >
+                Company Pan Number is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Signing Authority Name</mat-label>
+              <input matInput formControlName="signingAuthorityName" />
+              <mat-error
+                *ngIf="
+                  formGroup.controls['signingAuthorityName'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Signing Authority Name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Signing Authority Designation</mat-label>
+              <input matInput formControlName="signingAuthorityDesignation" />
+              <mat-error
+                *ngIf="
+                  formGroup.controls['signingAuthorityDesignation'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Signing Authority Designation is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Upload GST Certificate</mat-label>
+              <ngx-mat-file-input
+                accept=".pdf"
+                formControlName="gstCertificate"
+                (change)="onFileSelected($event, 'first')"
+              >
+              </ngx-mat-file-input>
+              <mat-icon matSuffix>upload</mat-icon>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['gstCertificate'].hasError('required')
+                "
+              >
+                GST certificate is required
+              </mat-error>
+            </mat-form-field>
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+                *ngIf="!!companyData?.gstCertificate"
+              >
+                <h6>Uploaded Gst Certificate</h6>
+                <div class="mt-4">
+                  <app-global-image-preview
+                    [fileList]="[companyData?.gstCertificate]"
+                    [filePreviewList]="[companyData?.gstCertificate]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                    [className]="'img_width_100'"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+              <div
+                *ngIf="fileFirstList?.length"
+                class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+              >
+                <h6 class="mb-4">New Gst Certificate</h6>
+                <app-global-image-preview
+                  [fileList]="fileFirstList"
+                  [filePreviewList]="fileFirstPreviewUrls"
+                  [type]="'fileUploader'"
+                  [remove]="false"
+                  [className]="'img_width_100'"
+                ></app-global-image-preview>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Upload Registration Certificate</mat-label>
+              <ngx-mat-file-input
+                accept=".pdf"
+                formControlName="registrationCertificate"
+                (change)="onFileSelected($event, 'second')"
+              >
+              </ngx-mat-file-input>
+              <mat-icon matSuffix>upload</mat-icon>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['registrationCertificate'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Registration Certificate is required
+              </mat-error>
+            </mat-form-field>
+
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+                *ngIf="!!companyData?.registrationCertificate"
+              >
+                <h6>Uploaded Registration Certificate</h6>
+                <div class="mt-4">
+                  <app-global-image-preview
+                    [fileList]="[companyData?.registrationCertificate]"
+                    [filePreviewList]="[companyData?.registrationCertificate]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                    [className]="'img_width_100'"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+              <div
+                *ngIf="fileSecondList.length"
+                class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+              >
+                <h6 class="mb-4">New Registration Certificate</h6>
+                <app-global-image-preview
+                  [fileList]="fileSecondList"
+                  [filePreviewList]="fileSecondPreviewUrls"
+                  [type]="'fileUploader'"
+                  [remove]="false"
+                  [className]="'img_width_100'"
+                ></app-global-image-preview>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Upload Pan Card</mat-label>
+              <ngx-mat-file-input
+                accept=".pdf"
+                formControlName="panCertificate"
+                (change)="onFileSelected($event, 'third')"
+              >
+              </ngx-mat-file-input>
+              <mat-icon matSuffix>upload</mat-icon>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['panCertificate'].hasError('required')
+                "
+              >
+                Pan Card is required
+              </mat-error>
+            </mat-form-field>
+
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+                *ngIf="!!companyData?.panCertificate"
+              >
+                <h6>Uploaded Pan Card</h6>
+                <div class="mt-4">
+                  <app-global-image-preview
+                    [fileList]="[companyData?.panCertificate]"
+                    [filePreviewList]="[companyData?.panCertificate]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                    [className]="'img_width_100'"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+              <div
+                *ngIf="fileThirdList.length"
+                class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+              >
+                <h6 class="mb-4">New Pan Card</h6>
+                <app-global-image-preview
+                  [fileList]="fileThirdList"
+                  [filePreviewList]="fileThirdPreviewUrls"
+                  [type]="'fileUploader'"
+                  [remove]="false"
+                  [className]="'img_width_100'"
+                ></app-global-image-preview>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Upload Signing Authority Image</mat-label>
+              <ngx-mat-file-input
+                accept=".pdf"
+                formControlName="signingAuthorityImage"
+                (change)="onFileSelected($event, 'fourth')"
+              >
+              </ngx-mat-file-input>
+              <mat-icon matSuffix>upload</mat-icon>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['signingAuthorityImage'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Signing Authority Image is required
+              </mat-error>
+            </mat-form-field>
+
+            <div class="row">
+              <div
+                class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2"
+                *ngIf="!!companyData.signingAuthorityImage"
+              >
+                <h6>Uploaded Signing Authority Image</h6>
+                <div class="mt-4">
+                  <app-global-image-preview
+                    [fileList]="[companyData.signingAuthorityImage]"
+                    [filePreviewList]="[companyData.signingAuthorityImage]"
+                    [type]="'fileUploaded'"
+                    [remove]="false"
+                    [className]="'img_width_100'"
+                  ></app-global-image-preview>
+                </div>
+              </div>
+              <div
+                *ngIf="fileFourthList.length"
+                class="col-xl-6 col-lg-6 col-md-12 col-sm-12"
+              >
+                <h6 class="mb-4">New Signing Authority Image</h6>
+                <app-global-image-preview
+                  [fileList]="fileFourthList"
+                  [filePreviewList]="fileFourthPreviewUrls"
+                  [type]="'fileUploader'"
+                  [remove]="false"
+                  [className]="'img_width_100'"
+                ></app-global-image-preview>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <button mat-raised-button color="primary" (click)="finalFormSubmit()">
+            Submit
+          </button>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </div>
+</div>

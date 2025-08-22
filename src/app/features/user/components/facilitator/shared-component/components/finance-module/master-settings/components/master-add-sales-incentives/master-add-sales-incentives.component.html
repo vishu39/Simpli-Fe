@@ -1,0 +1,297 @@
+<div>
+  <h4>{{ selectedMasterOption?.name }}</h4>
+
+  <div class="topActionDiv mt-4 mb-2">
+    <button
+      color="primary"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="onClickAction('Add')"
+    >
+      +Add
+    </button>
+    <button
+      color="secondary"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="exportMasterDataCSV()"
+    >
+      Export
+    </button>
+    <button
+      color="warn"
+      mat-raised-button
+      type="button"
+      class="topActionButton"
+      (click)="onReload()"
+    >
+      Refresh
+    </button>
+  </div>
+
+  <div class="tableDiv mt-4">
+    <div class="tableHeaderDiv">
+      <div class="first">
+        <h5>Sales Incentives</h5>
+        <!-- <span>
+          <button
+            [matTooltip]="'Filter Email'"
+            [ngClass]="
+              selectedEmailFetchList?.length > 0 ? 'filter_active' : ''
+            "
+            (click)="openFilterModal()"
+            mat-icon-button
+          >
+            <mat-icon>tune</mat-icon>
+          </button>
+        </span> -->
+      </div>
+
+      <div class="pagination m-0">
+        <p class="mb-0">
+          {{ dataParams?.page }} - {{ totalNumberOfPages }} of
+          {{ totalElement }}
+        </p>
+        <div>
+          <div class="email-btn-group">
+            <button
+              [disabled]="dataParams?.page <= 1"
+              (click)="prev()"
+              mat-icon-button
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>navigate_before</mat-icon>
+            </button>
+            <button
+              [disabled]="dataParams?.page === totalNumberOfPages"
+              (click)="next()"
+              mat-icon-button
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>navigate_next</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tableContainer hide-scrollbar">
+      <table *ngIf="arrayData?.length">
+        <colgroup>
+          <col style="width: 80px" />
+          <col style="width: 150px" />
+          <col style="width: 150px" />
+          <col style="width: 200px" />
+          <col style="width: 150px" />
+          <col style="width: 200px" />
+          <col style="width: 200px" />
+          <col style="width: 100px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>S No.</th>
+            <th>Type</th>
+            <th>Revenue Bills</th>
+            <th>Frequency</th>
+            <th>Payout Percentage</th>
+            <th>Activation Start Date</th>
+            <th>Activation End Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- ✅ Data rows -->
+          <ng-container>
+            <tr *ngFor="let company of arrayData; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ getNameForType(company.type) }}</td>
+              <td>{{ getNameForRevenue(company.revenueBasis) }}</td>
+              <td>{{ getNameForFrequency(company.frequency) }}</td>
+              <td>{{ company?.payoutPercentage }} %</td>
+              <td>{{ company?.activationStartDate | date : "medium" }}</td>
+              <td>{{ company?.activationEndDate | date : "medium" }}</td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <!-- <mat-icon
+                    style="color: blue; cursor: pointer"
+                    [matTooltip]="'View Docs'"
+                    >remove_red_eye</mat-icon
+                  > -->
+                  <mat-icon
+                    style="color: green; cursor: pointer"
+                    [matTooltip]="'Edit Company'"
+                    (click)="onClickAction('Edit', company)"
+                    >edit</mat-icon
+                  >
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <div *ngIf="isArrayDataLoading" class="divCenter">
+        <mat-spinner [diameter]="30"></mat-spinner>
+      </div>
+
+      <div *ngIf="!arrayData?.length && !isArrayDataLoading" class="divCenter">
+        --No Data Found--
+      </div>
+    </div>
+  </div>
+
+  <div class="formDiv mt-4" *ngIf="isActionTabVisible">
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          ><b>{{ actionTitle }}</b></mat-panel-title
+        >
+      </mat-expansion-panel-header>
+      <form class="p-3" [formGroup]="formGroup">
+        <div class="row">
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option [value]="item?.value" *ngFor="let item of typeArray"
+                  >{{ item?.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="formGroup.controls['type'].hasError('required')"
+              >
+                Select Type is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Revenue Basis</mat-label>
+              <mat-select formControlName="revenueBasis">
+                <mat-option
+                  [value]="item?.value"
+                  *ngFor="let item of revenueBasisArray"
+                  >{{ item?.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="formGroup.controls['revenueBasis'].hasError('required')"
+              >
+                Revenue Basis is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Frequency</mat-label>
+              <mat-select formControlName="frequency">
+                <mat-option
+                  [value]="item?.value"
+                  *ngFor="let item of frequencyArray"
+                  >{{ item?.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="formGroup.controls['frequency'].hasError('required')"
+              >
+                Select Frequency is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Percentage Payout (%)</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="payoutPercentage"
+              />
+
+              <mat-error
+                *ngIf="
+                  formGroup.controls['payoutPercentage'].hasError('required')
+                "
+              >
+                Percentage Payout is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <b>Activation Period</b>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field appearance="outline" class="example-full-width">
+              <mat-label>Activation Start Date</mat-label>
+              <input
+                matInput
+                [owlDateTime]="asdt"
+                [owlDateTimeTrigger]="asdt"
+                formControlName="activationStartDate"
+              />
+              <mat-icon matSuffix [owlDateTimeTrigger]="asdt" class="date-icon"
+                >today</mat-icon
+              >
+              <owl-date-time
+                hour12Timer="true"
+                #asdt
+                pickerType="both"
+              ></owl-date-time>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['activationStartDate'].hasError('required')
+                "
+              >
+                Activation Start Date is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field appearance="outline" class="example-full-width">
+              <mat-label>Activation End Date</mat-label>
+              <input
+                matInput
+                [owlDateTime]="aedt"
+                [owlDateTimeTrigger]="aedt"
+                formControlName="activationEndDate"
+              />
+              <mat-icon matSuffix [owlDateTimeTrigger]="aedt" class="date-icon"
+                >today</mat-icon
+              >
+              <owl-date-time
+                hour12Timer="true"
+                #aedt
+                pickerType="both"
+              ></owl-date-time>
+              <mat-error
+                *ngIf="
+                  formGroup.controls['activationEndDate'].hasError('required')
+                "
+              >
+                Activation End Date is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <button mat-raised-button color="primary" (click)="finalFormSubmit()">
+            Submit
+          </button>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </div>
+</div>

@@ -1,12 +1,44 @@
-@import "../../../../../../../../../shared/styles/custom-finance-ui.scss";
+// @import "../../../../../../../../../shared/styles/custom-finance-ui.scss";
 
-.filter_active {
-  // background: rgb(197, 252, 233);
-  background: #6cb5f9;
-  color: black;
-  outline: none;
-}
+.grid1x2 {
+  margin: 15px 0 0 0;
+  // height: calc(100vh - 190px);
+  height: calc(100vh - 90px);
+  display: grid;
+  grid-template-columns: 100%;
+  gap: 1%;
 
-::ng-deep .mat-button-focus-overlay {
-  display: none;
+  @media only screen and (min-width: 850px) {
+    grid-template-columns: 25% 74%;
+  }
+
+  .left {
+    // height: calc(100vh - 90px);
+
+    .isSelected {
+      background-color: rgb(17, 176, 230);
+      color: white;
+    }
+
+    .masterOptionIcon {
+      display: none;
+      @media only screen and (min-width: 943px) {
+        display: block;
+      }
+    }
+  }
+  .right {
+    height: 100%;
+    overflow: scroll;
+  }
+
+  .fieldOptions {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
 }
