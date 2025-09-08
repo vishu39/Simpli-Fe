@@ -46,30 +46,32 @@ export class OperationEntriesRightDetailsComponent implements OnInit {
     this.windowWidth = window.innerWidth;
   }
 
-  ngOnChanges(changes: SimpleChanges) {}
+  ngOnChanges(changes: SimpleChanges) {
+    this.getAllHospitalUhidForFinanceBilling()
+  }
 
-  uhidArray = [
-    {
-      hospitalName: "Fortis Kolkata",
-      uhid: "UHID124215",
-    },
-    {
-      hospitalName: "Fortis Mulund",
-      uhid: "UHID29887715",
-    },
-    {
-      hospitalName: "Fortis Mumbai",
-      uhid: "UHID7896474215",
-    },
-    {
-      hospitalName: "Fortis Pune",
-      uhid: "UHID122215",
-    },
-    {
-      hospitalName: "Fortis Dubai",
-      uhid: "UHID23626",
-    },
-  ];
+  hospitalUhidParams: any = {
+    page: 1,
+    limit: 0,
+    search: "",
+  };
+
+  uhidArray: any = [];
+  isLoading: any = false
+  getAllHospitalUhidForFinanceBilling() {
+    this.isLoading = true
+    this.facilitatorService
+      .getAllHospitalUhidForFinanceBilling(
+        this.hospitalUhidParams,
+        this.queryData?._id
+      )
+      .subscribe((res: any) => {
+        this.uhidArray = res?.data?.content
+        this.isLoading = false
+      }, () => {
+        this.isLoading = false
+      });
+  }
 
   treatingDoctorUserType = treatingDoctorUserType;
 

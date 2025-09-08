@@ -184,7 +184,24 @@ import { MasterAddCompanyComponent } from "./components/finance-module/master-se
 import { MasterAddHospitalPayoutComponent } from "./components/finance-module/master-settings/components/master-add-hospital-payout/master-add-hospital-payout.component";
 import { MasterAddPartnerPayoutComponent } from "./components/finance-module/master-settings/components/master-add-partner-payout/master-add-partner-payout.component";
 import { MasterAddSalesIncentivesComponent } from "./components/finance-module/master-settings/components/master-add-sales-incentives/master-add-sales-incentives.component";
-import { MasterDataViewDocsComponent } from './components/finance-module/master-settings/dialog/master-data-view-docs/master-data-view-docs.component';
+import { MasterDataViewDocsComponent } from "./components/finance-module/master-settings/dialog/master-data-view-docs/master-data-view-docs.component";
+import { FinanceLogsComponent } from "./components/finance-module/finance-logs/finance-logs.component";
+import { OpPartnerPayoutComponent } from "./components/finance-module/master-settings/components/master-add-partner-payout/component/op-partner-payout/op-partner-payout.component";
+import { IpPartnerPayoutComponent } from "./components/finance-module/master-settings/components/master-add-partner-payout/component/ip-partner-payout/ip-partner-payout.component";
+import { PackagesPartnerPayoutComponent } from "./components/finance-module/master-settings/components/master-add-partner-payout/component/packages-partner-payout/packages-partner-payout.component";
+import { IpHospitalPayoutComponent } from "./components/finance-module/master-settings/components/master-add-hospital-payout/component/ip-hospital-payout/ip-hospital-payout.component";
+import { OpHospitalPayoutComponent } from "./components/finance-module/master-settings/components/master-add-hospital-payout/component/op-hospital-payout/op-hospital-payout.component";
+import { PackagesHospitalPayoutComponent } from "./components/finance-module/master-settings/components/master-add-hospital-payout/component/packages-hospital-payout/packages-hospital-payout.component";
+import { AddHospitalUhidComponent } from "./components/finance-module/operation-settings/operation-entries/components/add-hospital-uhid/add-hospital-uhid.component";
+import { UploadBillingDocComponent } from "./components/finance-module/operation-settings/operation-entries/components/upload-billing-doc/upload-billing-doc.component";
+import { UploadEstimatesComponent } from "./components/finance-module/operation-settings/operation-entries/components/upload-estimates/upload-estimates.component";
+import { AdmissionDischargeTrackerComponent } from "./components/finance-module/operation-settings/operation-entries/components/admission-discharge-tracker/admission-discharge-tracker.component";
+import { UploadFinalBillComponent } from "./components/finance-module/operation-settings/operation-entries/components/upload-final-bill/upload-final-bill.component";
+import { FinanceBillingViewHospitalUhidComponent } from './components/finance-module/operation-settings/operation-entries/components/finance-billing-view-hospital-uhid/finance-billing-view-hospital-uhid.component';
+import { FinanceBillingViewDocBillsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-doc-bills/finance-billing-view-doc-bills.component";
+import { FinanceBillingViewAdmissionTrackerDetailsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-admission-tracker-details/finance-billing-view-admission-tracker-details.component";
+import { FinanceBillingViewEstimateBillsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-estimate-bills/finance-billing-view-estimate-bills.component";
+import { FinanceBillingViewFinalBillsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-final-bills/finance-billing-view-final-bills.component";
 
 @NgModule({
   declarations: [
@@ -366,6 +383,25 @@ import { MasterDataViewDocsComponent } from './components/finance-module/master-
     MasterAddPartnerPayoutComponent,
     MasterAddSalesIncentivesComponent,
     MasterDataViewDocsComponent,
+    FinanceLogsComponent,
+    OpPartnerPayoutComponent,
+    IpPartnerPayoutComponent,
+    PackagesPartnerPayoutComponent,
+    IpHospitalPayoutComponent,
+    OpHospitalPayoutComponent,
+    PackagesHospitalPayoutComponent,
+
+    // billing entries
+    AddHospitalUhidComponent,
+    UploadBillingDocComponent,
+    UploadEstimatesComponent,
+    AdmissionDischargeTrackerComponent,
+    UploadFinalBillComponent,
+    FinanceBillingViewHospitalUhidComponent,
+    FinanceBillingViewDocBillsComponent,
+    FinanceBillingViewAdmissionTrackerDetailsComponent,
+    FinanceBillingViewEstimateBillsComponent,
+    FinanceBillingViewFinalBillsComponent
   ],
   imports: [
     CommonModule,
@@ -432,6 +468,7 @@ import { MasterDataViewDocsComponent } from './components/finance-module/master-
     // finance
     OperationEntriesComponent,
     MasterDataEntriesComponent,
+    FinanceLogsComponent,
   ],
   providers: [DatePipe],
 })

@@ -1,0 +1,26 @@
+<div>
+  <div *ngIf="uhidArray?.length">
+    <table border="1" class="mt-4 uhidTable">
+      <thead>
+        <tr>
+          <th>Hospital Name</th>
+          <th>UHID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of uhidArray">
+          <td>{{ item?.hospitalName }}</td>
+          <td>{{ item?.hospitalUHID }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="isLoading" class="divCenter">
+    <mat-spinner [diameter]="30"></mat-spinner>
+  </div>
+
+  <div *ngIf="!uhidArray?.length && !isLoading" class="divCenter">
+    --No Data Found--
+  </div>
+</div>

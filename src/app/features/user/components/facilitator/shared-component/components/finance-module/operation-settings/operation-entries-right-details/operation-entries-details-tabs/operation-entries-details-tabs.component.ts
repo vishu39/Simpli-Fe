@@ -21,29 +21,6 @@ export class OperationEntriesDetailsTabsComponent implements OnInit {
 
   decodedToken = this.sharedService.decodeToken();
 
-  uhidArray = [
-    {
-      hospitalName: "Fortis Kolkata",
-      uhid: "UHID124215",
-    },
-    {
-      hospitalName: "Fortis Mulund",
-      uhid: "UHID29887715",
-    },
-    {
-      hospitalName: "Fortis Mumbai",
-      uhid: "UHID7896474215",
-    },
-    {
-      hospitalName: "Fortis Pune",
-      uhid: "UHID122215",
-    },
-    {
-      hospitalName: "Fortis Dubai",
-      uhid: "UHID23626",
-    },
-  ];
-
   amountArray = [
     {
       hospitalName: "Fortis Kolkata",

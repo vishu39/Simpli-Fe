@@ -3622,4 +3622,488 @@ export class FacilitatorService {
         })
       );
   }
+
+  // finance module
+
+  // master setting api's
+  addCompanyMaster(data: any) {
+    // const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(this.serviceApiUrl + `addCompanyMaster`, data);
+  }
+
+  editCompanyMaster(id: any, data: any) {
+    // const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(this.serviceApiUrl + `editCompanyMaster/${id}`, data);
+  }
+
+  getAllCompanyMasterData(data: any) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllCompanyMasterData`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  // hospital payout
+  addOpHospitalPayout(data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(this.serviceApiUrl + `addOpHospitalPayout`, {
+      dataEncrypt,
+    });
+  }
+
+  editOpHospitalPayout(id: any, data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(this.serviceApiUrl + `editOpHospitalPayout/${id}`, {
+      dataEncrypt,
+    });
+  }
+
+  getAllOpHospitalPayoutData(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllOpHospitalPayoutData/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  addIpHospitalPayout(data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(this.serviceApiUrl + `addIpHospitalPayout`, {
+      dataEncrypt,
+    });
+  }
+
+  editIpHospitalPayout(id: any, data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(this.serviceApiUrl + `editIpHospitalPayout/${id}`, {
+      dataEncrypt,
+    });
+  }
+
+  getAllIpHospitalPayoutData(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllIpHospitalPayoutData/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  addPackageHospitalPayout(data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(this.serviceApiUrl + `addPackageHospitalPayout`, {
+      dataEncrypt,
+    });
+  }
+
+  editPackageHospitalPayout(id: any, data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(
+      this.serviceApiUrl + `editPackageHospitalPayout/${id}`,
+      {
+        dataEncrypt,
+      }
+    );
+  }
+
+  getAllPackageHospitalPayoutData(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllPackageHospitalPayoutData/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  // partner payout
+  addOpPartnerPayout(data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(this.serviceApiUrl + `addOpPartnerPayout`, {
+      dataEncrypt,
+    });
+  }
+
+  editOpPartnerPayout(id: any, data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(this.serviceApiUrl + `editOpPartnerPayout/${id}`, {
+      dataEncrypt,
+    });
+  }
+
+  getAllOpPartnerPayoutData(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllOpPartnerPayoutData/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  addIpPartnerPayout(data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(this.serviceApiUrl + `addIpPartnerPayout`, {
+      dataEncrypt,
+    });
+  }
+
+  editIpPartnerPayout(id: any, data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(this.serviceApiUrl + `editIpPartnerPayout/${id}`, {
+      dataEncrypt,
+    });
+  }
+
+  getAllIpPartnerPayoutData(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllIpPartnerPayoutData/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  addPackagePartnerPayout(data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(this.serviceApiUrl + `addPackagePartnerPayout`, {
+      dataEncrypt,
+    });
+  }
+
+  editPackagePartnerPayout(id: any, data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(
+      this.serviceApiUrl + `editPackagePartnerPayout/${id}`,
+      {
+        dataEncrypt,
+      }
+    );
+  }
+
+  getAllPackagePartnerPayoutData(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllPackagePartnerPayoutData/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  // billing entries api's
+  addHospitalUhidForFinanceBilling(data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(
+      this.serviceApiUrl + `addHospitalUhidForFinanceBilling`,
+      {
+        dataEncrypt,
+      }
+    );
+  }
+
+  editHospitalUhidForFinanceBilling(id: any, data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(
+      this.serviceApiUrl + `editHospitalUhidForFinanceBilling/${id}`,
+      {
+        dataEncrypt,
+      }
+    );
+  }
+
+  getAllHospitalUhidForFinanceBilling(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllHospitalUhidForFinanceBilling/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  getHospitalUhidForFinanceBillingById(id: any) {
+    return this.http
+      .get(this.serviceApiUrl + `getHospitalUhidForFinanceBillingById/${id}`)
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  addBillingDocForFinanceBilling(data: any) {
+    return this.http.post(
+      this.serviceApiUrl + `addBillingDocForFinanceBilling`,
+      data
+    );
+  }
+
+  editBillingDocForFinanceBilling(id: any, data: any) {
+    return this.http.put(
+      this.serviceApiUrl + `editBillingDocForFinanceBilling/${id}`,
+      data
+    );
+  }
+
+  getAllBillingDocForFinanceBilling(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllBillingDocForFinanceBilling/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  getBillingDocForFinanceBillingById(id: any, data: any) {
+    const params = new HttpParams().set("hospitalId", data.hospitalId);
+
+    return this.http
+      .get(this.serviceApiUrl + `getBillingDocForFinanceBillingById/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  addAdmissionDischargeTrackerForFinanceBilling(data: any) {
+    return this.http.post(
+      this.serviceApiUrl + `addAdmissionDischargeTrackerForFinanceBilling`,
+      data
+    );
+  }
+
+  editAdmissionDischargeTrackerForFinanceBilling(id: any, data: any) {
+    return this.http.put(
+      this.serviceApiUrl +
+        `editAdmissionDischargeTrackerForFinanceBilling/${id}`,
+      data
+    );
+  }
+
+  getAllAdmissionDischargeTrackerForFinanceBilling(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(
+        this.serviceApiUrl +
+          `getAllAdmissionDischargeTrackerForFinanceBilling/${id}`,
+        {
+          params: params,
+        }
+      )
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  getAdmissionDischargeTrackerForFinanceBillingById(id: any, data: any) {
+    const params = new HttpParams().set("hospitalId", data.hospitalId);
+
+    return this.http
+      .get(
+        this.serviceApiUrl +
+          `getAdmissionDischargeTrackerForFinanceBillingById/${id}`,
+        {
+          params: params,
+        }
+      )
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  addEstimateDocForFinanceBilling(data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.post(
+      this.serviceApiUrl + `addEstimateDocForFinanceBilling`,
+      {
+        dataEncrypt,
+      }
+    );
+  }
+
+  editEstimateDocForFinanceBilling(id: any, data: any) {
+    const dataEncrypt = this.sharedService.encrypt(data);
+    return this.http.put(
+      this.serviceApiUrl + `editEstimateDocForFinanceBilling/${id}`,
+      {
+        dataEncrypt,
+      }
+    );
+  }
+
+  getAllEstimateDocForFinanceBilling(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllEstimateDocForFinanceBilling/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  getEstimateDocForFinanceBillingById(id: any, data: any) {
+    const params = new HttpParams().set("hospitalId", data.hospitalId);
+
+    return this.http
+      .get(this.serviceApiUrl + `getEstimateDocForFinanceBillingById/${id}`, {
+        params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  addFinalBillForFinanceBilling(data: any) {
+    return this.http.post(
+      this.serviceApiUrl + `addFinalBillForFinanceBilling`,
+      data
+    );
+  }
+
+  editFinalBillForFinanceBilling(id: any, data: any) {
+    return this.http.put(
+      this.serviceApiUrl + `editFinalBillForFinanceBilling/${id}`,
+      data
+    );
+  }
+
+  getAllFinalBillForFinanceBilling(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllFinalBillForFinanceBilling/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  getFinalBillForFinanceBillingById(id: any, data: any) {
+    const params = new HttpParams().set("hospitalId", data.hospitalId);
+
+    return this.http
+      .get(this.serviceApiUrl + `getFinalBillForFinanceBillingById/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
 }

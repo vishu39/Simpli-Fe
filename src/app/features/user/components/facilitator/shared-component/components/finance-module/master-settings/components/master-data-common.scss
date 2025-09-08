@@ -84,3 +84,14 @@ table tr:nth-child(even) {
   align-items: center;
   justify-content: center;
 }
+
+.filter_active {
+  // background: rgb(197, 252, 233);
+  background: #6cb5f9 !important;
+  color: black  !important;
+  outline: none  !important;
+}
+
+::ng-deep .mat-button-focus-overlay {
+  display: none  !important;
+}

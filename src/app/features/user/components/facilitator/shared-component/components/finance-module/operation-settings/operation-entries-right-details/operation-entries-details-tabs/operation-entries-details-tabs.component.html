@@ -31,20 +31,7 @@
 
     <!-- Opd request -->
     <div *ngSwitchCase="'UHIDS'">
-      <table border="1" class="mt-4 uhidTable">
-        <thead>
-          <tr>
-            <th>Hospital Name</th>
-            <th>UHID</th>
-          </tr>
-        </thead>
-        <tbody *ngFor="let item of uhidArray">
-          <tr>
-            <td>{{ item?.hospitalName }}</td>
-            <td>{{ item?.uhid }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <shared-finance-billing-view-hospital-uhid [patientData]="queryData"></shared-finance-billing-view-hospital-uhid>
     </div>
 
     <div *ngSwitchCase="'Amounts'">
@@ -74,19 +61,19 @@
     </div>
 
     <div *ngSwitchCase="'Doc Bills'">
-      <global-shared-finance-billing-view-doc-bills></global-shared-finance-billing-view-doc-bills>
+      <global-shared-finance-billing-view-doc-bills  [patientData]="queryData"></global-shared-finance-billing-view-doc-bills>
     </div>
 
     <div *ngSwitchCase="'Estimate Bills'">
-      <global-shared-finance-billing-view-estimate-bills></global-shared-finance-billing-view-estimate-bills>
+      <global-shared-finance-billing-view-estimate-bills  [patientData]="queryData"></global-shared-finance-billing-view-estimate-bills>
     </div>
 
     <div *ngSwitchCase="'Admission/Discharge Tracker'">
-      <global-shared-finance-billing-view-admission-tracker-details></global-shared-finance-billing-view-admission-tracker-details>
+      <global-shared-finance-billing-view-admission-tracker-details  [patientData]="queryData"></global-shared-finance-billing-view-admission-tracker-details>
     </div>
 
     <div *ngSwitchCase="'Final Bills'">
-      <global-shared-finance-billing-view-final-bills></global-shared-finance-billing-view-final-bills>
+      <global-shared-finance-billing-view-final-bills  [patientData]="queryData"></global-shared-finance-billing-view-final-bills>
     </div>
   </div>
 </div>

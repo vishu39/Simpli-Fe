@@ -1,0 +1,626 @@
+        <div class="p-3">
+          <div class="card p-3">
+            <div class="topActionDiv">
+              <button
+                color="primary"
+                mat-raised-button
+                type="button"
+                class="topActionButton"
+                (click)="onClickAction('Add')"
+              >
+                +Add
+              </button>
+              <!-- <button
+                color="secondary"
+                mat-raised-button
+                type="button"
+                class="topActionButton"
+                (click)="exportMasterDataCSV()"
+              >
+                Export
+              </button>-->
+              <button
+                color="warn"
+                mat-raised-button
+                type="button"
+                class="topActionButton"
+                (click)="onReload()"
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          <div class="card p-3 mb-3" *ngIf="isActionTabVisibleForPackage">
+            <h5>
+              {{ actionTitleForPackage }}
+            </h5>
+            <form [formGroup]="packageForm" class="mt-2">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Package Name</mat-label>
+                    <input type="text" formControlName="packageName" matInput />
+                    <mat-error
+                      *ngIf="
+                        packageForm.controls['packageName'].hasError('required')
+                      "
+                    >
+                      Package Name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Package Cost</mat-label>
+                    <input
+                      type="number"
+                      formControlName="packageCost"
+                      matInput
+                    />
+                    <mat-error
+                      *ngIf="
+                        packageForm.controls['packageCost'].hasError('required')
+                      "
+                    >
+                      Package Cost is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Select Currency</mat-label>
+                    <mat-select
+                      formControlName="currency"
+                      [compareWith]="compareCurrencyObjects"
+                    >
+                      <input
+                        class="searchInput"
+                        placeholder="search..."
+                        (keydown.space)="$event.stopPropagation()"
+                        matInput
+                        (keyup)="searchCurrencyForPackage($event.target.value)"
+                      />
+                      <div
+                        class="other_option"
+                        *ngIf="!currencyArrayForPackage?.length"
+                      >
+                        No results
+                      </div>
+
+                      <mat-option
+                        (click)="onClickCurrencyForPackage(currency)"
+                        *ngFor="let currency of currencyArrayForPackage"
+                        [value]="currency"
+                      >
+                        {{ currency?.code }} - {{ currency?.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="
+                        packageForm.controls['currency'].hasError('required')
+                      "
+                    >
+                      Select Currency is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <div class="multiple_select_custom">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Country</mat-label>
+                      <mat-select
+                        multiple
+                        formControlName="country"
+                        msInfiniteScroll
+                        (infiniteScroll)="onInfiniteScrollCountryForPackage()"
+                      >
+                        <input
+                          class="searchInput"
+                          placeholder="search..."
+                          (keydown.space)="$event.stopPropagation()"
+                          matInput
+                          (keyup)="searchCountryForPackage($event.target.value)"
+                        />
+                        <div
+                          class="other_option"
+                          *ngIf="
+                            !countryDataForPackage?.length &&
+                            !isLoadingCountryForPackage
+                          "
+                        >
+                          No results
+                        </div>
+
+                        <div
+                          class="other_option"
+                          *ngIf="countryDataForPackage?.length"
+                        >
+                          <mat-checkbox
+                            (change)="selectAllCountryForPackage($event)"
+                            >Select All
+                          </mat-checkbox>
+                        </div>
+
+                        <mat-spinner
+                          *ngIf="isLoadingCountrySelectAllForPackage"
+                          class="mx-auto mb-2 mt-2"
+                          [diameter]="30"
+                        >
+                        </mat-spinner>
+
+                        <ng-container
+                          *ngIf="!isLoadingCountrySelectAllForPackage"
+                        >
+                          <mat-option
+                            (click)="onClickCountryForPackage(item.name)"
+                            *ngFor="let item of countryDataForPackage"
+                            [value]="item.name"
+                          >
+                            {{ item.name }}
+                          </mat-option>
+                        </ng-container>
+
+                        <mat-spinner
+                          *ngIf="
+                            isLoadingCountryForPackage &&
+                            !isLoadingCountrySelectAllForPackage
+                          "
+                          class="mx-auto mb-2 mt-2"
+                          [diameter]="30"
+                        >
+                        </mat-spinner>
+                      </mat-select>
+                      <div class="chip_section" [perfectScrollbar]>
+                        <mat-chip-list>
+                          <mat-chip
+                            *ngFor="
+                              let item of packageForm.get('country').value
+                            "
+                          >
+                            {{ item }}
+                          </mat-chip>
+                        </mat-chip-list>
+                      </div>
+                      <mat-error
+                        *ngIf="
+                          packageForm.controls['country'].hasError('required')
+                        "
+                      >
+                        Country is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Payout In Percentage</mat-label>
+                    <input
+                      type="number"
+                      formControlName="payoutInPercentage"
+                      matInput
+                    />
+                    <mat-error
+                      *ngIf="
+                        packageForm.controls['payoutInPercentage'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Payout In Percentage is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Payout In Fixed Amount</mat-label>
+                    <input
+                      type="number"
+                      formControlName="payoutInFixedAmount"
+                      matInput
+                    />
+                    <mat-error
+                      *ngIf="
+                        packageForm.controls['payoutInFixedAmount'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Payout In Fixed Amount is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Select Currency (Payout)</mat-label>
+                    <mat-select
+                      formControlName="currencyPayout"
+                      [compareWith]="compareCurrencyObjects"
+                    >
+                      <input
+                        class="searchInput"
+                        placeholder="search..."
+                        (keydown.space)="$event.stopPropagation()"
+                        matInput
+                        (keyup)="
+                          searchCurrencyPayoutForPackage($event.target.value)
+                        "
+                      />
+                      <div
+                        class="other_option"
+                        *ngIf="!currencyPayoutArrayForPackage?.length"
+                      >
+                        No results
+                      </div>
+
+                      <mat-option
+                        (click)="onClickCurrencyPayoutForPackage(currency)"
+                        *ngFor="let currency of currencyPayoutArrayForPackage"
+                        [value]="currency"
+                      >
+                        {{ currency?.code }} - {{ currency?.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="
+                        packageForm.controls['currencyPayout'].hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Select Currency (Payout) is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="button"
+                  (click)="packageFormSubmit('add')"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="tableDiv mt-4">
+            <div class="tableHeaderDiv">
+              <div class="first">
+                <h5 class="mb-0">Packages Data</h5>
+
+                <span>
+                  <button
+                    [matTooltip]="'Filter Packages'"
+                    [ngClass]="isFilterActive ? 'filter_active' : ''"
+                    (click)="openFilterModal('package')"
+                    mat-icon-button
+                    style="background-color: #ebeaea"
+                  >
+                    <mat-icon>tune</mat-icon>
+                  </button>
+                </span>
+              </div>
+
+              <div class="pagination m-0">
+                <p class="mb-0">
+                  {{ packageParams?.page }} -
+                  {{ totalNumberOfPagesForPackage }} of
+                  {{ totalElementPackage }}
+                </p>
+                <div>
+                  <div class="email-btn-group">
+                    <button
+                      [disabled]="packageParams?.page <= 1"
+                      (click)="prevForPackage()"
+                      mat-icon-button
+                      aria-label="Example icon-button with a heart icon"
+                    >
+                      <mat-icon>navigate_before</mat-icon>
+                    </button>
+                    <button
+                      [disabled]="
+                        packageParams?.page === totalNumberOfPagesForPackage
+                      "
+                      (click)="nextForPackage()"
+                      mat-icon-button
+                      aria-label="Example icon-button with a heart icon"
+                    >
+                      <mat-icon>navigate_next</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tableContainer hide-scrollbar">
+              <form [formGroup]="formGroup" *ngIf="packageArray?.value?.length">
+                <table formArrayName="package">
+                  <colgroup>
+                    <col style="width: 50px" />
+                    <col style="width: 150px" />
+                    <col style="width: 150px" />
+                    <col style="width: 150px" />
+                    <col style="width: 150px" />
+                    <col style="width: 150px" />
+                    <col style="width: 150px" />
+                    <col style="width: 150px" />
+                    <col style="width: 100px" />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>S No.</th>
+                      <th>Country</th>
+                      <th>Package Name</th>
+                      <th>Package Cost</th>
+                      <th>Currency</th>
+                      <th>Payout (%)</th>
+                      <th>Payout Fixed</th>
+                      <th>Currency Payout</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <ng-container>
+                      <tr
+                        *ngFor="
+                          let item of packageArray.controls;
+                          let i = index
+                        "
+                        [formGroupName]="i"
+                      >
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                          <mat-form-field
+                            class="example-full-width"
+                            appearance="outline"
+                          >
+                            <mat-label>Country</mat-label>
+                            <input
+                              matInput
+                              formControlName="country"
+                              type="text"
+                            />
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field
+                            class="example-full-width"
+                            appearance="outline"
+                          >
+                            <mat-label>Package Name</mat-label>
+                            <input
+                              matInput
+                              formControlName="packageName"
+                              type="text"
+                            />
+                            <mat-error
+                              *ngIf="
+                                item.controls['packageName'].hasError(
+                                  'required'
+                                )
+                              "
+                            >
+                              Package Name is required
+                            </mat-error>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field
+                            class="example-full-width"
+                            appearance="outline"
+                          >
+                            <mat-label>Package Cost</mat-label>
+                            <input
+                              matInput
+                              formControlName="packageCost"
+                              type="text"
+                            />
+                            <mat-error
+                              *ngIf="
+                                item.controls['packageCost'].hasError(
+                                  'required'
+                                )
+                              "
+                            >
+                              Package cost is required
+                            </mat-error>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field
+                            class="example-full-width"
+                            appearance="outline"
+                          >
+                            <mat-label>Select Currency</mat-label>
+                            <mat-select
+                              formControlName="currency"
+                              [compareWith]="compareCurrencyObjects"
+                            >
+                              <input
+                                class="searchInput"
+                                placeholder="search..."
+                                (keydown.space)="$event.stopPropagation()"
+                                matInput
+                                (keyup)="
+                                  searchCurrencyForPackage($event.target.value)
+                                "
+                              />
+                              <div
+                                class="other_option"
+                                *ngIf="!currencyArrayForPackage?.length"
+                              >
+                                No results
+                              </div>
+
+                              <mat-option
+                                (click)="onClickCurrencyForPackage(currency)"
+                                *ngFor="let currency of currencyArrayForPackage"
+                                [value]="currency"
+                              >
+                                {{ currency?.code }} - {{ currency?.name }}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error
+                              *ngIf="
+                                item.controls['currency'].hasError('required')
+                              "
+                            >
+                              Select Currency is required
+                            </mat-error>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field
+                            class="example-full-width"
+                            appearance="outline"
+                          >
+                            <mat-label>Payout In Percentage</mat-label>
+                            <input
+                              type="number"
+                              formControlName="payoutInPercentage"
+                              matInput
+                            />
+                            <mat-error
+                              *ngIf="
+                                item.controls['payoutInPercentage'].hasError(
+                                  'required'
+                                )
+                              "
+                            >
+                              Payout In Percentage is required
+                            </mat-error>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field
+                            class="example-full-width"
+                            appearance="outline"
+                          >
+                            <mat-label>Payout In Fixed Amount</mat-label>
+                            <input
+                              type="number"
+                              formControlName="payoutInFixedAmount"
+                              matInput
+                            />
+                            <mat-error
+                              *ngIf="
+                                item.controls['payoutInFixedAmount'].hasError(
+                                  'required'
+                                )
+                              "
+                            >
+                              Payout In Fixed Amount is required
+                            </mat-error>
+                          </mat-form-field>
+                        </td>
+
+                        <td>
+                          <mat-form-field
+                            class="example-full-width"
+                            appearance="outline"
+                          >
+                            <mat-label>Select Currency (Payout)</mat-label>
+                            <mat-select
+                              formControlName="currencyPayout"
+                              [compareWith]="compareCurrencyObjects"
+                            >
+                              <input
+                                class="searchInput"
+                                placeholder="search..."
+                                (keydown.space)="$event.stopPropagation()"
+                                matInput
+                                (keyup)="
+                                  searchCurrencyPayoutForPackage(
+                                    $event.target.value
+                                  )
+                                "
+                              />
+                              <div
+                                class="other_option"
+                                *ngIf="!currencyPayoutArrayForPackage?.length"
+                              >
+                                No results
+                              </div>
+
+                              <mat-option
+                                (click)="
+                                  onClickCurrencyPayoutForPackage(currency)
+                                "
+                                *ngFor="
+                                  let currency of currencyPayoutArrayForPackage
+                                "
+                                [value]="currency"
+                              >
+                                {{ currency?.code }} - {{ currency?.name }}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error
+                              *ngIf="
+                                item.controls['currencyPayout'].hasError(
+                                  'required'
+                                )
+                              "
+                            >
+                              Select Currency (Payout) is required
+                            </mat-error>
+                          </mat-form-field>
+                        </td>
+
+                        <td>
+                          <button
+                            style="margin-bottom: 16px"
+                            type="button"
+                            mat-raised-button
+                            color="primary"
+                            (click)="packageFormSubmit('edit', i)"
+                          >
+                            Submit
+                          </button>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </form>
+
+              <div *ngIf="isDataLoadingForPackage" class="divCenter">
+                <mat-spinner [diameter]="30"></mat-spinner>
+              </div>
+
+              <div
+                *ngIf="!packageArray?.value?.length && !isDataLoadingForPackage"
+                class="divCenter"
+              >
+                --No Data Found--
+              </div>
+            </div>
+          </div>
+        </div>

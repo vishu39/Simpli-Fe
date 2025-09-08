@@ -1,0 +1,21 @@
+.filter_active {
+  background: #6cb5f9;
+  color: black;
+  outline: none;
+}
+
+::ng-deep .mat-button-focus-overlay {
+  display: none;
+}
+
+// .my-table .mat-column-column1 {
+//   width: 30%;
+// }
+
+// .my-table .mat-column-column2 {
+//   width: 40%;
+// }
+
+.mat-column-message {
+  min-width: 60%;
+}

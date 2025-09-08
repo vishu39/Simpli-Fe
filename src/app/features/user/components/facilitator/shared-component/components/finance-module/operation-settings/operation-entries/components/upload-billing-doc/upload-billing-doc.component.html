@@ -1,0 +1,179 @@
+<div class="modalHeader">
+  <div class="editRowModal">
+    <div class="modalHeader clearfix">
+      <div class="modal-about">
+        <div class="font-weight-bold p-t-5 font-17">
+          {{ dialogTitle }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    mat-icon-button
+    (click)="closeDialog(false)"
+    aria-label="Close dialog"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <form class="p-3" [formGroup]="formGroup">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Select Category</mat-label>
+          <mat-select formControlName="category">
+            <mat-option [value]="item" *ngFor="let item of categoriesOptions"
+              >{{ item | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="formGroup.controls['category'].hasError('required')"
+          >
+            Select Category is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Select Hospital</mat-label>
+          <mat-select
+            msInfiniteScroll
+            (infiniteScroll)="onInfiniteScrollHospital()"
+            formControlName="hospitalId"
+          >
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchHospital($event.target.value)"
+            />
+            <div
+              class="other_option"
+              *ngIf="!hospitalData?.length && !isLoadingHospital"
+            >
+              No results
+            </div>
+            <mat-option
+              *ngFor="let item of hospitalData"
+              [value]="item._id"
+              (click)="onChangeHospital(item?.name)"
+            >
+              {{ item.name }}
+            </mat-option>
+            <mat-spinner
+              *ngIf="isLoadingHospital"
+              class="mx-auto mb-2 mt-2"
+              [diameter]="30"
+            >
+            </mat-spinner>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput formControlName="amount" type="number" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Select Currency</mat-label>
+          <mat-select
+            formControlName="currency"
+            [compareWith]="compareCurrencyObjects"
+          >
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchCurrency($event.target.value)"
+            />
+            <div class="other_option" *ngIf="!currencyArray?.length">
+              No results
+            </div>
+
+            <mat-option
+              (click)="onClickCurrency(currency)"
+              *ngFor="let currency of currencyArray"
+              [value]="currency"
+            >
+              {{ currency?.code }} - {{ currency?.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="formGroup.controls['currency'].hasError('required')"
+          >
+            Select Currency is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <app-global-image-preview
+          [fileList]="fileList"
+          [filePreviewList]="filePreviewUrls"
+          [type]="'fileUploader'"
+          [remove]="true"
+          (onDelete)="onDelete($event)"
+        ></app-global-image-preview>
+
+        <div id="fileFirst">
+          <h6 style="color: #666666">Uplaod</h6>
+          <mat-form-field
+            class="example-full-width always-floating-label"
+            appearance="outline"
+          >
+            <ngx-mat-file-input
+              style="display: none"
+              #fileFirstInput
+              class="mat-form-field-should-float"
+              accept=".png, .jpg, .jpeg, .pdf"
+              name="file"
+              formControlName="file"
+              (change)="onFileSelected($event)"
+              multiple
+            >
+            </ngx-mat-file-input>
+
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <div>
+                <span *ngFor="let file of fileList; let i = index">
+                  <span
+                    >{{ file?.name
+                    }}<span *ngIf="i < fileList?.length - 1">, </span>
+                  </span>
+                </span>
+              </div>
+              <mat-icon style="transform: translateY(-5px)">upload</mat-icon>
+            </div>
+            <!-- <mat-error
+                  *ngIf="
+                    vilRequestForm.controls['fileFirst'].hasError('required')
+                  "
+                >
+                  Passport is required
+                </mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button mat-flat-button color="primary" (click)="actionSubmit(true)">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

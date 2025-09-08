@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
-import { AddHospitalUhidComponent } from "src/app/shared/components/finance-module/component/operation-setting/add-hospital-uhid/add-hospital-uhid.component";
-import { AdmissionDischargeTrackerComponent } from "src/app/shared/components/finance-module/component/operation-setting/admission-discharge-tracker/admission-discharge-tracker.component";
-import { UploadBillingDocComponent } from "src/app/shared/components/finance-module/component/operation-setting/upload-billing-doc/upload-billing-doc.component";
-import { UploadEstimatesComponent } from "src/app/shared/components/finance-module/component/operation-setting/upload-estimates/upload-estimates.component";
-import { UploadFinalBillComponent } from "src/app/shared/components/finance-module/component/operation-setting/upload-final-bill/upload-final-bill.component";
+import { AddHospitalUhidComponent } from "src/app/features/user/components/facilitator/shared-component/components/finance-module/operation-settings/operation-entries/components/add-hospital-uhid/add-hospital-uhid.component";
+import { AdmissionDischargeTrackerComponent } from "src/app/features/user/components/facilitator/shared-component/components/finance-module/operation-settings/operation-entries/components/admission-discharge-tracker/admission-discharge-tracker.component";
+import { UploadBillingDocComponent } from "src/app/features/user/components/facilitator/shared-component/components/finance-module/operation-settings/operation-entries/components/upload-billing-doc/upload-billing-doc.component";
+import { UploadEstimatesComponent } from "src/app/features/user/components/facilitator/shared-component/components/finance-module/operation-settings/operation-entries/components/upload-estimates/upload-estimates.component";
+import { UploadFinalBillComponent } from "src/app/features/user/components/facilitator/shared-component/components/finance-module/operation-settings/operation-entries/components/upload-final-bill/upload-final-bill.component";
 import { SMToolBar } from "src/app/smvt-framework/interfaces/sm-framework-defaults";
 import { CommonService } from "src/app/smvt-framework/services/common.service";
 
@@ -52,66 +52,9 @@ export class OperationEntriesComponent implements OnInit {
     private fb: FormBuilder
   ) {}
 
-  addHospitalUHIDForm: FormGroup;
-  billingDocForm: FormGroup;
-  estimateForm: FormGroup;
-  admissionDischargeTrackerForm: FormGroup;
-  finalBillForm: FormGroup;
-
   ngOnInit(): void {
     this.getAllPatient();
     this.getAccountDetailsAttribute();
-
-    this.addHospitalUHIDForm = this.fb.group({
-      hospitalId: [""],
-      hospitalName: [""],
-      // hospitalId: ["", [Validators.required]],
-      // hospitalName: ["", [Validators.required]],
-      hospitalUHID: [""],
-      patient: [this.queryData?._id],
-    });
-
-    this.billingDocForm = this.fb.group({
-      hospitalId: [""],
-      hospitalName: [""],
-      category: ["", [Validators.required]],
-      amount: ["", [Validators.required]],
-      currency: ["", [Validators.required]],
-      file: [],
-    });
-
-    this.estimateForm = this.fb.group({
-      hospitalId: [""],
-      hospitalName: [""],
-      estimateGiven: ["", [Validators.required]],
-      estimateDate: [""],
-      approxAdmissionDate: [""],
-      comment: [""],
-      // packageName: [""],
-      // roomCategory: [""],
-      // roomPrice: [""],
-      // currency: [""],
-      packageArray: this.fb.array([]),
-    });
-
-    this.admissionDischargeTrackerForm = this.fb.group({
-      hospitalId: [""],
-      hospitalName: [""],
-      admissionDate: ["", [Validators.required]],
-      admittedOnPlannedDate: ["", [Validators.required]],
-      admittedOnPlannedDateComment: ["", [Validators.required]],
-      dischargeDate: ["", [Validators.required]],
-      file: [""],
-    });
-
-    this.finalBillForm = this.fb.group({
-      hospitalId: [""],
-      hospitalName: [""],
-      admissionDate: ["", [Validators.required]],
-      dischargeDate: ["", [Validators.required]],
-      fileFirst: [""],
-      fileSecond: [""],
-    });
   }
 
   toolbarConfig: SMToolBar = {
@@ -169,12 +112,8 @@ export class OperationEntriesComponent implements OnInit {
     });
     dialogRef.componentInstance.dialogTitle = "Add Hospital UHID";
     dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.addHospitalUHIDForm;
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.apiCall == true) {
-        console.log(this.addHospitalUHIDForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
       }
     });
   }
@@ -187,13 +126,8 @@ export class OperationEntriesComponent implements OnInit {
     });
     dialogRef.componentInstance.dialogTitle = "Admission / Discharge Tracker";
     dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.admissionDischargeTrackerForm;
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.apiCall == true) {
-        console.log("fileList", result?.fileList);
-        console.log(this.admissionDischargeTrackerForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
       }
     });
   }
@@ -206,12 +140,8 @@ export class OperationEntriesComponent implements OnInit {
     });
     dialogRef.componentInstance.dialogTitle = "Upload Billing Doc";
     dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.billingDocForm;
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.apiCall == true) {
-        console.log(this.billingDocForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
       }
     });
   }
@@ -224,12 +154,8 @@ export class OperationEntriesComponent implements OnInit {
     });
     dialogRef.componentInstance.dialogTitle = "Upload Estimates";
     dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.estimateForm;
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.apiCall == true) {
-        console.log(this.estimateForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
       }
     });
   }
@@ -242,12 +168,8 @@ export class OperationEntriesComponent implements OnInit {
     });
     dialogRef.componentInstance.dialogTitle = "Final Bill Upload";
     dialogRef.componentInstance.patientData = this.queryData;
-    dialogRef.componentInstance.formGroup = this.finalBillForm;
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.apiCall == true) {
-        console.log(this.finalBillForm.getRawValue());
-
-        // this.selectedQuery(this.queryData, "assignedDialogClosed");
       }
     });
   }

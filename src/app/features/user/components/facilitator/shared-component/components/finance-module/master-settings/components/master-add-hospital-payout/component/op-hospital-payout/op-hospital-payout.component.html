@@ -1,0 +1,304 @@
+<div class="p-3">
+  <div class="card p-3">
+    <div class="topActionDiv">
+      <button
+        color="primary"
+        mat-raised-button
+        type="button"
+        class="topActionButton"
+        (click)="onClickAction('Add')"
+      >
+        +Add
+      </button>
+      <button
+        color="secondary"
+        mat-raised-button
+        type="button"
+        class="topActionButton"
+        (click)="exportMasterDataCSV()"
+      >
+        Export
+      </button>
+      <button
+        color="warn"
+        mat-raised-button
+        type="button"
+        class="topActionButton"
+        (click)="onReload()"
+      >
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="card p-3 mb-3" *ngIf="isActionTabVisibleForOp">
+    <h5>
+      {{ actionTitle }}
+    </h5>
+    <form [formGroup]="opForm">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <div class="multiple_select_custom">
+            <mat-form-field class="example-full-width">
+              <mat-label>Country</mat-label>
+              <mat-select
+                multiple
+                formControlName="country"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollCountryForOP()"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCountryForOP($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!countryDataForOP?.length && !isLoadingCountryForOP"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="countryDataForOP?.length">
+                  <mat-checkbox (change)="selectAllCountryForOP($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingCountrySelectAllForOP"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingCountrySelectAllForOP">
+                  <mat-option
+                    (click)="onClickCountryForOP(item.name)"
+                    *ngFor="let item of countryDataForOP"
+                    [value]="item.name"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="
+                    isLoadingCountryForOP && !isLoadingCountrySelectAllForOP
+                  "
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip *ngFor="let item of opForm.get('country').value">
+                    {{ item }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <mat-error
+                *ngIf="opForm.controls['country'].hasError('required')"
+              >
+                Country is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Calculated on Revenue %</mat-label>
+            <input matInput formControlName="calculatedRevenue" type="number" />
+            <mat-error
+              *ngIf="opForm.controls['calculatedRevenue'].hasError('required')"
+            >
+              Calculated on Revenue % is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Type of revenue</mat-label>
+            <mat-select formControlName="revenueType">
+              <mat-option [value]="item" *ngFor="let item of revenueTypeOptions"
+                >{{ item }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="opForm.controls['revenueType'].hasError('required')"
+            >
+              Type of revenue is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button
+          type="button"
+          mat-raised-button
+          color="primary"
+          (click)="outPatientFormSubmit('add')"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="tableDiv mt-4">
+    <div class="tableHeaderDiv">
+      <div class="first">
+        <h5 class="mb-0">Out Patient Data</h5>
+
+        <span>
+          <button
+            [matTooltip]="'Filter Out Patient'"
+            [ngClass]="isFilterActive ? 'filter_active' : ''"
+            (click)="openFilterModal('outPatient')"
+            mat-icon-button
+            style="background-color: #ebeaea"
+          >
+            <mat-icon>tune</mat-icon>
+          </button>
+        </span>
+      </div>
+
+      <div class="pagination m-0">
+        <p class="mb-0">
+          {{ opParams?.page }} - {{ totalNumberOfPagesForOp }} of
+          {{ totalElementOp }}
+        </p>
+        <div>
+          <div class="email-btn-group">
+            <button
+              [disabled]="opParams?.page <= 1"
+              (click)="prevForOp()"
+              mat-icon-button
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>navigate_before</mat-icon>
+            </button>
+            <button
+              [disabled]="opParams?.page === totalNumberOfPagesForOp"
+              (click)="nextForOp()"
+              mat-icon-button
+              aria-label="Example icon-button with a heart icon"
+            >
+              <mat-icon>navigate_next</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tableContainer hide-scrollbar">
+      <form [formGroup]="formGroup" *ngIf="opArray?.value?.length">
+        <table formArrayName="op">
+          <colgroup>
+            <col style="width: 5%" />
+            <col style="width: 25%" />
+            <col style="width: 30%" />
+            <col style="width: 30%" />
+            <col style="width: 10%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>S No.</th>
+              <th>Country</th>
+              <th>Calculated on Revenue %</th>
+              <th>Type Of Revenue</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container>
+              <tr
+                *ngFor="let item of opArray.controls; let i = index"
+                [formGroupName]="i"
+              >
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Country</mat-label>
+                    <input matInput formControlName="country" type="text" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Calculated on Revenue %</mat-label>
+                    <input
+                      matInput
+                      formControlName="calculatedRevenue"
+                      type="number"
+                    />
+                    <mat-error
+                      *ngIf="
+                        item.controls['calculatedRevenue'].hasError('required')
+                      "
+                    >
+                      Calculated on Revenue % is required
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-label>Type of revenue</mat-label>
+                    <mat-select formControlName="revenueType">
+                      <mat-option
+                        [value]="item"
+                        *ngFor="let item of revenueTypeOptions"
+                        >{{ item }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="item.controls['revenueType'].hasError('required')"
+                    >
+                      Type of revenue is required
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <button
+                    style="margin-bottom: 16px"
+                    type="button"
+                    mat-raised-button
+                    color="primary"
+                    (click)="outPatientFormSubmit('edit', i)"
+                  >
+                    Submit
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </form>
+
+      <div *ngIf="isDataLoadingForOp" class="divCenter">
+        <mat-spinner [diameter]="30"></mat-spinner>
+      </div>
+
+      <div
+        *ngIf="!opArray?.value?.length && !isDataLoadingForOp"
+        class="divCenter"
+      >
+        --No Data Found--
+      </div>
+    </div>
+  </div>
+</div>

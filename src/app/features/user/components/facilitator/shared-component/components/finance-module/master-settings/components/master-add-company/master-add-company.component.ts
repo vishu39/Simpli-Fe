@@ -5,6 +5,9 @@ import { currencies } from "currencies.json";
 import { cloneDeep } from "lodash";
 import { regexService } from "src/app/core/service/regex";
 import { MasterDataViewDocsComponent } from "../../dialog/master-data-view-docs/master-data-view-docs.component";
+import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
+import { SharedService } from "src/app/core/service/shared/shared.service";
+import { MasterSettingCompanyFilterDialogComponent } from "src/app/shared/components/finance-module/dialogs/master-setting-company-filter-dialog/master-setting-company-filter-dialog.component";
 
 @Component({
   selector: "shared-master-add-company",
@@ -23,108 +26,17 @@ export class MasterAddCompanyComponent implements OnInit {
 
   gstOption: any = ["Yes", "No"];
 
-  constructor(private fb: FormBuilder, private dialog: MatDialog) {}
+  constructor(
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private facilitatorService: FacilitatorService,
+    private sharedService: SharedService
+  ) { }
 
-  panelOpenState = true;
-
-  isCompanyDataLoading: boolean = false;
-  totalNumberOfPages = 0;
-  companyData = [
-    {
-      companyName: "ABC Pvt Ltd",
-      address: "123 MG Road, Delhi, India",
-      gstNo: "27ABCDE1234F1Z5",
-      companyPanNo: "ABCDE1234F",
-      email: "contact@abc.com",
-      contact: "+91-9876543210",
-      registrationNo: "123412341234",
-      paymentTerms: "Net 30",
-      currency: { code: "INR" },
-      gstApplicable: "Yes",
-    },
-    {
-      companyName: "XYZ Enterprises",
-      address: "56 Park Street, Kolkata, India",
-      gstNo: "19XYZDE5678G1Z2",
-      companyPanNo: "XYZDE5678G",
-      email: "info@xyz.com",
-      contact: "+91-9812345678",
-      registrationNo: "567856785678",
-      paymentTerms: "Net 15",
-      currency: { code: "INR" },
-      gstApplicable: "Yes",
-    },
-    {
-      companyName: "MNO Traders",
-      address: "45 Brigade Road, Bangalore, India",
-      gstNo: "29MNOPQ7890H1Z3",
-      companyPanNo: "MNOPQ7890H",
-      email: "support@mno.com",
-      contact: "+91-9123456789",
-      registrationNo: "901290129012",
-      paymentTerms: "Advance",
-      currency: { code: "INR" },
-      gstApplicable: "No",
-    },
-    {
-      companyName: "Global Tech Solutions",
-      address: "Sector 18, Noida, India",
-      gstNo: "09GTSAB1234I1Z4",
-      companyPanNo: "GTSAB1234I",
-      email: "sales@globaltech.com",
-      contact: "+91-9898989898",
-      registrationNo: "111122223333",
-      paymentTerms: "Net 45",
-      currency: { code: "INR" },
-      gstApplicable: "Yes",
-    },
-    {
-      companyName: "Sunrise Exports",
-      address: "Anna Nagar, Chennai, India",
-      gstNo: "33SUNRS2345J1Z5",
-      companyPanNo: "SUNRS2345J",
-      email: "exports@sunrise.com",
-      contact: "+91-9000011111",
-      registrationNo: "222233334444",
-      paymentTerms: "Net 60",
-      currency: { code: "INR" },
-      gstApplicable: "Yes",
-    },
-  ];
-
-  // companyData: any = [];
-
-  totalElementCompany: number;
-  companyParams = {
-    page: 1,
-    limit: 10,
-    search: "",
-    filterObj: {},
-  };
+  isTableExpansionOpen = true;
+  isFormExpansionOpen = false;
 
   // this.calculateTotalPages();
-
-  calculateTotalPages() {
-    this.totalNumberOfPages = Math.ceil(
-      this.totalElementCompany / this.companyParams.limit
-    );
-  }
-
-  next() {
-    this.companyParams.page = this.companyParams?.page + 1;
-    if (this.companyParams?.page <= this.totalNumberOfPages) {
-      // this.getAllEmailFetch();
-    } else {
-      this.companyParams.page = this.totalNumberOfPages;
-    }
-  }
-
-  prev() {
-    if (this.companyParams?.page > 1) {
-      this.companyParams.page = this.companyParams?.page - 1;
-      // this.getAllEmailFetch();
-    }
-  }
 
   openViewModal(item: any) {
     const dialogRef = this.dialog.open(MasterDataViewDocsComponent, {
@@ -160,15 +72,13 @@ export class MasterAddCompanyComponent implements OnInit {
       signingAuthorityName: ["", [Validators.required]],
       signingAuthorityDesignation: ["", [Validators.required]],
 
-      gstCertificate: ["", [Validators.required]],
-      registrationCertificate: ["", [Validators.required]],
-      panCertificate: ["", [Validators.required]],
-      signingAuthorityImage: ["", [Validators.required]],
+      gstCertificate: [""],
+      registrationCertificate: [""],
+      panCertificate: [""],
+      signingAuthorityImage: [""],
     });
 
-    this.formGroup.patchValue({
-      patient: this.patientData?._id,
-    });
+    this.getAllCompanyMasterData();
 
     this.sortCurrencies();
     let usdCurrencyIndex = this.currencyArray?.findIndex(
@@ -178,6 +88,59 @@ export class MasterAddCompanyComponent implements OnInit {
       this.formGroup.patchValue({
         currency: this.currencyArray[usdCurrencyIndex],
       });
+    }
+  }
+
+  companyData: any = [];
+  isCompanyDataLoading: boolean = false;
+  totalNumberOfPages = 0;
+
+  totalElementCompany: number;
+  companyParams = {
+    page: 1,
+    limit: 10,
+    search: "",
+    filter_obj: {},
+  };
+
+  getAllCompanyMasterData() {
+    this.isCompanyDataLoading = true;
+    this.facilitatorService
+      .getAllCompanyMasterData(this.companyParams)
+      .subscribe(
+        (res: any) => {
+          this.companyData = res?.data?.content;
+          this.totalElementCompany = res?.data?.totalElement;
+          this.calculateTotalPages();
+          this.isCompanyDataLoading = false;
+        },
+        () => {
+          this.isCompanyDataLoading = false;
+        }
+      );
+  }
+
+  calculateTotalPages() {
+    this.totalNumberOfPages = Math.ceil(
+      this.totalElementCompany / this.companyParams.limit
+    );
+  }
+
+  next() {
+    this.companyParams.page = this.companyParams?.page + 1;
+    if (this.companyParams?.page <= this.totalNumberOfPages) {
+      this.companyData = [];
+      this.getAllCompanyMasterData();
+    } else {
+      this.companyParams.page = this.totalNumberOfPages;
+    }
+  }
+
+  prev() {
+    if (this.companyParams?.page > 1) {
+      this.companyParams.page = this.companyParams?.page - 1;
+      this.companyData = [];
+      this.getAllCompanyMasterData();
     }
   }
 
@@ -298,32 +261,51 @@ export class MasterAddCompanyComponent implements OnInit {
     this.actionTitle = "";
     this.isActionTabVisible = false;
     this.actionType = "";
-
+    this.companyData = [];
     this.fileFirstList = [];
     this.fileFirstPreviewUrls = [];
     this.fileSecondList = [];
     this.fileSecondPreviewUrls = [];
     this.fileThirdList = [];
     this.fileThirdPreviewUrls = [];
+    this.selectedItemForEdit = {};
     this.formGroup.reset();
+
+    this.getAllCompanyMasterData();
   }
 
   actionTitle: string = "";
   isActionTabVisible: boolean = false;
   actionType: string = "";
 
+  selectedItemForEdit: any = {};
+
   onClickAction(type: string, item: any = null) {
     this.actionTitle = `${type} Company Data`;
     this.isActionTabVisible = true;
     this.actionType = type;
+    this.isTableExpansionOpen = false;
+    this.isFormExpansionOpen = true;
 
     if (type === "Edit") {
+      this.selectedItemForEdit = {};
       this.patchIfEdit(item);
     }
   }
 
   patchIfEdit(item: any) {
+    this.selectedItemForEdit = item;
     this.formGroup.patchValue(item);
+
+    let currencyIndex = this.currencyArray?.findIndex(
+      (ca: any) => ca?.code === item?.currency
+    );
+
+    if (currencyIndex !== -1) {
+      this.formGroup.patchValue({
+        currency: this.currencyArray[currencyIndex],
+      });
+    }
   }
 
   exportMasterDataCSV() {
@@ -375,19 +357,120 @@ export class MasterAddCompanyComponent implements OnInit {
       let payload = {
         ...this.formGroup.getRawValue(),
       };
+      let currency = payload?.currency;
 
-      payload["gstCertificate"] = this.fileFirstList;
-      payload["registrationCertificate"] = this.fileSecondList;
-      payload["panCertificate"] = this.fileThirdList;
-      payload["signingAuthorityImage"] = this.fileFourthList;
+      delete payload["currency"];
+      delete payload["gstCertificate"];
+      delete payload["registrationCertificate"];
+      delete payload["panCertificate"];
+      delete payload["signingAuthorityImage"];
+
+      let formData = new FormData();
+
+      formData.append("currency", JSON.stringify(currency));
+
+      for (const key in payload) {
+        formData.append(key, payload[key]);
+      }
+
+      for (var i = 0; i < this.fileFirstList?.length; i++) {
+        formData.append("fileFirst", this.fileFirstList[i]);
+      }
+
+      for (var i = 0; i < this.fileSecondList?.length; i++) {
+        formData.append("fileSecond", this.fileSecondList[i]);
+      }
+
+      for (var i = 0; i < this.fileThirdList?.length; i++) {
+        formData.append("fileThird", this.fileThirdList[i]);
+      }
+
+      for (var i = 0; i < this.fileFourthList?.length; i++) {
+        formData.append("fileFourth", this.fileFourthList[i]);
+      }
 
       if (this.actionType === "Add") {
-        this.companyData.unshift(payload);
-        this.onReload();
+        this.facilitatorService
+          .addCompanyMaster(formData)
+          .subscribe((res: any) => {
+            this.sharedService.showNotification(
+              "snackBar-success",
+              res?.message
+            );
+            this.onReload();
+          });
       } else if (this.actionType === "Edit") {
+        this.facilitatorService
+          .editCompanyMaster(this.selectedItemForEdit?._id, formData)
+          .subscribe((res: any) => {
+            this.sharedService.showNotification(
+              "snackBar-success",
+              res?.message
+            );
+            this.onReload();
+          });
       }
     } else {
       this.formGroup.markAllAsTouched();
     }
+  }
+
+  selectedFilter: any = [];
+
+  isFilterActive = false;
+  openFilterModal() {
+    const dialogRef = this.dialog.open(
+      MasterSettingCompanyFilterDialogComponent,
+      {
+        width: "60%",
+        disableClose: true,
+        autoFocus: false,
+      }
+    );
+
+    let selectedFilterData: any = this.selectedFilter;
+
+    dialogRef.componentInstance.openedComponent = "facilitator";
+    (dialogRef.componentInstance.selectedFilter = selectedFilterData),
+      dialogRef.afterClosed().subscribe((result) => {
+        const { apiCall, filteredData } = result;
+        if (apiCall) {
+          this.selectedFilter = filteredData;
+          if (
+            filteredData?.currency?.length > 0 ||
+            filteredData?.gstApplicable?.length > 0
+          ) {
+            this.isFilterActive = true;
+            let filterObj = {};
+            if (filteredData?.currency?.length > 0) {
+              filterObj["currency"] = filteredData?.currency;
+            }
+            if (filteredData?.gstApplicable?.length > 0) {
+              filterObj["gstApplicable"] = filteredData?.gstApplicable;
+            }
+
+            this.companyParams.filter_obj = filterObj;
+            this.companyParams.page = 1;
+            this.companyData = [];
+            this.getAllCompanyMasterData();
+          } else if (!!filteredData?.search) {
+            this.isFilterActive = true;
+
+            this.companyParams.search = filteredData?.search;
+            this.companyParams.page = 1;
+            this.companyData = [];
+            this.getAllCompanyMasterData();
+          } else {
+            this.isFilterActive = false;
+
+            this.selectedFilter = filteredData;
+            this.companyParams.filter_obj = {};
+            this.companyParams.search = "";
+            this.companyParams.page = 1;
+            this.companyData = [];
+            this.getAllCompanyMasterData();
+          }
+        }
+      });
   }
 }

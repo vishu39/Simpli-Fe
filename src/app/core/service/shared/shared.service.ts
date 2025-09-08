@@ -575,4 +575,15 @@ export class SharedService {
         })
       );
   }
+
+  getRevenueTypeMasterFinanceData() {
+    return this.http
+      .get(this.sharedServiceApiUrl + "getRevenueTypeMasterFinanceData")
+      .pipe(
+        map((res: any) => {
+          res.data = this.decrypt(res.data);
+          return res;
+        })
+      );
+  }
 }

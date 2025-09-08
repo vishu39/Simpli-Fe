@@ -1,0 +1,22 @@
+.uhidTable {
+  border: 1px solid lightgrey;
+  td {
+    border: 1px solid lightgrey;
+    padding: 8px 4px;
+  }
+  th {
+    border: 1px solid lightgrey;
+    padding: 8px 4px;
+    background: #1560bd;
+    color: white;
+  }
+}
+
+
+.divCenter{
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid lightgrey;
+}

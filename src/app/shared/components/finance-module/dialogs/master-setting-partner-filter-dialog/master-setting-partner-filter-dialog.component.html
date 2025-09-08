@@ -1,0 +1,360 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 font-17">
+            {{ dialogTitle }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      (click)="closeDialog(false)"
+      aria-label="Close dialog"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <hr />
+  <div mat-dialog-content>
+    <div>
+      <form [formGroup]="filterForm" class="p-4 pt-0">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Search</mat-label>
+              <input
+                matInput
+                placeholder="Search"
+                formControlName="search"
+                type="text"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <div class="multiple_select_custom">
+              <mat-form-field class="example-full-width">
+                <mat-label>Hospital</mat-label>
+                <mat-select
+                  multiple
+                  formControlName="hospital"
+                  msInfiniteScroll
+                  (infiniteScroll)="onInfiniteScrollHospital()"
+                  [compareWith]="compareObjects"
+                >
+                  <input
+                    class="searchInput"
+                    placeholder="search..."
+                    (keydown.space)="$event.stopPropagation()"
+                    matInput
+                    (keyup)="searchHospital($event.target.value)"
+                  />
+                  <div
+                    class="other_option"
+                    *ngIf="!hospitalData?.length && !isLoadingHospital"
+                  >
+                    No results
+                  </div>
+
+                  <div class="other_option" *ngIf="hospitalData?.length">
+                    <mat-checkbox (change)="selectAllHospital($event)"
+                      >Select All
+                    </mat-checkbox>
+                  </div>
+
+                  <mat-spinner
+                    *ngIf="isLoadingHospitalSelectAll"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+
+                  <ng-container *ngIf="!isLoadingHospitalSelectAll">
+                    <mat-option
+                      (click)="
+                        onClickHospital({
+                          _id: item._id,
+                          name: item.name
+                        })
+                      "
+                      *ngFor="let item of hospitalData"
+                      [value]="{
+                        _id: item._id,
+                        name: item.name
+                      }"
+                    >
+                      {{ item.name }}
+                    </mat-option>
+                  </ng-container>
+
+                  <mat-spinner
+                    *ngIf="isLoadingHospital && !isLoadingHospitalSelectAll"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+                </mat-select>
+                <div class="chip_section" [perfectScrollbar]>
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="let item of filterForm.get('hospital').value"
+                    >
+                      {{ item.name }}
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+          >
+            <mat-form-field class="example-full-width">
+              <mat-label>Country</mat-label>
+              <mat-select
+                multiple
+                formControlName="country"
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollCountry()"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCountry($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!countryData?.length && !isLoadingCountry"
+                >
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="countryData?.length">
+                  <mat-checkbox (change)="selectAllCountry($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-spinner
+                  *ngIf="isLoadingCountrySelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+
+                <ng-container *ngIf="!isLoadingCountrySelectAll">
+                  <mat-option
+                    (click)="onClickCountry(item.name)"
+                    *ngFor="let item of countryData"
+                    [value]="item.name"
+                  >
+                    {{ item.name }}
+                  </mat-option>
+                </ng-container>
+
+                <mat-spinner
+                  *ngIf="isLoadingCountry && !isLoadingCountrySelectAll"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of filterForm?.get('country')?.value"
+                  >
+                    {{ item }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+
+          <div
+            *ngIf="type === 'outPatient' || type === 'inPatient'"
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+          >
+            <mat-form-field class="example-full-width">
+              <mat-label>Revenue Type</mat-label>
+              <mat-select multiple formControlName="revenueType">
+                <div class="other_option" *ngIf="revenueTypeOptions?.length">
+                  <mat-checkbox (change)="selectAllRevenueType($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-option
+                  (click)="onClickRevenueType(item)"
+                  [value]="item"
+                  *ngFor="let item of revenueTypeOptions"
+                  >{{ item}}
+                </mat-option>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let item of filterForm?.get('revenueType')?.value"
+                  >
+                    {{ item }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+
+          <div
+            *ngIf="type === 'outPatient' || type === 'inPatient'"
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+          >
+            <mat-form-field class="example-full-width">
+              <mat-label>Revenue Type (Partner)</mat-label>
+              <mat-select multiple formControlName="revenueTypePartner">
+                <div class="other_option" *ngIf="revenueTypeOptions?.length">
+                  <mat-checkbox (change)="selectAllRevenueTypePartner($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-option
+                  (click)="onClickRevenueTypePartner(item)"
+                  [value]="item"
+                  *ngFor="let item of revenueTypeOptions"
+                  >{{ item }}
+                </mat-option>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="
+                      let item of filterForm?.get('revenueTypePartner')?.value
+                    "
+                  >
+                    {{ item }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+
+          <div
+            *ngIf="type === 'package'"
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+          >
+            <mat-form-field class="example-full-width">
+              <mat-label>Currency</mat-label>
+              <mat-select
+                multiple
+                formControlName="currency"
+                [compareWith]="compareCurrencyObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCurrency($event.target.value)"
+                />
+                <div class="other_option" *ngIf="!currencyArray?.length">
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="currencyArray?.length">
+                  <mat-checkbox (change)="selectAllCurrency($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-option
+                  (click)="onClickCurrency(currency)"
+                  [value]="currency"
+                  *ngFor="let currency of currencyArray"
+                  >{{ currency?.code }} - {{ currency?.name }}
+                </mat-option>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="let currency of filterForm?.get('currency')?.value"
+                  >
+                    {{ currency?.code }} - {{ currency?.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+
+          <div
+            *ngIf="type === 'package'"
+            class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 multiple_select_custom"
+          >
+            <mat-form-field class="example-full-width">
+              <mat-label>Currency (Payout)</mat-label>
+              <mat-select
+                multiple
+                formControlName="currencyPayout"
+                [compareWith]="compareCurrencyObjects"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCurrencyPayout($event.target.value)"
+                />
+                <div class="other_option" *ngIf="!currencyPayoutArray?.length">
+                  No results
+                </div>
+
+                <div class="other_option" *ngIf="currencyPayoutArray?.length">
+                  <mat-checkbox (change)="selectAllCurrencyPayout($event)"
+                    >Select All
+                  </mat-checkbox>
+                </div>
+
+                <mat-option
+                  (click)="onClickCurrencyPayout(currency)"
+                  [value]="currency"
+                  *ngFor="let currency of currencyPayoutArray"
+                  >{{ currency?.code }} - {{ currency?.name }}
+                </mat-option>
+              </mat-select>
+              <div class="chip_section" [perfectScrollbar]>
+                <mat-chip-list>
+                  <mat-chip
+                    *ngFor="
+                      let currency of filterForm?.get('currencyPayout')?.value
+                    "
+                  >
+                    {{ currency?.code }} - {{ currency?.name }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div>
+          <button mat-flat-button color="primary" (click)="onSubmit()">
+            Submit
+          </button>
+          <button
+            style="margin-left: 12px"
+            mat-flat-button
+            type="button"
+            color="warn"
+            (click)="resetFilter()"
+          >
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

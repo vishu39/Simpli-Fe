@@ -232,6 +232,18 @@ export class AdminMainLayoutComponent implements OnInit {
           badgeClass: "",
           submenu: [],
         },
+        {
+          path: "/user/facilitator/admin/finance/logs",
+          title: "Logs",
+          iconType: "",
+          icon: "",
+          class: "ml-menu",
+          active: false,
+          groupTitle: false,
+          badge: "",
+          badgeClass: "",
+          submenu: [],
+        },
       ],
     },
     {

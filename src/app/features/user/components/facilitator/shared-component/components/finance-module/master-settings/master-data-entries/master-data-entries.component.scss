@@ -3,17 +3,24 @@
 .grid1x2 {
   margin: 15px 0 0 0;
   // height: calc(100vh - 190px);
-  height: calc(100vh - 90px);
+  // height: calc(100vh - 90px);
   display: grid;
   grid-template-columns: 100%;
   gap: 1%;
 
   @media only screen and (min-width: 850px) {
-    grid-template-columns: 25% 74%;
+    // grid-template-columns: 25% 74%;
   }
 
   .left {
     // height: calc(100vh - 90px);
+
+    .masterOptions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      row-gap: 8px;
+    }
 
     .isSelected {
       background-color: rgb(17, 176, 230);
@@ -21,7 +28,7 @@
     }
 
     .masterOptionIcon {
-      display: none;
+      // display: none;
       @media only screen and (min-width: 943px) {
         display: block;
       }
@@ -29,7 +36,7 @@
   }
   .right {
     height: 100%;
-    overflow: scroll;
+    // overflow: scroll;
   }
 
   .fieldOptions {
@@ -40,5 +47,6 @@
     margin-bottom: 4px;
     border-radius: 8px;
     cursor: pointer;
+    border: 1px solid lightgrey;
   }
 }

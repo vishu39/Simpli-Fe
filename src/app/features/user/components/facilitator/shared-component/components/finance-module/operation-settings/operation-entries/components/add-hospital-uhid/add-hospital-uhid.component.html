@@ -1,0 +1,73 @@
+<div class="modalHeader">
+  <div class="editRowModal">
+    <div class="modalHeader clearfix">
+      <div class="modal-about">
+        <div class="font-weight-bold p-t-5 font-17">
+          {{ dialogTitle }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    mat-icon-button
+    (click)="closeDialog(false)"
+    aria-label="Close dialog"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup" class="m-3">
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Select Hospital</mat-label>
+          <mat-select
+            msInfiniteScroll
+            (infiniteScroll)="onInfiniteScrollHospital()"
+            formControlName="hospitalId"
+          >
+            <input
+              class="searchInput"
+              placeholder="search..."
+              (keydown.space)="$event.stopPropagation()"
+              matInput
+              (keyup)="searchHospital($event.target.value)"
+            />
+            <div
+              class="other_option"
+              *ngIf="!hospitalData?.length && !isLoadingHospital"
+            >
+              No results
+            </div>
+            <mat-option
+              *ngFor="let item of hospitalData"
+              [value]="item._id"
+              (click)="onChangeHospital(item?.name)"
+            >
+              {{ item.name }}
+            </mat-option>
+            <mat-spinner
+              *ngIf="isLoadingHospital"
+              class="mx-auto mb-2 mt-2"
+              [diameter]="30"
+            >
+            </mat-spinner>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Hospital UHID</mat-label>
+          <input matInput type="text" formControlName="hospitalUHID" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      <button mat-flat-button color="primary" (click)="actionSubmit()">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

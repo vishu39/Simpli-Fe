@@ -1,0 +1,102 @@
+<div class="m-4">
+  <ng-container *ngIf="docsData?.length">
+    <div *ngIf="hasEstimateGiven()">
+      <h5>Estimate Given</h5>
+
+      <div *ngFor="let item of docsData" class="mb-3">
+        <mat-accordion *ngIf="item?.estimateGiven === 'yes'">
+          <mat-expansion-panel
+            (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <p class="mb-0">
+                  <b>{{ item?.hospitalName }}</b>
+                </p>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="p-3">
+              <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Estimate Given</b></div>
+                  <div>{{ item?.estimateGiven | titlecase }}</div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Estimate Date</b></div>
+                  <div>
+                    {{ (item?.estimateDate | date : "medium") || "NIL" }}
+                  </div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Approx Admission Date</b></div>
+                  <div>
+                    {{ (item?.approxAdmissionDate | date : "medium") || "NIL" }}
+                  </div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                  <div><b>Created At</b></div>
+                  <div>{{ (item?.createdAt | date : "medium") || "NIL" }}</div>
+                </div>
+              </div>
+
+              <div *ngIf="item?.packageArray?.length" class="card p-3">
+                <div *ngFor="let data of item?.packageArray; let i = index" class="mb-4">
+                  <h6>Package {{ i + 1 }}</h6>
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <div><b>Package name</b></div>
+                      <div>{{ data?.packageName }}</div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <div><b>Room Category</b></div>
+                      <div>{{ data?.roomCategory }}</div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <div><b>Room Price</b></div>
+                      <div>{{ data?.roomPrice }}</div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                      <div><b>Currency</b></div>
+                      <div>{{ data?.currency?.code }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+
+    <div *ngIf="hasEstimateNotGiven()" class="mt-5">
+      <h5>Estimate Not Given</h5>
+
+      <table border="1" class="mt-2 estimateNotGivenTable">
+        <thead>
+          <tr>
+            <th>Estimate Given</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of docsData">
+            <tr *ngIf="item?.estimateGiven === 'no'">
+              <td>{{ item?.estimateGiven | titlecase }}</td>
+              <td>{{ item?.comment }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <div class="" *ngIf="isDocsLoading">
+    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+  </div>
+
+  <div class="card m-4 p-3" *ngIf="!isDocsLoading && !docsData?.length">
+    <div style="text-align: center">--No Data Found--</div>
+  </div>
+</div>

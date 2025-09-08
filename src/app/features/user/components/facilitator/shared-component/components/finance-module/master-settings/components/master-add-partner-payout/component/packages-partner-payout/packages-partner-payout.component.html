@@ -1,0 +1,565 @@
+<div class="p-3">
+  <div class="card p-3" *ngIf="referralPartner?.length">
+    <div class="topActionDiv">
+      <button
+        color="primary"
+        mat-raised-button
+        type="button"
+        class="topActionButton"
+        (click)="isAddVisible = true"
+      >
+        +Add
+      </button>
+      <button
+        color="secondary"
+        mat-raised-button
+        type="button"
+        class="topActionButton"
+      >
+        Export
+      </button>
+      <button
+        color="warn"
+        mat-raised-button
+        type="button"
+        class="topActionButton"
+        (click)="onReload()"
+      >
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div>
+    <div class="card p-3 mb-3" *ngIf="isAddVisible">
+      <h5>Add Payout</h5>
+      <form [formGroup]="addFormGroup">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="multiple_select_custom">
+              <mat-form-field class="example-full-width">
+                <mat-label>Hospital</mat-label>
+                <mat-select
+                  multiple
+                  formControlName="hospital"
+                  msInfiniteScroll
+                  (infiniteScroll)="onInfiniteScrollHospital()"
+                  [compareWith]="compareObjects"
+                >
+                  <input
+                    class="searchInput"
+                    placeholder="search..."
+                    (keydown.space)="$event.stopPropagation()"
+                    matInput
+                    (keyup)="searchHospital($event.target.value)"
+                  />
+                  <div
+                    class="other_option"
+                    *ngIf="!hospitalData?.length && !isLoadingHospital"
+                  >
+                    No results
+                  </div>
+
+                  <div class="other_option" *ngIf="hospitalData?.length">
+                    <mat-checkbox (change)="selectAllHospital($event)"
+                      >Select All
+                    </mat-checkbox>
+                  </div>
+
+                  <mat-spinner
+                    *ngIf="isLoadingHospitalSelectAll"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+
+                  <ng-container *ngIf="!isLoadingHospitalSelectAll">
+                    <mat-option
+                      (click)="
+                        onClickHospital({
+                          _id: item._id,
+                          name: item.name
+                        })
+                      "
+                      *ngFor="let item of hospitalData"
+                      [value]="{
+                        _id: item._id,
+                        name: item.name
+                      }"
+                    >
+                      {{ item.name }}
+                    </mat-option>
+                  </ng-container>
+
+                  <mat-spinner
+                    *ngIf="isLoadingHospital && !isLoadingHospitalSelectAll"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+                </mat-select>
+                <div class="chip_section" [perfectScrollbar]>
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="let item of addFormGroup.get('hospital').value"
+                    >
+                      {{ item.name }}
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-2">
+            <div class="multiple_select_custom">
+              <mat-form-field class="example-full-width">
+                <mat-label>Country (Source)</mat-label>
+                <mat-select
+                  multiple
+                  formControlName="sourceCountry"
+                  msInfiniteScroll
+                  (infiniteScroll)="onInfiniteScrollCountryForSource()"
+                >
+                  <input
+                    class="searchInput"
+                    placeholder="search..."
+                    (keydown.space)="$event.stopPropagation()"
+                    matInput
+                    (keyup)="searchCountryForSource($event.target.value)"
+                  />
+                  <div
+                    class="other_option"
+                    *ngIf="
+                      !countryDataForSource?.length &&
+                      !isLoadingCountryForSource
+                    "
+                  >
+                    No results
+                  </div>
+
+                  <div
+                    class="other_option"
+                    *ngIf="countryDataForSource?.length"
+                  >
+                    <mat-checkbox (change)="selectAllCountryForSource($event)"
+                      >Select All
+                    </mat-checkbox>
+                  </div>
+
+                  <mat-spinner
+                    *ngIf="isLoadingCountrySelectAllForSource"
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+
+                  <ng-container *ngIf="!isLoadingCountrySelectAllForSource">
+                    <mat-option
+                      (click)="onClickCountryForSource(item.name)"
+                      *ngFor="let item of countryDataForSource"
+                      [value]="item.name"
+                    >
+                      {{ item.name }}
+                    </mat-option>
+                  </ng-container>
+
+                  <mat-spinner
+                    *ngIf="
+                      isLoadingCountryForSource &&
+                      !isLoadingCountrySelectAllForSource
+                    "
+                    class="mx-auto mb-2 mt-2"
+                    [diameter]="30"
+                  >
+                  </mat-spinner>
+                </mat-select>
+                <div class="chip_section" [perfectScrollbar]>
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="
+                        let item of addFormGroup.get('sourceCountry').value
+                      "
+                    >
+                      {{ item }}
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+                <mat-error
+                  *ngIf="
+                    addFormGroup.controls['sourceCountry'].hasError('required')
+                  "
+                >
+                  Country (Source) is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Payout partner (%)</mat-label>
+              <input
+                matInput
+                formControlName="payoutPartnerInPercentage"
+                type="number"
+              />
+              <mat-error
+                *ngIf="
+                  addFormGroup.controls['payoutPartnerInPercentage'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Payout Partner (%) is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Payout Partner Fixed Amount</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="payoutPartnerInFixedAmount"
+              />
+              <mat-error
+                *ngIf="
+                  addFormGroup.controls['payoutPartnerInFixedAmount'].hasError(
+                    'required'
+                  )
+                "
+              >
+                Payout Partner Fixed Amount is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <button
+            type="button"
+            mat-raised-button
+            color="primary"
+            (click)="addPayoutForm()"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="tableDiv mt-4">
+      <div class="tableHeaderDiv">
+        <div class="first">
+          <h5 class="mb-0">Package Data</h5>
+
+          <span>
+            <button
+              [matTooltip]="'Filter Packages'"
+              [ngClass]="isFilterActive ? 'filter_active' : ''"
+              (click)="openFilterModal()"
+              mat-icon-button
+              style="background-color: #ebeaea"
+            >
+              <mat-icon>tune</mat-icon>
+            </button>
+          </span>
+        </div>
+
+        <div class="pagination m-0">
+          <p class="mb-0">
+            {{ packageParams?.page }} - {{ totalNumberOfPagesForPackage }} of
+            {{ totalElementPackage }}
+          </p>
+          <div>
+            <div class="email-btn-group">
+              <button
+                [disabled]="packageParams?.page <= 1"
+                (click)="prevForPackage()"
+                mat-icon-button
+                aria-label="Example icon-button with a heart icon"
+              >
+                <mat-icon>navigate_before</mat-icon>
+              </button>
+              <button
+                [disabled]="
+                  packageParams?.page === totalNumberOfPagesForPackage
+                "
+                (click)="nextForPackage()"
+                mat-icon-button
+                aria-label="Example icon-button with a heart icon"
+              >
+                <mat-icon>navigate_next</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tableContainer hide-scrollbar">
+        <form [formGroup]="formGroup" *ngIf="packageArray?.value?.length">
+          <table formArrayName="packages">
+            <colgroup>
+              <col style="width: 50px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 150px" />
+              <col style="width: 100px" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>S No.</th>
+                <th>Hospital</th>
+                <th>Country (Soure)</th>
+                <th>Package Name</th>
+                <th>Package Cost</th>
+                <th>Currency</th>
+                <th>Payout (%)</th>
+                <th>Payout Fixed Amount</th>
+                <th>Currency Payout</th>
+                <th>Payout Partner (%)</th>
+                <th>Payout partner Fixed Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <ng-container>
+                <tr
+                  *ngFor="let item of packageArray.controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Hospital</mat-label>
+                      <input
+                        matInput
+                        formControlName="hospitalName"
+                        type="text"
+                      />
+                      <mat-error
+                        *ngIf="
+                          item.controls['hospitalName'].hasError('required')
+                        "
+                      >
+                        Hospital is required
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Country (Soure)</mat-label>
+                      <input
+                        matInput
+                        formControlName="sourceCountry"
+                        type="text"
+                      />
+                      <mat-error
+                        *ngIf="
+                          item.controls['sourceCountry'].hasError('required')
+                        "
+                      >
+                        Country (Source) is required
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Package Name</mat-label>
+                      <input
+                        matInput
+                        formControlName="packageName"
+                        type="text"
+                      />
+                      <mat-error
+                        *ngIf="
+                          item.controls['packageName'].hasError('required')
+                        "
+                      >
+                        Package Name % is required
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Package Cost</mat-label>
+                      <input
+                        matInput
+                        formControlName="packageCost"
+                        type="number"
+                      />
+                      <mat-error
+                        *ngIf="
+                          item.controls['packageCost'].hasError('required')
+                        "
+                      >
+                        Package Cost is required
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Currency</mat-label>
+                      <input matInput formControlName="currency" type="text" />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Payout (%)</mat-label>
+                      <input
+                        matInput
+                        formControlName="payoutInPercentage"
+                        type="number"
+                      />
+                      <mat-error
+                        *ngIf="
+                          item.controls['payoutInPercentage'].hasError(
+                            'required'
+                          )
+                        "
+                      >
+                        Payout (%) is required
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Payout Fixed Amount</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="payoutInFixedAmount"
+                      />
+                      <mat-error
+                        *ngIf="
+                          item.controls['payoutInFixedAmount'].hasError(
+                            'required'
+                          )
+                        "
+                      >
+                        Payout Fixed Amount is required
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Currency Payout</mat-label>
+                      <input
+                        matInput
+                        formControlName="currencyPayout"
+                        type="text"
+                      />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Payout partner (%)</mat-label>
+                      <input
+                        matInput
+                        formControlName="payoutPartnerInPercentage"
+                        type="number"
+                      />
+                      <mat-error
+                        *ngIf="
+                          item.controls['payoutPartnerInPercentage'].hasError(
+                            'required'
+                          )
+                        "
+                      >
+                        Payout Partner (%) is required
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Payout Partner Fixed Amount</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="payoutPartnerInFixedAmount"
+                      />
+                      <mat-error
+                        *ngIf="
+                          item.controls['payoutPartnerInFixedAmount'].hasError(
+                            'required'
+                          )
+                        "
+                      >
+                        Payout Partner Fixed Amount is required
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <button
+                      style="margin-bottom: 16px"
+                      type="button"
+                      mat-raised-button
+                      color="primary"
+                      (click)="editPayoutForm(i)"
+                    >
+                      Submit
+                    </button>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </form>
+
+        <div *ngIf="isDataLoadingForPackage" class="divCenter">
+          <mat-spinner [diameter]="30"></mat-spinner>
+        </div>
+
+        <div
+          *ngIf="!packageArray?.value?.length && !isDataLoadingForPackage"
+          class="divCenter"
+        >
+          --No Data Found--
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
