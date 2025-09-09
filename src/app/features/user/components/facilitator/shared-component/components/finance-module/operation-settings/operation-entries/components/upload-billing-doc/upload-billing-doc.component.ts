@@ -53,6 +53,38 @@ export class UploadBillingDocComponent implements OnInit {
         currency: this.currencyArray[usdCurrencyIndex],
       });
     }
+
+    if (this.isEdit) {
+      this.getBillingDocForFinanceBillingById();
+    }
+  }
+
+  docDataForEdit: any = {};
+  getBillingDocForFinanceBillingById() {
+    this.facilitatorService
+      .getBillingDocForFinanceBillingById(this.patientData?._id, {
+        hospitalId: this.editingData?.hospitalId,
+      })
+      .subscribe((res: any) => {
+        this.docDataForEdit = res?.data[0];
+        this.patchData(this.docDataForEdit);
+      });
+
+    this.formGroup.get("hospitalName").disable();
+  }
+
+  billingDocsArray = [];
+  patchData(item: any) {
+    this.billingDocsArray = item?.billingDocs;
+    this.formGroup.patchValue({
+      hospitalId: item?.hospitalId,
+      hospitalName: item?.hospitalName,
+      category: item?.category,
+      amount: item?.amount,
+      currency: item?.currency,
+      file: "",
+      patient: [this.patientData?._id],
+    });
   }
 
   // Hospital linking
@@ -210,7 +242,6 @@ export class UploadBillingDocComponent implements OnInit {
       };
       let currency = payload?.currency;
 
-
       delete payload["file"];
       delete payload["currency"];
 
@@ -236,13 +267,12 @@ export class UploadBillingDocComponent implements OnInit {
   }
 
   editFinalForm() {
-    let id = this.editingData._id;
+    let id = this.patientData._id;
     if (this.formGroup.valid) {
       let payload = {
         ...this.formGroup.getRawValue(),
       };
       let currency = payload?.currency;
-
 
       delete payload["file"];
       delete payload["currency"];
@@ -256,6 +286,10 @@ export class UploadBillingDocComponent implements OnInit {
 
       for (var i = 0; i < this.fileList?.length; i++) {
         formData.append("fileFirst", this.fileList[i]);
+      }
+
+      if (this.billingDocsArray?.length) {
+        formData.append("billingDocs", JSON.stringify(this.billingDocsArray));
       }
 
       this.facilitatorService

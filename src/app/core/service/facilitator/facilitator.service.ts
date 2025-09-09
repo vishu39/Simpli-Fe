@@ -3893,9 +3893,13 @@ export class FacilitatorService {
       );
   }
 
-  getHospitalUhidForFinanceBillingById(id: any) {
+  getHospitalUhidForFinanceBillingById(id: any, data: any) {
+    const params = new HttpParams().set("hospitalId", data.hospitalId);
+
     return this.http
-      .get(this.serviceApiUrl + `getHospitalUhidForFinanceBillingById/${id}`)
+      .get(this.serviceApiUrl + `getHospitalUhidForFinanceBillingById/${id}`, {
+        params,
+      })
       .pipe(
         map((res: any) => {
           res.data = this.sharedService.decrypt(res.data);

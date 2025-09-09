@@ -39,6 +39,33 @@ export class AddHospitalUhidComponent implements OnInit {
     });
 
     this.getHospitalData();
+
+    if(this.isEdit){
+      this.getHospitalUhidForFinanceBillingById()
+    }
+  }
+
+  docDataForEdit:any= {};
+  getHospitalUhidForFinanceBillingById() {
+    this.facilitatorService
+      .getHospitalUhidForFinanceBillingById(this.patientData?._id, {
+        hospitalId: this.editingData?.hospitalId,
+      })
+      .subscribe((res: any) => {
+        this.docDataForEdit = res?.data[0];
+        this.patchData(this.docDataForEdit)
+      });
+  }
+
+  patchData(item:any){
+    this.formGroup.patchValue({
+      hospitalId: item?.hospitalId,
+      hospitalName: item?.hospitalName,
+      hospitalUHID: item?.hospitalUHID,
+      patient: [this.patientData?._id],
+    })
+
+        this.formGroup.get('hospitalName').disable()
   }
 
   // Hospital linking
@@ -129,7 +156,7 @@ export class AddHospitalUhidComponent implements OnInit {
   }
 
   editFinalForm() {
-    let id = this.editingData._id;
+    let id = this.patientData._id;
     if (this.formGroup.valid) {
       let payload = {
         ...this.formGroup.getRawValue(),

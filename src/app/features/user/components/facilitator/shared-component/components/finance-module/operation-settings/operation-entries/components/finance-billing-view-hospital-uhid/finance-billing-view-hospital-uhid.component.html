@@ -5,12 +5,23 @@
         <tr>
           <th>Hospital Name</th>
           <th>UHID</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of uhidArray">
           <td>{{ item?.hospitalName }}</td>
           <td>{{ item?.hospitalUHID }}</td>
+          <td>
+            <mat-icon
+              class="mt-1"
+              (click)="openModalForEdit(item)"
+              style="cursor: pointer"
+              matTooltip="Edit"
+              matTooltipPosition="right"
+              >edit</mat-icon
+            >
+          </td>
         </tr>
       </tbody>
     </table>

@@ -1,17 +1,30 @@
 <div class="m-4">
   <ng-container *ngIf="docsData?.length">
     <div *ngFor="let item of docsData; let i = index" class="mb-3">
-      <mat-accordion> 
+      <mat-accordion>
         <mat-expansion-panel
           (opened)="onClickAccordian(item, i)"
           (closed)="panelOpenState = false"
         >
-          <mat-expansion-panel-header>
+          <mat-expansion-panel-header #exPanel>
             <mat-panel-title>
               <p class="mb-0">
                 <b>{{ item?.hospitalName }}</b>
               </p>
             </mat-panel-title>
+
+            <mat-panel-description class="d-flex justify-content-end">
+              <div (click)="!exPanel._toggle()" class="p-2 mt-1">
+                <mat-icon
+                  class="mt-1"
+                  (click)="openModalForEdit(item)"
+                  style="cursor: pointer"
+                  matTooltip="Edit"
+                  matTooltipPosition="right"
+                  >edit</mat-icon
+                >
+              </div>
+            </mat-panel-description>
           </mat-expansion-panel-header>
 
           <div class="p-3">

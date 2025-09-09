@@ -19,7 +19,7 @@
 <div mat-dialog-content>
   <form [formGroup]="formGroup" class="m-3">
     <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngIf="!isEdit">
         <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Select Hospital</mat-label>
           <mat-select
@@ -54,6 +54,13 @@
             >
             </mat-spinner>
           </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2" *ngIf="isEdit">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Hospital</mat-label>
+          <input matInput formControlName="hospitalName" type="text" />
         </mat-form-field>
       </div>
 

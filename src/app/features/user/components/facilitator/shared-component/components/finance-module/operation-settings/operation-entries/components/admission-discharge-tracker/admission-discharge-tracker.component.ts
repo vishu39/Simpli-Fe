@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
+import * as moment from "moment";
 import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
 
@@ -43,6 +44,52 @@ export class AdmissionDischargeTrackerComponent implements OnInit {
     });
 
     this.getHospitalData();
+
+    if (this.isEdit) {
+      this.getAdmissionDischargeTrackerForFinanceBillingById();
+    }
+  }
+
+  docDataForEdit: any = {};
+  getAdmissionDischargeTrackerForFinanceBillingById() {
+    this.facilitatorService
+      .getAdmissionDischargeTrackerForFinanceBillingById(
+        this.patientData?._id,
+        {
+          hospitalId: this.editingData?.hospitalId,
+        }
+      )
+      .subscribe((res: any) => {
+        this.docDataForEdit = res?.data[0];
+        this.patchData(this.docDataForEdit);
+      });
+  }
+
+  dischargeSummaryEditArray = [];
+  patchData(item: any) {
+    this.dischargeSummaryEditArray = item?.dischargeSummary;
+
+    let newAdmissionDate: any = "";
+    let newDischargeDate: any = "";
+    if (!!item?.admissionDate) {
+      newAdmissionDate = moment(item?.admissionDate);
+    }
+    if (!!item?.dischargeDate) {
+      newDischargeDate = moment(item?.dischargeDate);
+    }
+
+    this.formGroup.patchValue({
+      hospitalId: item?.hospitalId,
+      hospitalName: item?.hospitalName,
+      admissionDate: newAdmissionDate ? newAdmissionDate?.toDate() : "",
+      dischargeDate: newDischargeDate ? newDischargeDate?.toDate() : "",
+      admittedOnPlannedDate: item?.admittedOnPlannedDate,
+      admittedOnPlannedDateComment: item?.admittedOnPlannedDateComment,
+      file: "",
+      patient: [this.patientData?._id],
+    });
+
+    this.formGroup.get("hospitalName").disable();
   }
 
   // Hospital linking
@@ -172,7 +219,7 @@ export class AdmissionDischargeTrackerComponent implements OnInit {
   }
 
   editFinalForm() {
-    let id = this.editingData._id;
+    let id = this.patientData._id;
     if (this.formGroup.valid) {
       let payload = {
         ...this.formGroup.getRawValue(),
@@ -186,6 +233,13 @@ export class AdmissionDischargeTrackerComponent implements OnInit {
 
       for (var i = 0; i < this.fileList?.length; i++) {
         formData.append("fileFirst", this.fileList[i]);
+      }
+
+      if (this.dischargeSummaryEditArray?.length) {
+        formData.append(
+          "dischargeSummary",
+          JSON.stringify(this.dischargeSummaryEditArray)
+        );
       }
 
       this.facilitatorService

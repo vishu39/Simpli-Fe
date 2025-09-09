@@ -31,11 +31,13 @@
 
     <!-- Opd request -->
     <div *ngSwitchCase="'UHIDS'">
-      <shared-finance-billing-view-hospital-uhid [patientData]="queryData"></shared-finance-billing-view-hospital-uhid>
+      <shared-finance-billing-view-hospital-uhid
+        [patientData]="queryData"
+      ></shared-finance-billing-view-hospital-uhid>
     </div>
 
     <div *ngSwitchCase="'Amounts'">
-      <table border="1" class="mt-4 uhidTable">
+      <table border="1" class="mt-4 uhidTable" *ngIf="docsData?.length">
         <thead>
           <tr>
             <th>Hospital Name</th>
@@ -44,7 +46,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of amountArray">
+          <tr *ngFor="let item of docsData">
             <td>{{ item?.hospitalName }}</td>
             <td>{{ item?.currency?.code }}</td>
             <td>{{ item?.amount }}</td>
@@ -53,27 +55,43 @@
           <tr>
             <td colspan="2"><b>Total Amount</b></td>
             <td>
-              <b>{{ getTotalAmount(amountArray) }}</b>
+              <b>{{ getTotalAmount(docsData) }}</b>
             </td>
           </tr>
         </tbody>
       </table>
+
+      <div *ngIf="isDocsLoading && !docsData?.length" class="divCenter">
+        <mat-spinner [diameter]="30"></mat-spinner>
+      </div>
+
+      <div *ngIf="!docsData?.length && !isDocsLoading" class="divCenter">
+        --No Data Found--
+      </div>
     </div>
 
     <div *ngSwitchCase="'Doc Bills'">
-      <global-shared-finance-billing-view-doc-bills  [patientData]="queryData"></global-shared-finance-billing-view-doc-bills>
+      <global-shared-finance-billing-view-doc-bills
+        [patientData]="queryData"
+      ></global-shared-finance-billing-view-doc-bills>
     </div>
 
     <div *ngSwitchCase="'Estimate Bills'">
-      <global-shared-finance-billing-view-estimate-bills  [patientData]="queryData"></global-shared-finance-billing-view-estimate-bills>
+      <global-shared-finance-billing-view-estimate-bills
+        [patientData]="queryData"
+      ></global-shared-finance-billing-view-estimate-bills>
     </div>
 
     <div *ngSwitchCase="'Admission/Discharge Tracker'">
-      <global-shared-finance-billing-view-admission-tracker-details  [patientData]="queryData"></global-shared-finance-billing-view-admission-tracker-details>
+      <global-shared-finance-billing-view-admission-tracker-details
+        [patientData]="queryData"
+      ></global-shared-finance-billing-view-admission-tracker-details>
     </div>
 
     <div *ngSwitchCase="'Final Bills'">
-      <global-shared-finance-billing-view-final-bills  [patientData]="queryData"></global-shared-finance-billing-view-final-bills>
+      <global-shared-finance-billing-view-final-bills
+        [patientData]="queryData"
+      ></global-shared-finance-billing-view-final-bills>
     </div>
   </div>
 </div>

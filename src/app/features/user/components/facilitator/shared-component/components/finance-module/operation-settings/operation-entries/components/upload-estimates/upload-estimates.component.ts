@@ -4,6 +4,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { MatRadioChange } from "@angular/material/radio";
 import { currencies } from "currencies.json";
 import { cloneDeep } from "lodash";
+import * as moment from "moment";
 import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
 
@@ -31,7 +32,7 @@ export class UploadEstimatesComponent implements OnInit {
     private fb: FormBuilder,
     private facilitatorService: FacilitatorService,
     private sharedService: SharedService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
@@ -51,6 +52,78 @@ export class UploadEstimatesComponent implements OnInit {
 
     this.getHospitalData();
     this.sortCurrencies();
+
+    if (this.isEdit) {
+      this.getEstimateDocForFinanceBillingById();
+    }
+  }
+
+  docDataForEdit: any = {};
+  getEstimateDocForFinanceBillingById() {
+    this.facilitatorService
+      .getEstimateDocForFinanceBillingById(this.patientData?._id, {
+        hospitalId: this.editingData?.hospitalId,
+      })
+      .subscribe((res: any) => {
+        this.docDataForEdit = res?.data[0];
+        this.patchData(this.docDataForEdit);
+      });
+  }
+
+  finalBillEditArray = [];
+  dischargeSummaryEditArray = [];
+  patchData(item: any) {
+    this.finalBillEditArray = item?.finalBill;
+    this.dischargeSummaryEditArray = item?.dischargeSummary;
+
+    this.formGroup.patchValue({
+      hospitalId: item?.hospitalId,
+      hospitalName: item?.hospitalName,
+      estimateGiven: item?.estimateGiven,
+    });
+
+    this.formGroup.get("hospitalName").disable();
+
+    if (item?.estimateGiven === "yes") {
+      let newEstimateDate: any = "";
+      let newApproxAdmissionDate: any = "";
+      if (!!item?.estimateDate) {
+        newEstimateDate = moment(item?.estimateDate);
+      }
+      if (!!item?.approxAdmissionDate) {
+        newApproxAdmissionDate = moment(item?.approxAdmissionDate);
+      }
+
+      this.getPackageArray.clear();
+      this.formGroup.patchValue({
+        estimateDate: newEstimateDate ? newEstimateDate?.toDate() : "",
+        approxAdmissionDate: newApproxAdmissionDate
+          ? newApproxAdmissionDate?.toDate()
+          : "",
+      });
+
+      if (item?.packageArray?.length) {
+        this.getPackageArray.removeAt(0);
+        item?.packageArray.forEach((res: any) => {
+          let fG = this.fb.group({
+            packageName: [res?.packageName, [Validators.required]],
+            roomPrice: [res?.roomPrice, [Validators.required]],
+            currency: [res?.currency, [Validators.required]],
+            roomCategory: [res?.roomCategory, [Validators.required]],
+          });
+
+          this.getPackageArray.push(fG);
+        });
+      }
+    } else if (item?.estimateGiven === "no") {
+      this.formGroup.patchValue({
+        comment: item?.comment,
+      });
+    }
+
+    this.onRadioChange({
+      value: item?.estimateGiven,
+    });
   }
 
   // Hospital linking
@@ -175,7 +248,7 @@ export class UploadEstimatesComponent implements OnInit {
     return c1 && c2 ? c1.code === c2.code : c1 === c2;
   }
 
-  onRadioChange(event: MatRadioChange) {
+  onRadioChange(event: any) {
     let value = event.value;
 
     // let hospitalIdControl = this.formGroup.get("hospitalId");
@@ -195,7 +268,9 @@ export class UploadEstimatesComponent implements OnInit {
         comment: "",
       });
 
-      this.addPackage();
+      if (!this.isEdit) {
+        this.addPackage();
+      }
 
       // this.setInitialCurrency();
       // hospitalIdControl?.setValidators([Validators.required]);
@@ -251,7 +326,7 @@ export class UploadEstimatesComponent implements OnInit {
 
   createPackageArrayForm() {
     return this.fb.group({
-      packageName: [""],
+      packageName: ["", [Validators.required]],
       roomPrice: ["", [Validators.required]],
       currency: [this.setInitialCurrency(), [Validators.required]],
       roomCategory: ["", [Validators.required]],
@@ -293,38 +368,38 @@ export class UploadEstimatesComponent implements OnInit {
       };
 
       if (values?.estimateGiven === "yes") {
-        payload.estimateDate = values?.estimateDate
-        payload.approxAdmissionDate = values?.approxAdmissionDate
-        payload.packageArray = values?.packageArray
+        payload.estimateDate = values?.estimateDate;
+        payload.approxAdmissionDate = values?.approxAdmissionDate;
+        payload.packageArray = values?.packageArray;
       }
       if (values?.estimateGiven === "no") {
-        payload.comment = values?.comment
+        payload.comment = values?.comment;
+      }
+
+      this.facilitatorService
+        .addEstimateDocForFinanceBilling(payload)
+        .subscribe((res: any) => {
+          this.sharedService.showNotification("snackBar-success", res?.message);
+
+          this.closeDialog(true);
+        });
+    }
+  }
+
+  editFinalForm() {
+    let id = this.patientData._id;
+    if (this.formGroup.valid) {
+      let payload = {
+        ...this.formGroup.getRawValue(),
       };
 
-    this.facilitatorService
-      .addEstimateDocForFinanceBilling(payload)
-      .subscribe((res: any) => {
-        this.sharedService.showNotification("snackBar-success", res?.message);
+      this.facilitatorService
+        .editEstimateDocForFinanceBilling(id, payload)
+        .subscribe((res: any) => {
+          this.sharedService.showNotification("snackBar-success", res?.message);
 
-        this.closeDialog(true);
-      });
+          this.closeDialog(true);
+        });
+    }
   }
-}
-
-editFinalForm() {
-  let id = this.editingData._id;
-  if (this.formGroup.valid) {
-    let payload = {
-      ...this.formGroup.getRawValue(),
-    };
-
-    this.facilitatorService
-      .editEstimateDocForFinanceBilling(id, payload)
-      .subscribe((res: any) => {
-        this.sharedService.showNotification("snackBar-success", res?.message);
-
-        this.closeDialog(true);
-      });
-  }
-}
 }

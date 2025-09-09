@@ -42,6 +42,50 @@ export class UploadFinalBillComponent implements OnInit {
     });
 
     this.getHospitalData();
+
+    if (this.isEdit) {
+      this.getFinalBillForFinanceBillingById();
+    }
+  }
+
+  docDataForEdit: any = {};
+  getFinalBillForFinanceBillingById() {
+    this.facilitatorService
+      .getFinalBillForFinanceBillingById(this.patientData?._id, {
+        hospitalId: this.editingData?.hospitalId,
+      })
+      .subscribe((res: any) => {
+        this.docDataForEdit = res?.data[0];
+        this.patchData(this.docDataForEdit);
+      });
+  }
+
+  finalBillEditArray = [];
+  dischargeSummaryEditArray = [];
+  patchData(item: any) {
+    this.finalBillEditArray = item?.finalBill;
+    this.dischargeSummaryEditArray = item?.dischargeSummary;
+
+    let newAdmissionDate: any = "";
+    let newDischargeDate: any = "";
+    if (!!item?.admissionDate) {
+      newAdmissionDate = moment(item?.admissionDate);
+    }
+    if (!!item?.dischargeDate) {
+      newDischargeDate = moment(item?.dischargeDate);
+    }
+
+    this.formGroup.patchValue({
+      hospitalId: item?.hospitalId,
+      hospitalName: item?.hospitalName,
+      admissionDate: newAdmissionDate ? newAdmissionDate?.toDate() : "",
+      dischargeDate: newDischargeDate ? newDischargeDate?.toDate() : "",
+      fileFirst: [""],
+      fileSecond: [""],
+      patient: [this.patientData?._id],
+    });
+
+    this.formGroup.get("hospitalName").disable();
   }
 
   admissionTrackerData: any = {};
@@ -226,7 +270,10 @@ export class UploadFinalBillComponent implements OnInit {
       }
 
       if (this.dischargeSummaryArray?.length) {
-        formData.append("dischargeSummary", JSON.stringify(this.dischargeSummaryArray));
+        formData.append(
+          "dischargeSummary",
+          JSON.stringify(this.dischargeSummaryArray)
+        );
       }
 
       for (var i = 0; i < this.fileFirstList?.length; i++) {
@@ -248,7 +295,7 @@ export class UploadFinalBillComponent implements OnInit {
   }
 
   editFinalForm() {
-    let id = this.editingData._id;
+    let id = this.patientData._id;
     if (this.formGroup.valid) {
       let payload = {
         ...this.formGroup.getRawValue(),
@@ -269,6 +316,17 @@ export class UploadFinalBillComponent implements OnInit {
 
       for (var i = 0; i < this.fileSecondList?.length; i++) {
         formData.append("fileSecond", this.fileSecondList[i]);
+      }
+
+      if (this.finalBillEditArray?.length) {
+        formData.append("finalBill", JSON.stringify(this.finalBillEditArray));
+      }
+
+      if (this.dischargeSummaryEditArray?.length) {
+        formData.append(
+          "dischargeSummary",
+          JSON.stringify(this.dischargeSummaryEditArray)
+        );
       }
 
       this.facilitatorService

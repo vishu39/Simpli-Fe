@@ -47,7 +47,38 @@ export class OperationEntriesRightDetailsComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.getAllHospitalUhidForFinanceBilling()
+    this.getAllHospitalUhidForFinanceBilling();
+    this.getAllBillingDocForFinanceBilling();
+  }
+
+  docsParams: any = {
+    page: 1,
+    limit: 0,
+    search: "",
+  };
+  isDocsLoading: boolean = false;
+  docsData = [];
+  formattedAmounts: string = "";
+  total: number = 0;
+  getAllBillingDocForFinanceBilling() {
+    this.isDocsLoading = true;
+    this.facilitatorService
+      .getAllBillingDocForFinanceBilling(this.docsParams, this.queryData?._id)
+      .subscribe(
+        (res: any) => {
+          this.docsData = res?.data?.content;
+          this.formattedAmounts = this.docsData
+            .map((a) => `${a.amount} ${a?.currency?.code}`)
+            .join(" + ");
+
+          // Calculate total
+          this.total = this.docsData.reduce((sum, a) => sum + (+a.amount), 0);
+          this.isDocsLoading = false;
+        },
+        () => {
+          this.isDocsLoading = false;
+        }
+      );
   }
 
   hospitalUhidParams: any = {
@@ -57,20 +88,23 @@ export class OperationEntriesRightDetailsComponent implements OnInit {
   };
 
   uhidArray: any = [];
-  isLoading: any = false
+  isLoading: any = false;
   getAllHospitalUhidForFinanceBilling() {
-    this.isLoading = true
+    this.isLoading = true;
     this.facilitatorService
       .getAllHospitalUhidForFinanceBilling(
         this.hospitalUhidParams,
         this.queryData?._id
       )
-      .subscribe((res: any) => {
-        this.uhidArray = res?.data?.content
-        this.isLoading = false
-      }, () => {
-        this.isLoading = false
-      });
+      .subscribe(
+        (res: any) => {
+          this.uhidArray = res?.data?.content;
+          this.isLoading = false;
+        },
+        () => {
+          this.isLoading = false;
+        }
+      );
   }
 
   treatingDoctorUserType = treatingDoctorUserType;
