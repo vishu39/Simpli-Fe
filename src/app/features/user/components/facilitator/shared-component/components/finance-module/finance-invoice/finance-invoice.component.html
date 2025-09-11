@@ -1,0 +1,279 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb
+        [title]="'Invoice'"
+        [active_item]="'All Invoice'"
+      ></app-breadcrumb>
+    </div>
+
+    <div class="invoceContainer">
+      <div class="card p-3 mb-4">
+        <h4 style="text-align: center" class="mb-4">
+          Step 1 – Select Hospital & Company
+        </h4>
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Hospital</mat-label>
+              <mat-select
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollHospital()"
+                (selectionChange)="onChangeHospital($event)"
+                [(ngModel)]="selectHospital._id"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchHospital($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!hospitalData?.length && !isLoadingHospital"
+                >
+                  No results
+                </div>
+                <mat-option
+                  *ngFor="let item of hospitalData"
+                  [value]="item._id"
+                >
+                  {{ item.name }}
+                </mat-option>
+                <mat-spinner
+                  *ngIf="isLoadingHospital"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Select Company</mat-label>
+              <mat-select
+                msInfiniteScroll
+                (infiniteScroll)="onInfiniteScrollCompanyMaster()"
+                (selectionChange)="onChangeCompanyMaster($event)"
+                [(ngModel)]="selectedCompanyId"
+              >
+                <input
+                  class="searchInput"
+                  placeholder="search..."
+                  (keydown.space)="$event.stopPropagation()"
+                  matInput
+                  (keyup)="searchCompanyMaster($event.target.value)"
+                />
+                <div
+                  class="other_option"
+                  *ngIf="!companyData?.length && !isCompanyDataLoading"
+                >
+                  No results
+                </div>
+                <mat-option *ngFor="let item of companyData" [value]="item._id">
+                  {{ item.companyName }}
+                </mat-option>
+                <mat-spinner
+                  *ngIf="isCompanyDataLoading"
+                  class="mx-auto mb-2 mt-2"
+                  [diameter]="30"
+                >
+                </mat-spinner>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-3 mb-4">
+        <h4 style="text-align: center" class="mb-4">
+          Step 2 – Patient Data Reconciliation
+        </h4>
+
+        <div class="table-container">
+          <p class="info-text">Upload CSV/Excel or Select Patients</p>
+
+          <table class="patient-table">
+            <thead>
+              <tr>
+                <th>Patient Name</th>
+                <th>IP/OP/Package</th>
+                <th>Hosp. Admission</th>
+                <th>Hosp. Discharge</th>
+                <th>Hospital Amt</th>
+                <th>Our Admission</th>
+                <th>Our Discharge</th>
+                <th>Our Amt</th>
+                <th>Hospital Payout</th>
+                <th>Default Amt</th>
+                <th>Invoice Desc</th>
+                <th>OK</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of patientData">
+                <td>{{ item.patientName }}</td>
+                <td>
+                  <select [(ngModel)]="item.type">
+                    <option *ngFor="let opt of typeOptions" [value]="opt">
+                      {{ opt }}
+                    </option>
+                  </select>
+                </td>
+                <td>{{ item.hospAdmission }}</td>
+                <td>{{ item.hospDischarge }}</td>
+                <td>{{ item.hospitalAmt }}</td>
+                <td>{{ item.ourAdmission }}</td>
+                <td>{{ item.ourDischarge }}</td>
+                <td>{{ item.ourAmt }}</td>
+                <td>{{ item.hospitalPayout }}</td>
+                <td>{{ item.defaultAmt }}</td>
+                <td>
+                  <select style="width: 100%" [(ngModel)]="item.invoiceDesc">
+                    <option *ngFor="let inv of invoiceOptions" [value]="inv">
+                      {{ inv }}
+                    </option>
+                  </select>
+                </td>
+                <td>
+                  <input type="checkbox" [(ngModel)]="item.ok" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card p-3 mb-4">
+        <h4 style="text-align: center" class="mb-4">
+          Step 3 – Facilitator Fees Mapping & Totals
+        </h4>
+
+        <div class="table-container">
+          <p class="info-text">
+            Automatically calculate Facilitator Fees based on master settings
+            (e.g., OP 20%, IP 25%) but editable per patient.
+          </p>
+
+          <table class="fee-table">
+            <thead>
+              <tr>
+                <th>Patient Name</th>
+                <th>Type</th>
+                <th>Our Amt</th>
+                <th>% Applied</th>
+                <th>Facilitator Fees</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of feeData">
+                <td>{{ item.patientName }}</td>
+                <td>{{ item.type }}</td>
+                <td>{{ item.ourAmt }}</td>
+                <td>
+                  <input
+                    type="text"
+                    [(ngModel)]="item.percentApplied"
+                    class="percent-input"
+                  />
+                </td>
+                <td>{{ getFacilitatorFee(item) }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5" class="total-row" style="text-align: center">
+                  <b>Total Facilitator Fees: </b> {{ totalFees }}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="card p-3 mb-4">
+        <h4 style="text-align: center" class="mb-4">
+          Step 4 – Partner Payout Mapping
+        </h4>
+
+        <div class="table-container">
+          <table class="payout-table">
+            <thead>
+              <tr>
+                <th>Patient Name</th>
+                <th>Partner Referred</th>
+                <th>Our Payout %</th>
+                <th>Our Payout Amt</th>
+                <th>Hospital Payout</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of payoutData">
+                <td>{{ item.patientName }}</td>
+                <td>{{ item.partnerReferred }}</td>
+                <td>{{ item.ourPayoutPercent }}</td>
+                <td>{{ item.ourPayoutAmount }}</td>
+                <td>{{ item.hospitalPayout }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card p-3 mb-4">
+        <h4 style="text-align: center" class="mb-4">
+          Step 5 – Invoice Preview + E-Invoice Integration
+        </h4>
+
+        <div class="p-4 bg-gray-100 rounded-lg">
+          <div class="p-4 card" style="background-color: #f2f3f5 !important">
+            <div style="text-align: center">
+              <b>Facilitator GSTIN: </b> {{ facilitatorGSTIN }}
+            </div>
+            <div style="text-align: center">
+              <b>Hospital GSTIN: </b> {{ hospitalGSTIN }}
+            </div>
+            <div style="text-align: center">
+              <b>Invoice No: </b> {{ invoiceNo }} | Date: {{ invoiceDate }}
+            </div>
+          </div>
+
+          <div class="p-4 card mt-4">
+            <h3 class="text-center font-bold mb-3">
+              Line Items (with GST breakup)
+            </h3>
+            <div
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <ul>
+                <li *ngFor="let p of patients">
+                  {{ p.name }} – Facilitator Fees: {{ p.facilitatorFees }} |
+                  GST: {{ (p.facilitatorFees * p.gstPercent) / 100 }} | Total:
+                  {{
+                    p.facilitatorFees + (p.facilitatorFees * p.gstPercent) / 100
+                  }}
+                </li>
+              </ul>
+            </div>
+
+            <h3 class="text-center font-bold mt-3">
+              Grand Total: {{ getGrandTotal() }}
+            </h3>
+          </div>
+
+          <div class="d-flex gap-3">
+            <button mat-raised-button color="primary">
+              Generate IRN (E-Invoice)
+            </button>
+            <button mat-raised-button color="success">Download PDF</button>
+            <button mat-raised-button color="warn">Send to Hospital</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

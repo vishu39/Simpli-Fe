@@ -3,10 +3,12 @@ import { RouterModule, Routes } from "@angular/router";
 import { OperationEntriesComponent } from "./components/operation-entries/operation-entries.component";
 import { MasterDataEntriesComponent } from "./components/master-data-entries/master-data-entries.component";
 import { FinanceLogsComponent } from "./components/finance-logs/finance-logs.component";
+import { FinanceInvoiceComponent } from "./components/finance-invoice/finance-invoice.component";
 
 const routes: Routes = [
   { path: "master-settings", component: MasterDataEntriesComponent },
   { path: "billing-entries", component: OperationEntriesComponent },
+  { path: "invoice", component: FinanceInvoiceComponent },
   { path: "logs", component: FinanceLogsComponent },
 ];
 

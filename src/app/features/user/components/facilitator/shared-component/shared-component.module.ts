@@ -197,11 +197,12 @@ import { UploadBillingDocComponent } from "./components/finance-module/operation
 import { UploadEstimatesComponent } from "./components/finance-module/operation-settings/operation-entries/components/upload-estimates/upload-estimates.component";
 import { AdmissionDischargeTrackerComponent } from "./components/finance-module/operation-settings/operation-entries/components/admission-discharge-tracker/admission-discharge-tracker.component";
 import { UploadFinalBillComponent } from "./components/finance-module/operation-settings/operation-entries/components/upload-final-bill/upload-final-bill.component";
-import { FinanceBillingViewHospitalUhidComponent } from './components/finance-module/operation-settings/operation-entries/components/finance-billing-view-hospital-uhid/finance-billing-view-hospital-uhid.component';
+import { FinanceBillingViewHospitalUhidComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-hospital-uhid/finance-billing-view-hospital-uhid.component";
 import { FinanceBillingViewDocBillsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-doc-bills/finance-billing-view-doc-bills.component";
 import { FinanceBillingViewAdmissionTrackerDetailsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-admission-tracker-details/finance-billing-view-admission-tracker-details.component";
 import { FinanceBillingViewEstimateBillsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-estimate-bills/finance-billing-view-estimate-bills.component";
 import { FinanceBillingViewFinalBillsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-final-bills/finance-billing-view-final-bills.component";
+import { FinanceInvoiceComponent } from "./components/finance-module/finance-invoice/finance-invoice.component";
 
 @NgModule({
   declarations: [
@@ -401,7 +402,8 @@ import { FinanceBillingViewFinalBillsComponent } from "./components/finance-modu
     FinanceBillingViewDocBillsComponent,
     FinanceBillingViewAdmissionTrackerDetailsComponent,
     FinanceBillingViewEstimateBillsComponent,
-    FinanceBillingViewFinalBillsComponent
+    FinanceBillingViewFinalBillsComponent,
+    FinanceInvoiceComponent,
   ],
   imports: [
     CommonModule,
@@ -469,6 +471,7 @@ import { FinanceBillingViewFinalBillsComponent } from "./components/finance-modu
     OperationEntriesComponent,
     MasterDataEntriesComponent,
     FinanceLogsComponent,
+    FinanceInvoiceComponent,
   ],
   providers: [DatePipe],
 })
