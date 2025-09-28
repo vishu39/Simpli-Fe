@@ -3687,6 +3687,17 @@ export class FacilitatorService {
       );
   }
 
+  getAllCountryForOpHospitalPayout(id: string) {
+    return this.http
+      .get(this.serviceApiUrl + `getAllCountryForOpHospitalPayout/${id}`)
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
   addIpHospitalPayout(data: any) {
     const dataEncrypt = this.sharedService.encrypt(data);
     return this.http.post(this.serviceApiUrl + `addIpHospitalPayout`, {
@@ -3711,6 +3722,17 @@ export class FacilitatorService {
       .get(this.serviceApiUrl + `getAllIpHospitalPayoutData/${id}`, {
         params: params,
       })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  getAllCountryForIpHospitalPayout(id: string) {
+    return this.http
+      .get(this.serviceApiUrl + `getAllCountryForIpHospitalPayout/${id}`)
       .pipe(
         map((res: any) => {
           res.data = this.sharedService.decrypt(res.data);
@@ -4101,6 +4123,53 @@ export class FacilitatorService {
 
     return this.http
       .get(this.serviceApiUrl + `getFinalBillForFinanceBillingById/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+    
+  addPatientDepositForFinanceBilling(data: any) {
+    return this.http.post(
+      this.serviceApiUrl + `addPatientDepositForFinanceBilling`,
+      data
+    );
+  }
+
+  editPatientDepositForFinanceBilling(id: any, data: any) {
+    return this.http.put(
+      this.serviceApiUrl + `editPatientDepositForFinanceBilling/${id}`,
+      data
+    );
+  }
+
+  getAllPatientDepositForFinanceBilling(data: any, id: string) {
+    const params = new HttpParams()
+      .set("page", data.page)
+      .set("limit", data.limit)
+      .set("search", data.search)
+      .set("filter_obj", JSON.stringify(data?.filter_obj || {}));
+    return this.http
+      .get(this.serviceApiUrl + `getAllPatientDepositForFinanceBilling/${id}`, {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.sharedService.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  getPatientDepositForFinanceBillingById(id: any, data: any) {
+    const params = new HttpParams().set("hospitalId", data.hospitalId);
+
+    return this.http
+      .get(this.serviceApiUrl + `getPatientDepositForFinanceBillingById/${id}`, {
         params: params,
       })
       .pipe(

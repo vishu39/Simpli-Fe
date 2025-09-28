@@ -133,6 +133,7 @@ export class InternalUserDialogComponent implements OnInit {
           this.internalUserForm.patchValue({
             emailId: res?.data?.emailId,
           });
+          this.sharedService.stopLoader();
         }
       });
   }

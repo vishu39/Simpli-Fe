@@ -91,10 +91,8 @@ export class AdminMainLayoutComponent implements OnInit {
   getUnreadEmailFetchCount() {
     this.hospitalService.getUnreadEmailFetchCount().subscribe((res: any) => {
       this.totalUnreadMessage = res?.data?.count;
-      let findIndex = this.ROUTES.findIndex(
-        (r: any) => r.path === "/user/hospital/admin/email-fetch"
-      );
-      let index = findIndex !== -1 ? findIndex : 8;
+       let findIndex=this.ROUTES.findIndex((r:any)=>r.path === '/user/hospital/admin/email-fetch')
+      let index=findIndex !== -1 ? findIndex : 8
       // this.ROUTES[8].badge = `${this.totalUnreadMessage}`;
       this.ROUTES[index].badge = `${this.totalUnreadMessage}`;
     });
@@ -197,43 +195,6 @@ export class AdminMainLayoutComponent implements OnInit {
       badgeClass: "",
       submenu: [],
     },
-    // {
-    //   path: "",
-    //   title: "Finance",
-    //   iconType: "material-icons-two-tone",
-    //   icon: "money",
-    //   class: "menu-toggle",
-    //   active: false,
-    //   groupTitle: false,
-    //   badge: "",
-    //   badgeClass: "",
-    //   submenu: [
-    //     {
-    //       path: "/user/hospital/admin/finance/master-data-entries",
-    //       title: "Master Data Entries",
-    //       iconType: "",
-    //       icon: "",
-    //       class: "ml-menu",
-    //       active: false,
-    //       groupTitle: false,
-    //       badge: "",
-    //       badgeClass: "",
-    //       submenu: [],
-    //     },
-    //     {
-    //       path: "/user/hospital/admin/finance/billing-entries",
-    //       title: "Billing Entries",
-    //       iconType: "",
-    //       icon: "",
-    //       class: "ml-menu",
-    //       active: false,
-    //       groupTitle: false,
-    //       badge: "",
-    //       badgeClass: "",
-    //       submenu: [],
-    //     },
-    //   ],
-    // },
     {
       path: "/user/hospital/admin/email-fetch",
       title: "Email Fetch",

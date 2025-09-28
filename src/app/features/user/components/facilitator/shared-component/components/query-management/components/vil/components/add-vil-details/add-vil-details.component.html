@@ -79,6 +79,8 @@
             [filePreviewList]="filePreviewUrls"
             [type]="'fileUploader'"
             [remove]="false"
+            [mode]="'addVil'"
+            (onFileRead)="readFile($event)"
           ></app-global-image-preview>
         </div>
         <mat-form-field class="example-full-width" appearance="outline">
@@ -108,6 +110,14 @@
         </div>
       </div>
     </div>
+
+    <div *ngIf="isAiVilChecker">
+      <global-shared-vil-ai-checker-table
+        [readTotalData]="readTotalData"
+        [isAiVilChecker]="isAiVilChecker"
+      ></global-shared-vil-ai-checker-table>
+    </div>
+
     <div class="row mt-2">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
         <div class="example-button-row justify-end">

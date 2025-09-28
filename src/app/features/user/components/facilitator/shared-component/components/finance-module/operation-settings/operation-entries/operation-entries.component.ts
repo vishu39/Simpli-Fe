@@ -10,6 +10,7 @@ import { UploadEstimatesComponent } from "src/app/features/user/components/facil
 import { UploadFinalBillComponent } from "src/app/features/user/components/facilitator/shared-component/components/finance-module/operation-settings/operation-entries/components/upload-final-bill/upload-final-bill.component";
 import { SMToolBar } from "src/app/smvt-framework/interfaces/sm-framework-defaults";
 import { CommonService } from "src/app/smvt-framework/services/common.service";
+import { AddPatientDepositComponent } from "./components/add-patient-deposit/add-patient-deposit.component";
 
 @Component({
   selector: "shared-operation-entries",
@@ -96,6 +97,9 @@ export class OperationEntriesComponent implements OnInit {
     if (data?.mode === "Upload Estimates") {
       this.uploadEstimates();
     }
+    if (data?.mode === "Patient Deposit") {
+      this.addPatientDeposit();
+    }
     if (data?.mode === "Upload Bill Docs") {
       this.uploadBillDoc();
     }
@@ -167,6 +171,20 @@ export class OperationEntriesComponent implements OnInit {
       autoFocus: false,
     });
     dialogRef.componentInstance.dialogTitle = "Final Bill Upload";
+    dialogRef.componentInstance.patientData = this.queryData;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.apiCall == true) {
+      }
+    });
+  }
+
+  addPatientDeposit() {
+    const dialogRef = this.dialog.open(AddPatientDepositComponent, {
+      width: "80%",
+      disableClose: true,
+      autoFocus: false,
+    });
+    dialogRef.componentInstance.dialogTitle = "Add Patient Deposit";
     dialogRef.componentInstance.patientData = this.queryData;
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.apiCall == true) {

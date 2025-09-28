@@ -303,7 +303,10 @@ export class DowloadVilComponent implements OnInit {
       value === "amritaCommonNigeriaVilTemplate" ||
       value === "sarvodyaCommonIraqVilTemplate" ||
       value === "asterCommonNigeriaVilTemplate" ||
-      value === "nciCommonNigeriaVilTemplate"
+      value === "nciCommonNigeriaVilTemplate" ||
+      value === "jupiterCommonMumbaiNigeriaVilTemplate" ||
+      value === "jupiterCommonPuneNigeriaVilTemplate" || 
+      value === "lakeshoreCommonNigeriaVilTemplate" 
     ) {
       this.getAllAddedOpinion();
       this.getAllAddedOpinionEdited();

@@ -21,11 +21,7 @@ export class IpPartnerPayoutComponent implements OnInit {
     private facilitatorService: FacilitatorService,
     private sharedService: SharedService,
     private dialog: MatDialog
-  ) {}
-
-  revenueTypeOptions: any = [];
-
-  ngOnInit(): void {
+  ) {
     this.addFormGroup = this.fb.group({
       hospital: [null, [Validators.required]],
       sourceCountry: [null, [Validators.required]],
@@ -36,7 +32,11 @@ export class IpPartnerPayoutComponent implements OnInit {
     this.formGroup = this.fb.group({
       ip: this.fb.array([]),
     });
+  }
 
+  revenueTypeOptions: any = [];
+
+  ngOnInit(): void {
     this.getAllHospital(false);
     this.getCountryDataForSource(false);
   }
@@ -61,6 +61,7 @@ export class IpPartnerPayoutComponent implements OnInit {
     } else {
       if (this.referralPartner.length) {
         this.getRevenueTypeMasterFinanceData();
+        this.getAllIpPartnerPayoutData();
       }
     }
   }

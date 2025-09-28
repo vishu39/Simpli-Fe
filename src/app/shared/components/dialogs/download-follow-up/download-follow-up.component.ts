@@ -108,7 +108,6 @@ export class DownloadFollowUpComponent implements OnInit {
   reportFormSubmit() {
    let loginType=GET_LOGIN_TYPE()
     if (this.reportForm.valid) {
-      this.sharedService.startLoader();
       let values = this.reportForm.getRawValue();
 
       if (values?.endDate) {
@@ -127,7 +126,6 @@ export class DownloadFollowUpComponent implements OnInit {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           });
           FileSaver.saveAs(blob, e?.filename);
-          this.sharedService.stopLoader();
           this.sharedService.showNotification("snackBar-success", res.message);
           this.closeDialog(true);
         });
@@ -143,7 +141,6 @@ export class DownloadFollowUpComponent implements OnInit {
              type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
            });
            FileSaver.saveAs(blob, e?.filename);
-           this.sharedService.stopLoader();
            this.sharedService.showNotification("snackBar-success", res.message);
            this.closeDialog(true);
          });

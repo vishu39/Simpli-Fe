@@ -123,7 +123,6 @@ export class PendingQueryListComponent implements OnInit {
     }
   }
   downloadQuery() {
-    this.sharedService.startLoader();
     this.facilitatorService.downloadPendingQuery().subscribe((res: any) => {
       let e = res?.data;
       const uint8Array = new Uint8Array(e?.content?.data);
@@ -131,7 +130,6 @@ export class PendingQueryListComponent implements OnInit {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
       FileSaver.saveAs(blob, e?.filename);
-      this.sharedService.stopLoader();
       this.sharedService.showNotification("snackBar-success", res.message);
     });
   }

@@ -30,7 +30,7 @@ export class EmailFetchSendProformaComponent implements OnInit {
   languageList = [];
   languageParams = {
     page: 1,
-    limit: 20,
+    limit: 0,
     search: "",
   };
 

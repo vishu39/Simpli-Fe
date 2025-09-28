@@ -203,6 +203,8 @@ import { FinanceBillingViewAdmissionTrackerDetailsComponent } from "./components
 import { FinanceBillingViewEstimateBillsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-estimate-bills/finance-billing-view-estimate-bills.component";
 import { FinanceBillingViewFinalBillsComponent } from "./components/finance-module/operation-settings/operation-entries/components/finance-billing-view-final-bills/finance-billing-view-final-bills.component";
 import { FinanceInvoiceComponent } from "./components/finance-module/finance-invoice/finance-invoice.component";
+import { AddPatientDepositComponent } from './components/finance-module/operation-settings/operation-entries/components/add-patient-deposit/add-patient-deposit.component';
+import { ViewPatientDepositComponent } from './components/finance-module/operation-settings/operation-entries/components/view-patient-deposit/view-patient-deposit.component';
 
 @NgModule({
   declarations: [
@@ -404,6 +406,8 @@ import { FinanceInvoiceComponent } from "./components/finance-module/finance-inv
     FinanceBillingViewEstimateBillsComponent,
     FinanceBillingViewFinalBillsComponent,
     FinanceInvoiceComponent,
+    AddPatientDepositComponent,
+    ViewPatientDepositComponent,
   ],
   imports: [
     CommonModule,

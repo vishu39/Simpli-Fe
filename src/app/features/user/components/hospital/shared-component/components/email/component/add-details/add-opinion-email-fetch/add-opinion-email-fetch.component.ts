@@ -682,6 +682,7 @@ export class AddOpinionEmailFetchComponent implements OnInit {
               });
             }
           }
+          // this.sharedService.stopLoader()
         }
       });
   }

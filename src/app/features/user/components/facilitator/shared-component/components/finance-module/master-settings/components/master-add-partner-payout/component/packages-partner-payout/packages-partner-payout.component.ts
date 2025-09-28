@@ -23,9 +23,7 @@ export class PackagesPartnerPayoutComponent implements OnInit {
     private facilitatorService: FacilitatorService,
     private sharedService: SharedService,
     private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.addFormGroup = this.fb.group({
       hospital: [null, [Validators.required]],
       sourceCountry: [null, [Validators.required]],
@@ -36,7 +34,9 @@ export class PackagesPartnerPayoutComponent implements OnInit {
     this.formGroup = this.fb.group({
       packages: this.fb.array([]),
     });
+  }
 
+  ngOnInit(): void {
     this.getAllHospital(false);
     this.getCountryDataForSource(false);
   }
@@ -401,7 +401,7 @@ export class PackagesPartnerPayoutComponent implements OnInit {
     // });
   }
 
-  addPackageFormField(item: any) {    
+  addPackageFormField(item: any) {
     let buildObj = this.fb.group({
       hospitalId: [
         {

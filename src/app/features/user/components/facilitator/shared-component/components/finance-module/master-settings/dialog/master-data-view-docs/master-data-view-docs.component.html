@@ -30,7 +30,7 @@
               !inputData.gstCertificate &&
               !inputData.registrationCertificate &&
               !inputData.panCertificate &&
-              !inputData.signingAuthorityImage
+              !inputData.stampWithSignature
             "
             class="divCenter"
           >
@@ -87,17 +87,56 @@
 
           <div
             class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-4"
-            *ngIf="!!inputData.signingAuthorityImage"
+            *ngIf="!!inputData.stampWithSignature"
           >
-            <h6>Uploaded Signing Authority Image</h6>
+            <h6>Uploaded Stamp With Signature</h6>
             <div class="mt-4">
               <app-global-image-preview
-                [fileList]="[inputData.signingAuthorityImage]"
-                [filePreviewList]="[inputData.signingAuthorityImage]"
+                [fileList]="[inputData.stampWithSignature]"
+                [filePreviewList]="[inputData.stampWithSignature]"
                 [type]="'fileUploaded'"
                 [remove]="false"
                 [className]="'img_width_100'"
               ></app-global-image-preview>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="inputData?.address?.length" class="mt-4">
+          <h5>Address</h5>
+
+          <div class="row mt-2">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div><b>Address Line 1</b></div>
+              <div>{{ inputData?.address[0]?.addressLine1 || NIL }}</div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div><b>Address Line 2</b></div>
+              <div>{{ inputData?.address[0]?.addressLine2 || NIL }}</div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div><b>Locality</b></div>
+              <div>{{ inputData?.address[0]?.locality || NIL }}</div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div><b>Country</b></div>
+              <div>{{ inputData?.address[0]?.country || NIL }}</div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div><b>State</b></div>
+              <div>{{ inputData?.address[0]?.state || NIL }}</div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div><b>City</b></div>
+              <div>{{ inputData?.address[0]?.city || NIL }}</div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div><b>District</b></div>
+              <div>{{ inputData?.address[0]?.district || NIL }}</div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+              <div><b>Pincode</b></div>
+              <div>{{ inputData?.address[0]?.pincode || NIL }}</div>
             </div>
           </div>
         </div>

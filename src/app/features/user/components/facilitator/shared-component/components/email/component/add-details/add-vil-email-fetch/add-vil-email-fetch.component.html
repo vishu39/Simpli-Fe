@@ -182,6 +182,8 @@
                 [filePreviewList]="filePreviewUrls"
                 [type]="'fileUploader'"
                 [remove]="false"
+                [mode]="'addVil'"
+                (onFileRead)="readFile($event)"
               ></app-email-fetch-image-previewer>
             </div>
             <div
@@ -238,6 +240,13 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div *ngIf="isAiVilChecker">
+          <global-shared-vil-ai-checker-table
+            [readTotalData]="readTotalData"
+            [isAiVilChecker]="isAiVilChecker"
+          ></global-shared-vil-ai-checker-table>
         </div>
       </form>
     </div>

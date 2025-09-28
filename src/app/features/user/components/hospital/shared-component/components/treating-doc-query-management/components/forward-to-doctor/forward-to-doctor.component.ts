@@ -210,6 +210,8 @@ export class ForwardToDoctorComponent implements OnInit {
             emailId: res?.data?.emailId,
             contact: res?.data?.contact,
           });
+          this.sharedService.stopLoader();
+
         }
       });
   }

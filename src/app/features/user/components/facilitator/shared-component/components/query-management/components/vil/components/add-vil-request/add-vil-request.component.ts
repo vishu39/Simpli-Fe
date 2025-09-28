@@ -92,27 +92,21 @@ export class AddVilRequestComponent implements OnInit {
   ) {}
   createForm() {
     this.vilRequestForm = this.fb.group({
-      patientName: [this.patientData?.name, [Validators.required]],
-      givenName: [this.patientData?.givenName],
-      surName: [this.patientData?.surName],
-      gender: [this.patientData?.gender],
+      patientName: ["", [Validators.required]],
+      givenName: [""],
+      surName: [""],
+      gender: [""],
       dob: [""],
-      country: [this.patientData?.country || null],
+      country: [null],
       addressInIndia: [""],
       contactInIndia: [""],
-      emailId: [
-        this.patientData?.emailId,
-        [Validators.pattern(regexService.emailRegex)],
-      ],
-      contact: [
-        this.patientData?.contact,
-        [Validators.pattern(regexService.contactRegex)],
-      ],
-      address: [this.patientData?.address],
+      emailId: ["", [Validators.pattern(regexService.emailRegex)]],
+      contact: ["", [Validators.pattern(regexService.contactRegex)]],
+      address: [""],
       treatment: [null],
       department: [null],
       // verifyAddress: [false],
-      passportNumber: [this.patientData?.passportNumber, [Validators.required]],
+      passportNumber: ["", [Validators.required]],
       patient: [this.patientData?._id],
       hospitalName: [, [Validators.required]],
       hospitalId: ["", [Validators.required]],
@@ -143,6 +137,7 @@ export class AddVilRequestComponent implements OnInit {
 
   ngOnInit(): void {
     this.createForm();
+    this.getPatientById();
     this.getAllVilRequest();
     this.getAllAggregator();
     this.getCountryData();
@@ -150,17 +145,47 @@ export class AddVilRequestComponent implements OnInit {
     this.getTreatmentData();
     this.patchDraft();
 
-    let newDob: any = "";
-    if (!!this.patientData?.dob) {
-      newDob = moment(this.patientData?.dob);
-    }
+    // let newDob: any = "";
+    // if (!!this.patientData?.dob) {
+    //   newDob = moment(this.patientData?.dob);
+    // }
 
-    this.vilRequestForm.patchValue({
-      dob: newDob ? newDob?.toDate() : "",
-      contactInIndia: this.patientData?.contactInIndia || "",
-      addressInIndia: this.patientData?.addressInIndia || "",
-      treatment: this.patientData?.treatment,
-    });
+    // this.vilRequestForm.patchValue({
+    //   dob: newDob ? newDob?.toDate() : "",
+    //   contactInIndia: this.patientData?.contactInIndia || "",
+    //   addressInIndia: this.patientData?.addressInIndia || "",
+    //   treatment: this.patientData?.treatment,
+    // });
+  }
+
+  getPatientById() {
+    this.faciliatorService
+      .getPatient(this.patientData._id)
+      .subscribe((res: any) => {
+        this.patientData = res?.data;
+
+        let newDob: any = "";
+        if (!!this.patientData?.dob) {
+          newDob = moment(this.patientData?.dob);
+        }
+
+        this.vilRequestForm.patchValue({
+          patientName: this.patientData?.name,
+          givenName: this.patientData?.givenName,
+          surName: this.patientData?.surName,
+          gender: this.patientData?.gender,
+          country: this.patientData?.country || null,
+          emailId: this.patientData?.emailId,
+          contact: this.patientData?.contact,
+          address: this.patientData?.address,
+          passportNumber: this.patientData?.passportNumber,
+          patient: this.patientData?._id,
+          dob: newDob ? newDob?.toDate() : "",
+          contactInIndia: this.patientData?.contactInIndia || "",
+          addressInIndia: this.patientData?.addressInIndia || "",
+          treatment: this.patientData?.treatment,
+        });
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -354,10 +379,10 @@ export class AddVilRequestComponent implements OnInit {
         this.attendantArray.clear();
         addedData?.attendantDetails?.forEach((t: any) => {
           let formObj: FormGroup = this.createAttendantArrayForm();
-        let newDob:any
-        if(!!t?.dob){
-          newDob = moment(t?.dob);
-        }
+          let newDob: any;
+          if (!!t?.dob) {
+            newDob = moment(t?.dob);
+          }
           formObj.patchValue({
             name: t?.name,
             passportNumber: t?.passportNumber,
@@ -382,10 +407,10 @@ export class AddVilRequestComponent implements OnInit {
         this.donorArray.clear();
         addedData?.donorDetails?.forEach((t: any) => {
           let formObj: FormGroup = this.createDonorArrayForm();
-        let newDob:any
-        if(!!t?.dob){
-          newDob = moment(t?.dob);
-        }
+          let newDob: any;
+          if (!!t?.dob) {
+            newDob = moment(t?.dob);
+          }
           formObj.patchValue({
             name: t?.name,
             passportNumber: t?.passportNumber,
@@ -940,8 +965,8 @@ export class AddVilRequestComponent implements OnInit {
     if (vilRequestDraftData?.attendantDetails?.length > 0) {
       vilRequestDraftData?.attendantDetails?.forEach((t: any) => {
         let formObj: FormGroup = this.createAttendantArrayForm();
-        let newDob:any
-        if(!!t?.dob){
+        let newDob: any;
+        if (!!t?.dob) {
           newDob = moment(t?.dob);
         }
         formObj.patchValue({
@@ -967,8 +992,8 @@ export class AddVilRequestComponent implements OnInit {
     if (vilRequestDraftData?.donorDetails?.length > 0) {
       vilRequestDraftData?.donorDetails?.forEach((t: any) => {
         let formObj: FormGroup = this.createDonorArrayForm();
-        let newDob:any
-        if(!!t?.dob){
+        let newDob: any;
+        if (!!t?.dob) {
           newDob = moment(t?.dob);
         }
         formObj.patchValue({
@@ -991,7 +1016,7 @@ export class AddVilRequestComponent implements OnInit {
       delete newData["donorDetails"];
     }
 
-    if(newData?.aggregator?.length){
+    if (newData?.aggregator?.length) {
       delete newData["aggregator"];
     }
     // if (!newData?.aggregator?.length) {

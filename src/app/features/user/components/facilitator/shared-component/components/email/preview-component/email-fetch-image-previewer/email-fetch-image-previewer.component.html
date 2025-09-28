@@ -92,7 +92,12 @@
         ></audio>
       </div>
 
-      <hr class="m-0" *ngIf="mode === 'addPatient' || mode === 'vilRequest'" />
+      <hr
+        class="m-0"
+        *ngIf="
+          mode === 'addPatient' || mode === 'vilRequest' || mode === 'addVil'
+        "
+      />
 
       <div class="action_div">
         <span *ngIf="remove">
@@ -106,7 +111,13 @@
         </span>
 
         <div
-          *ngIf="(mode === 'addPatient' && !!file.signedUrl) || mode === 'vilRequest'"
+          *ngIf="
+            (mode === 'addPatient' && !!file.signedUrl) ||
+            mode === 'vilRequest' ||
+            (mode === 'addVil' &&
+              !file.signedUrl &&
+              !file.type.includes('image'))
+          "
           style="
             cursor: pointer;
             color: green;

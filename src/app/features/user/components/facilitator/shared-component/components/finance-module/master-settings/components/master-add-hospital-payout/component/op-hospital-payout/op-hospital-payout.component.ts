@@ -21,14 +21,15 @@ export class OpHospitalPayoutComponent implements OnInit {
     private sharedService: SharedService,
     private facilitatorService: FacilitatorService,
     private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.buildOpForm();
 
     this.formGroup = this.fb.group({
       op: this.fb.array([]),
     });
+  }
+
+  ngOnInit(): void {
     this.getRevenueTypeMasterFinanceData();
     this.getCountryDataForOP(false);
   }
@@ -50,12 +51,21 @@ export class OpHospitalPayoutComponent implements OnInit {
       this.isActionTabVisibleForOp = false;
       this.revenueDataForOp = [];
       this.opArray.clear();
+      this.getAllCountryForOpHospitalPayout()
       this.getAllOpHospitalPayoutData();
     } else {
-      if(this.hospitalId){
+      if (this.hospitalId) {
+        this.getAllCountryForOpHospitalPayout()
         this.getAllOpHospitalPayoutData();
       }
     }
+  }
+
+  allAddedCountryData:any = []
+  getAllCountryForOpHospitalPayout(){
+    this.facilitatorService.getAllCountryForOpHospitalPayout(this.hospitalId).subscribe((res:any)=>{
+      this.allAddedCountryData= res?.data
+    })
   }
 
   revenueTypeOptions: any = [];
@@ -77,7 +87,7 @@ export class OpHospitalPayoutComponent implements OnInit {
   totalNumberOfPagesForOp = 0;
   revenueDataForOp: any = [];
   totalElementOp: number = 0;
-  getAllOpHospitalPayoutData() {    
+  getAllOpHospitalPayoutData() {
     this.isDataLoadingForOp = true;
     this.facilitatorService
       .getAllOpHospitalPayoutData(this.opParams, this.hospitalId)

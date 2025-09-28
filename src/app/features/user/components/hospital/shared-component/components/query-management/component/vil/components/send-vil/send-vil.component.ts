@@ -127,26 +127,26 @@ export class SendVilComponent implements OnInit {
   changeSendTo(val: string) {
     this.emailFrom.patchValue({
       sendTo: val,
-      emailTo: ""
+      emailTo: "",
     });
 
     if (val === hospitalAdminUserType.referralPartner) {
       this.resetEmbassyData();
       if (this.patientData?.referralType === "pre") {
-        this.contactArray?.clear()
+        this.contactArray?.clear();
         this.getPreReferralPartner();
       } else if (this.patientData?.referralType === "own") {
-        this.contactArray?.clear()
+        this.contactArray?.clear();
         this.getOwnReferralPartner();
-      }else{
-        this.contactArray?.clear()
+      } else {
+        this.contactArray?.clear();
       }
     } else if (val === "patient") {
       this.resetEmbassyData();
       this.emailFrom.patchValue({
         emailTo: this.patientData?.emailId || "",
       });
-      this.contactArray?.clear()
+      this.contactArray?.clear();
       if (this.patientData?.contact) {
         this.setContactNumberFromSendTo(this.patientData?.contact);
       }
@@ -156,7 +156,7 @@ export class SendVilComponent implements OnInit {
       this.emailFrom.patchValue({
         emailTo: "",
       });
-      this.contactArray?.clear()
+      this.contactArray?.clear();
       // if (this.patientData?.contact) {
       //   this.setContactNumberFromSendTo(this.patientData?.contact);
       // }
@@ -238,54 +238,54 @@ export class SendVilComponent implements OnInit {
   }
 
   selectChange(e: any, item: any, isEdited: boolean, isIssuedVil = false) {
-    let vilObj = {
-      _id: item?._id,
-      isEdited,
-      isIssuedVil,
-    };
-    this.emailFrom.patchValue({
-      hospital: [item?.hospitalId],
-      sendVil: [vilObj],
-      selectHospital: item?._id,
-    });
+    // let vilObj = {
+    //   _id: item?._id,
+    //   isEdited,
+    //   isIssuedVil,
+    // };
+    // this.emailFrom.patchValue({
+    //   hospital: [item?.hospitalId],
+    //   sendVil: [vilObj],
+    //   selectHospital: item?._id,
+    // });
 
-    // if (e.checked) {
-    //   let vilObj = {
-    //     _id: item?._id,
-    //     isEdited,
-    //     isIssuedVil,
-    //   };
-    //   this.vilArray.push(vilObj);
-    //   this.hospitalArray.push(item?.hospitalId);
-    //   this.emailFrom.patchValue({
-    //     hospital: this.hospitalArray,
-    //     sendVil: this.vilArray,
-    //     selectHospital: item?._id,
-    //   });
-    // } else {
-    //   let hospitalIndex = this.hospitalArray.findIndex(
-    //     (h: any) => h === item?.hospitalId
-    //   );
-    //   if (hospitalIndex !== -1) {
-    //     this.hospitalArray.splice(hospitalIndex, 1);
-    //   }
-    //   let vilIndex = this.vilArray.findIndex(
-    //     (vil: any) => vil?._id === item?._id
-    //   );
-    //   if (vilIndex !== -1) {
-    //     this.vilArray.splice(vilIndex, 1);
-    //   }
-    //   this.emailFrom.patchValue({
-    //     hospital: this.hospitalArray,
-    //     sendVil: this.vilArray,
-    //     selectHospital: item?._id,
-    //   });
-    //   if (!this.vilArray?.length) {
-    //     this.emailFrom.patchValue({
-    //       selectHospital: "",
-    //     });
-    //   }
-    // }
+    if (e.checked) {
+      let vilObj = {
+        _id: item?._id,
+        isEdited,
+        isIssuedVil,
+      };
+      this.vilArray.push(vilObj);
+      this.hospitalArray.push(item?.hospitalId);
+      this.emailFrom.patchValue({
+        hospital: this.hospitalArray,
+        sendVil: this.vilArray,
+        selectHospital: item?._id,
+      });
+    } else {
+      let hospitalIndex = this.hospitalArray.findIndex(
+        (h: any) => h === item?.hospitalId
+      );
+      if (hospitalIndex !== -1) {
+        this.hospitalArray.splice(hospitalIndex, 1);
+      }
+      let vilIndex = this.vilArray.findIndex(
+        (vil: any) => vil?._id === item?._id
+      );
+      if (vilIndex !== -1) {
+        this.vilArray.splice(vilIndex, 1);
+      }
+      this.emailFrom.patchValue({
+        hospital: this.hospitalArray,
+        sendVil: this.vilArray,
+        selectHospital: item?._id,
+      });
+      if (!this.vilArray?.length) {
+        this.emailFrom.patchValue({
+          selectHospital: "",
+        });
+      }
+    }
   }
 
   spaceRestrict(event: any) {
@@ -345,9 +345,9 @@ export class SendVilComponent implements OnInit {
         item?.emailCc?.length > 0 ? item?.emailCc?.join(", ") : "NIL"
       }</div>
 `;
-eventString += `<div><strong>Contact:</strong> ${
-  item?.contact?.length > 0 ? item.contact.join(", ") : "NIL"
-}</div>`;
+      eventString += `<div><strong>Contact:</strong> ${
+        item?.contact?.length > 0 ? item.contact.join(", ") : "NIL"
+      }</div>`;
     } else if (item?.sendTo === "referral partner") {
       eventString = `
       <div><strong>Email To:</strong> ${item?.emailTo || "NIL"}</div>
@@ -355,9 +355,9 @@ eventString += `<div><strong>Contact:</strong> ${
         item?.emailCc?.length > 0 ? item?.emailCc?.join(", ") : "NIL"
       }</div>      
 `;
-eventString += `<div><strong>Contact:</strong> ${
-  item?.contact?.length > 0 ? item.contact.join(", ") : "NIL"
-}</div>`;
+      eventString += `<div><strong>Contact:</strong> ${
+        item?.contact?.length > 0 ? item.contact.join(", ") : "NIL"
+      }</div>`;
     } else if (item?.sendTo === "embassy") {
       eventString = `
       <div><strong>Email To:</strong> ${item?.emailTo || "NIL"}</div>
@@ -365,9 +365,9 @@ eventString += `<div><strong>Contact:</strong> ${
         item?.emailCc?.length > 0 ? item?.emailCc?.join(", ") : "NIL"
       }</div>      
 `;
-eventString += `<div><strong>Contact:</strong> ${
-  item?.contact?.length > 0 ? item.contact.join(", ") : "NIL"
-}</div>`;
+      eventString += `<div><strong>Contact:</strong> ${
+        item?.contact?.length > 0 ? item.contact.join(", ") : "NIL"
+      }</div>`;
     }
     let tooltipInstance: any = tippy(tooltipButton, {
       content: eventString,

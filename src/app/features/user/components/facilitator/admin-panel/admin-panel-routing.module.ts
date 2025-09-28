@@ -30,7 +30,7 @@ const routes: Routes = [
         (m) => m.AccountModule
       ),
   },
-  {
+    {
     path: "finance",
     loadChildren: () =>
       import("./components/finance-module/finance-module.module").then(

@@ -195,6 +195,8 @@
                 [filePreviewList]="filePreviewUrls"
                 [type]="'fileUploader'"
                 [remove]="false"
+                [mode]="'addVil'"
+                (onFileRead)="readFile($event)"
               ></app-email-fetch-image-previewer>
             </div>
             <div
@@ -238,25 +240,15 @@
                   Upload Visa Invitation Letter is required
                 </mat-error>
               </mat-form-field>
-
-              <!-- <mat-form-field class="example-full-width" appearance="outline">
-                <mat-label>Upload Visa Invitation Letter *</mat-label>
-                <ngx-mat-file-input
-                  accept=".png, .jpg, .jpeg, .pdf"
-                  name="file"
-                  formControlName="file"
-                  (change)="onFileSelected($event)"
-                >
-                </ngx-mat-file-input>
-                <mat-icon matSuffix>upload</mat-icon>
-                <mat-error
-                  *ngIf="vilForm.controls['file'].hasError('required')"
-                >
-                  Upload Visa Invitation Letter is required
-                </mat-error>
-              </mat-form-field> -->
             </div>
           </div>
+        </div>
+
+        <div *ngIf="isAiVilChecker">
+          <global-shared-vil-ai-checker-table
+            [readTotalData]="readTotalData"
+            [isAiVilChecker]="isAiVilChecker"
+          ></global-shared-vil-ai-checker-table>
         </div>
       </form>
     </div>

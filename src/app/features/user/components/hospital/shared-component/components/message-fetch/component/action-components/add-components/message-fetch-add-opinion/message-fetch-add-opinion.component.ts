@@ -688,6 +688,7 @@ export class MessageFetchAddOpinionComponent implements OnInit {
               });
             }
           }
+          // this.sharedService.stopLoader()
         }
       });
   }

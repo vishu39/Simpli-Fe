@@ -1,0 +1,45 @@
+.vilAiCheckerTableDiv {
+  border: 1px solid lightgrey;
+  height: 500px;
+  overflow: scroll;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  border: 1px solid lightgrey;
+  padding: 12px 8px;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #1560bd; /* Make sure header has a background */
+  color: white;
+  z-index: 1; /* Keep it above other rows */
+}
+
+tbody td {
+  padding: 0px 8px;
+}
+
+td {
+  border: 1px solid lightgrey;
+}
+
+.bgWhite {
+  background-color: #ffffff;
+}
+
+.bgGrey {
+  background-color: #f0f0f0 !important;
+}
+
+td {
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}

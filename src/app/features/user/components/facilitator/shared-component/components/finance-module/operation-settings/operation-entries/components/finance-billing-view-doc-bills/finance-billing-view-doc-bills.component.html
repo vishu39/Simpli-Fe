@@ -38,6 +38,14 @@
                 <div>{{ item?.amount }} {{item?.currency?.code}}</div>
               </div>
               <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Pharmacy Consumable Amount</b></div>
+                <div>{{ item?.pharmacyAndConsumableAmount }} {{item?.currency?.code}}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Doctor Consultancy Amount</b></div>
+                <div>{{ item?.doctorConsultancyAmount }} {{item?.currency?.code}}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
                 <div><b>Created At</b></div>
                 <div>{{ (item?.createdAt | date : "medium" ) || 'NIL' }}</div>
               </div>

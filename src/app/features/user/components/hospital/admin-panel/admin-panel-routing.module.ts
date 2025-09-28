@@ -34,13 +34,6 @@ const routes: Routes = [
         (m) => m.AccountModule
       ),
   },
-  {
-    path: "finance",
-    loadChildren: () =>
-      import("./components/finance-module/finance-module.module").then(
-        (m) => m.FinanceModuleModule
-      ),
-  },
   { path: "internal-user", component: HospitalInternalUserComponent },
   { path: "hospital-staff", component: HospitalStaffComponent },
   { path: "doctor-staff", component: DoctorStaffComponent },
@@ -73,4 +66,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AdminPanelRoutingModule {}
+export class AdminPanelRoutingModule { }

@@ -308,16 +308,55 @@ export class EmailFetchSendVilComponent implements OnInit {
   }
 
   selectChange(e: any, item: any, isEdited: boolean, isIssuedVil = false) {
-    let vilObj = {
-      _id: item?._id,
-      isEdited,
-      isIssuedVil,
-    };
-    this.emailFrom.patchValue({
-      hospital: [item?.hospitalId],
-      sendVil: [vilObj],
-      selectHospital: item?._id,
-    });
+    // let vilObj = {
+    //   _id: item?._id,
+    //   isEdited,
+    //   isIssuedVil,
+    // };
+    // this.emailFrom.patchValue({
+    //   hospital: [item?.hospitalId],
+    //   sendVil: [vilObj],
+    //   selectHospital: item?._id,
+    // });
+
+    if (e.checked) {
+      let vilObj = {
+        _id: item?._id,
+        isEdited,
+        isIssuedVil,
+      };
+
+      this.vilArray.push(vilObj);
+      this.hospitalArray.push(item?.hospitalId);
+      this.emailFrom.patchValue({
+        hospital: this.hospitalArray,
+        sendVil: this.vilArray,
+        selectHospital: item?._id,
+      });
+    } else {
+      let hospitalIndex = this.hospitalArray.findIndex(
+        (h: any) => h === item?.hospitalId
+      );
+      if (hospitalIndex !== -1) {
+        this.hospitalArray.splice(hospitalIndex, 1);
+      }
+      let vilIndex = this.vilArray.findIndex(
+        (vil: any) => vil?._id === item?._id
+      );
+      if (vilIndex !== -1) {
+        this.vilArray.splice(vilIndex, 1);
+      }
+      this.emailFrom.patchValue({
+        hospital: this.hospitalArray,
+        sendVil: this.vilArray,
+        selectHospital: item?._id,
+      });
+      if (!this.vilArray?.length) {
+        this.emailFrom.patchValue({
+          selectHospital: "",
+        });
+      }
+    }
   }
 
   spaceRestrict(event: any) {

@@ -12,6 +12,7 @@ export class FinanceModuleService {
     { name: "Amounts" },
     { name: "Doc Bills" },
     { name: "Estimate Bills" },
+    { name: "Patient Deposit" },
     { name: "Admission/Discharge Tracker" },
     { name: "Final Bills" },
   ];
@@ -37,6 +38,12 @@ export class FinanceModuleService {
       icon: "timeline",
       color: "#DA012D",
       tooltip: "Admission / Discharge Tracker",
+    },
+    {
+      name: "Patient Deposit",
+      icon: "add",
+      color: "#DA012D",
+      tooltip: "Patient Deposit",
     },
     {
       name: "Upload Estimates",

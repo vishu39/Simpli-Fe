@@ -92,7 +92,7 @@
         ></audio>
       </div>
 
-      <hr class="m-0" *ngIf="mode === 'addVilRequest'" />
+      <hr class="m-0" *ngIf="mode === 'addVilRequest' || mode === 'addVil'" />
 
       <div class="action_div">
         <span *ngIf="remove">
@@ -106,7 +106,10 @@
         </span>
 
         <div
-          *ngIf="mode === 'addVilRequest'"
+          *ngIf="
+            mode === 'addVilRequest' ||
+            (mode === 'addVil' && !file.type.includes('image'))
+          "
           style="
             cursor: pointer;
             color: green;

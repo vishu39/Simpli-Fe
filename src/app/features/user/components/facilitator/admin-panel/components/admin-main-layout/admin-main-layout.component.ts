@@ -47,7 +47,7 @@ export class AdminMainLayoutComponent implements OnInit {
     });
 
     // if (tokenData.roleName === "fac" || tokenData.roleName==='Magnus Admin') {
-    //   this.ROUTES.splice(1, 0,
+    //   this.ROUTES.splice(1, 0, 
     //     {
     //     path: "/user/facilitator/admin/analytics-dashboard",
     //     title: "Analytics Dashboard",
@@ -91,10 +91,8 @@ export class AdminMainLayoutComponent implements OnInit {
   getUnreadEmailFetchCount() {
     this.facilitatorService.getUnreadEmailFetchCount().subscribe((res: any) => {
       this.totalUnreadMessage = res?.data?.count;
-      let findIndex = this.ROUTES.findIndex(
-        (r: any) => r.path === "/user/facilitator/admin/email-fetch"
-      );
-      let index = findIndex !== -1 ? findIndex : 8;
+      let findIndex=this.ROUTES.findIndex((r:any)=>r.path === '/user/facilitator/admin/email-fetch')
+      let index=findIndex !== -1 ? findIndex : 8
       // this.ROUTES[8].badge = `${this.totalUnreadMessage}`;
       this.ROUTES[index].badge = `${this.totalUnreadMessage}`;
     });

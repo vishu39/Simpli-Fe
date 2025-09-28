@@ -58,6 +58,7 @@ import { DownloadFollowUpComponent } from "./dialogs/download-follow-up/download
 import { QueryManagementCheckDetailsComponent } from "./query-management/component/query-management-check-details/query-management-check-details.component";
 import { QueryManagementEmailDetailsComponent } from "./query-management/component/query-management-email-details/query-management-email-details.component";
 import { PotentialTreatmentModalComponent } from "./dialogs/potential-treatment-modal/potential-treatment-modal.component";
+import { VilAiCheckerTableComponent } from "./vil-ai-checker-table/vil-ai-checker-table.component";
 import { FinanceModulePatientListComponent } from "./finance-module/finance-module-patient-list/finance-module-patient-list.component";
 import { FinanceModuleToolbarComponent } from "./finance-module/finance-module-toolbar/finance-module-toolbar.component";
 import { MasterSettingHospitalFilterDialogComponent } from "./finance-module/dialogs/master-setting-hospital-filter-dialog/master-setting-hospital-filter-dialog.component";
@@ -112,6 +113,7 @@ const COMPONENT = [
   QueryManagementCheckDetailsComponent,
   QueryManagementEmailDetailsComponent,
   PotentialTreatmentModalComponent,
+  VilAiCheckerTableComponent,
   AddDoctorDialogComponent,
   AddHospitalDialogComponent,
   MessageFetchLightBoxComponent,

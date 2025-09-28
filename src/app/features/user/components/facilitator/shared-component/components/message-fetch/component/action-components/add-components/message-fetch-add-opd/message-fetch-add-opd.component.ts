@@ -258,6 +258,7 @@ export class MessageFetchAddOpdComponent implements OnInit {
               });
             }
           }
+          // this.sharedService.stopLoader()
         }
       });
   }

@@ -82,6 +82,12 @@
       ></global-shared-finance-billing-view-estimate-bills>
     </div>
 
+    <div *ngSwitchCase="'Patient Deposit'">
+      <global-shared-view-patient-deposit
+        [patientData]="queryData"
+      ></global-shared-view-patient-deposit>
+    </div>
+
     <div *ngSwitchCase="'Admission/Discharge Tracker'">
       <global-shared-finance-billing-view-admission-tracker-details
         [patientData]="queryData"

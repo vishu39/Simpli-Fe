@@ -576,6 +576,41 @@ export class SharedService {
       );
   }
 
+  vilAICheckerByFile(payload: any, patientId: string, hospitalId: string) {
+    const params = new HttpParams()
+      .set("patientId", patientId || "")
+      .set("hospitalId", hospitalId || "");
+
+    return this.http
+      .post(`${this.sharedServiceApiUrl}vilAICheckerByFile`, payload, {
+        params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+  vilAICheckerByImage(payload: any, patientId: string, hospitalId: string) {
+    const params = new HttpParams()
+      .set("patientId", patientId || "")
+      .set("hospitalId", hospitalId || "");
+
+    return this.http
+      .post(`${this.sharedServiceApiUrl}vilAICheckerByImage`, payload, {
+        params,
+      })
+      .pipe(
+        map((res: any) => {
+          res.data = this.decrypt(res.data);
+          return res;
+        })
+      );
+  }
+
+
   getRevenueTypeMasterFinanceData() {
     return this.http
       .get(this.sharedServiceApiUrl + "getRevenueTypeMasterFinanceData")

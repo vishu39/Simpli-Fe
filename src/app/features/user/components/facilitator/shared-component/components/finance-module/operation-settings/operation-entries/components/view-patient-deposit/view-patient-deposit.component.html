@@ -1,0 +1,87 @@
+<div class="m-4">
+  <ng-container *ngIf="docsData?.length">
+    <div *ngFor="let item of docsData; let i = index" class="mb-3">
+      <mat-accordion>
+        <mat-expansion-panel
+          (opened)="onClickAccordian(item, i)"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <p class="mb-0">
+                <b>{{ item?.hospitalName }}</b>
+              </p>
+            </mat-panel-title>
+
+            <mat-panel-description class="d-flex justify-content-end">
+              <div (click)="!exPanel._toggle()" class="p-2 mt-1">
+                <mat-icon
+                  class="mt-1"
+                  (click)="openModalForEdit(item)"
+                  style="cursor: pointer"
+                  matTooltip="Edit"
+                  matTooltipPosition="right"
+                  >edit</mat-icon
+                >
+              </div>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="p-3">
+            <div class="row">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Deposit Amount</b></div>
+                <div>{{ item?.depositAmount }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Currency</b></div>
+                <div>{{ item?.currency?.code }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Date of Deposit</b></div>
+                <div>{{ item?.dateOfDeposit | date : "medium" }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Currency Converter</b></div>
+                <div>{{ item?.currencyConverter?.code }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Transfer Type</b></div>
+                <div>{{ item?.transferType }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2" *ngIf="item?.transferType === 'Wire'">
+                <div><b>Swift Code</b></div>
+                <div>{{ item?.swiftCode || "NIL" }}</div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-2">
+                <div><b>Created At</b></div>
+                <div>{{ (item?.createdAt | date : "medium") || "NIL" }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-3" *ngIf="item?.paymentReciept?.length">
+            <div><b>Payment Recipt</b></div>
+            <div class="row">
+              <div *ngIf="item?.paymentReciept?.length" class="mt-4">
+                <app-global-image-preview
+                  [fileList]="item?.paymentReciept"
+                  [filePreviewList]="item?.paymentReciept"
+                  [type]="'fileUploaded'"
+                  [remove]="false"
+                ></app-global-image-preview>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </ng-container>
+
+  <div class="" *ngIf="isDocsLoading">
+    <mat-spinner class="mx-auto mb-2 mt-2" [diameter]="30"> </mat-spinner>
+  </div>
+
+  <div class="card m-4 p-3" *ngIf="!isDocsLoading && !docsData?.length">
+    <div style="text-align: center">--No Data Found--</div>
+  </div>
+</div>

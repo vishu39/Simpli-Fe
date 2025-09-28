@@ -1,0 +1,1362 @@
+<div class="vilAiCheckerDiv" *ngIf="isAiVilChecker">
+  <h5 class="mt-3 mb-3">
+    AI Comparison Table: Hospital VIL vs Requested Fields
+  </h5>
+  <div class="vilAiCheckerTableDiv">
+    <table>
+      <colgroup>
+        <col style="width: 10%" />
+        <col style="width: 15%" />
+        <col style="width: 15%" />
+        <col style="width: 23%" />
+        <col style="width: 15%" />
+        <col style="width: 22%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Section</th>
+          <th>Field</th>
+          <th>Requested Value</th>
+          <th>Hospital Response</th>
+          <th>Status</th>
+          <th>Suggested Action</th>
+        </tr>
+      </thead>
+      <!-- for patient details start -->
+      <tbody class="tableBodyClass">
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.givenName?.vilData ||
+            readTotalData?.givenName?.aiData
+          "
+        >
+          <td><b>Patient</b></td>
+          <td>Given Name</td>
+          <td>{{ readTotalData?.givenName?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.givenName?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.givenName?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.givenName?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.givenName?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.givenName?.vilData &&
+            !readTotalData?.givenName?.aiData
+          "
+        >
+          <td><b>Patient</b></td>
+          <td>Given Name</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          *ngIf="
+            readTotalData?.surName?.vilData || readTotalData?.surName?.aiData
+          "
+        >
+          <td></td>
+          <td>Surname</td>
+          <td>{{ readTotalData?.surName?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.surName?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color: statusAccordingToIcon[readTotalData?.surName?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.surName?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.surName?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          *ngIf="
+            !readTotalData?.surName?.vilData && !readTotalData?.surName?.aiData
+          "
+        >
+          <td></td>
+          <td>Surname</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.gender?.vilData || readTotalData?.gender?.aiData
+          "
+        >
+          <td></td>
+          <td>Gender</td>
+          <td>
+            {{ (readTotalData?.gender?.vilData | titlecase) || "N/A" }}
+          </td>
+          <td>
+            {{ (readTotalData?.gender?.aiData | titlecase) || "N/A" }}
+          </td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color: statusAccordingToIcon[readTotalData?.gender?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.gender?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.gender?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.gender?.vilData && !readTotalData?.gender?.aiData
+          "
+        >
+          <td></td>
+          <td>Gender</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr *ngIf="readTotalData?.dob?.vilData || readTotalData?.dob?.aiData">
+          <td></td>
+          <td>DOB</td>
+          <td>
+            {{ getCorrectDate(readTotalData?.dob?.vilData) || "N/A" }}
+          </td>
+          <td>
+            {{ getCorrectDate(readTotalData?.dob?.aiData) || "N/A" }}
+          </td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color: statusAccordingToIcon[readTotalData?.dob?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.dob?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.dob?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr *ngIf="!readTotalData?.dob?.vilData && !readTotalData?.dob?.aiData">
+          <td></td>
+          <td>DOB</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.country?.vilData || readTotalData?.country?.aiData
+          "
+        >
+          <td></td>
+          <td>Nationality</td>
+          <td>{{ readTotalData?.country?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.country?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color: statusAccordingToIcon[readTotalData?.country?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.country?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.country?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.country?.vilData && !readTotalData?.country?.aiData
+          "
+        >
+          <td></td>
+          <td>Nationality</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          *ngIf="
+            readTotalData?.passportNumber?.vilData ||
+            readTotalData?.passportNumber?.aiData
+          "
+        >
+          <td></td>
+          <td>Passport No.</td>
+          <td>{{ readTotalData?.passportNumber?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.passportNumber?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.passportNumber?.status]
+                    ?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.passportNumber?.status]
+                  ?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>
+            {{ readTotalData?.passportNumber?.matchSuggestion || "N/A" }}
+          </td>
+        </tr>
+
+        <tr
+          *ngIf="
+            !readTotalData?.passportNumber?.vilData &&
+            !readTotalData?.passportNumber?.aiData
+          "
+        >
+          <td></td>
+          <td>Passport No.</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.contact?.vilData || readTotalData?.contact?.aiData
+          "
+        >
+          <td></td>
+          <td>Contact Number</td>
+          <td>{{ readTotalData?.contact?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.contact?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color: statusAccordingToIcon[readTotalData?.contact?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.contact?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.contact?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.contact?.vilData && !readTotalData?.contact?.aiData
+          "
+        >
+          <td></td>
+          <td>Contact Number</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          *ngIf="
+            readTotalData?.addressNative?.vilData ||
+            readTotalData?.addressNative?.aiData
+          "
+        >
+          <td></td>
+          <td>Address</td>
+          <td>{{ readTotalData?.addressNative?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.addressNative?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.addressNative?.status]
+                    ?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.addressNative?.status]
+                  ?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>
+            {{ readTotalData?.addressNative?.matchSuggestion || "N/A" }}
+          </td>
+        </tr>
+
+        <tr
+          *ngIf="
+            !readTotalData?.addressNative?.vilData &&
+            !readTotalData?.addressNative?.aiData
+          "
+        >
+          <td></td>
+          <td>Address</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.emailId?.vilData || readTotalData?.emailId?.aiData
+          "
+        >
+          <td></td>
+          <td>Email</td>
+          <td>{{ readTotalData?.emailId?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.emailId?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color: statusAccordingToIcon[readTotalData?.emailId?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.emailId?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.emailId?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.emailId?.vilData && !readTotalData?.emailId?.aiData
+          "
+        >
+          <td></td>
+          <td>Email</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+      </tbody>
+      <!-- for patient details end -->
+      <!-- for attendant details start -->
+      <ng-container *ngIf="readTotalData?.attendantDetails?.length">
+        <tbody
+          *ngFor="
+            let attendant of readTotalData?.attendantDetails;
+            let i = index
+          "
+          class="tableBodyClass"
+        >
+          <ng-container>
+            <!-- Given Name -->
+            <tr
+              *ngIf="
+                attendant?.givenName?.vilData || attendant?.givenName?.aiData
+              "
+            >
+              <td>
+                <b>Attendant {{ i + 1 }}</b>
+              </td>
+              <td>Given Name</td>
+              <td>{{ attendant?.givenName?.vilData || "N/A" }}</td>
+              <td>{{ attendant?.givenName?.aiData || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color:
+                      statusAccordingToIcon[attendant?.givenName?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[attendant?.givenName?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>{{ attendant?.givenName?.matchSuggestion || "N/A" }}</td>
+            </tr>
+            <tr
+              *ngIf="
+                !attendant?.givenName?.vilData && !attendant?.givenName?.aiData
+              "
+            >
+              <td>
+                <b>Attendant {{ i + 1 }}</b>
+              </td>
+              <td>Given Name</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Surname -->
+            <tr
+              *ngIf="attendant?.surName?.vilData || attendant?.surName?.aiData"
+              class="bgGrey"
+            >
+              <td></td>
+              <td>Surname</td>
+              <td>{{ attendant?.surName?.vilData || "N/A" }}</td>
+              <td>{{ attendant?.surName?.aiData || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color: statusAccordingToIcon[attendant?.surName?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[attendant?.surName?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>{{ attendant?.surName?.matchSuggestion || "N/A" }}</td>
+            </tr>
+            <tr
+              *ngIf="
+                !attendant?.surName?.vilData && !attendant?.surName?.aiData
+              "
+              class="bgGrey"
+            >
+              <td></td>
+              <td>Surname</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Gender -->
+            <tr *ngIf="attendant?.gender?.vilData || attendant?.gender?.aiData">
+              <td></td>
+              <td>Gender</td>
+              <td>
+                {{ (attendant?.gender?.vilData | titlecase) || "N/A" }}
+              </td>
+              <td>
+                {{ (attendant?.gender?.aiData | titlecase) || "N/A" }}
+              </td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color: statusAccordingToIcon[attendant?.gender?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[attendant?.gender?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>{{ attendant?.gender?.matchSuggestion || "N/A" }}</td>
+            </tr>
+            <tr
+              *ngIf="!attendant?.gender?.vilData && !attendant?.gender?.aiData"
+            >
+              <td></td>
+              <td>Gender</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- DOB -->
+            <tr
+              *ngIf="attendant?.dob?.vilData || attendant?.dob?.aiData"
+              class="bgGrey"
+            >
+              <td></td>
+              <td>DOB</td>
+              <td>
+                {{ getCorrectDate(attendant?.dob?.vilData) || "N/A" }}
+              </td>
+              <td>
+                {{ getCorrectDate(attendant?.dob?.aiData) || "N/A" }}
+              </td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color: statusAccordingToIcon[attendant?.dob?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[attendant?.dob?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>{{ attendant?.dob?.matchSuggestion || "N/A" }}</td>
+            </tr>
+            <tr
+              *ngIf="!attendant?.dob?.vilData && !attendant?.dob?.aiData"
+              class="bgGrey"
+            >
+              <td></td>
+              <td>DOB</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Passport Number -->
+            <tr
+              *ngIf="
+                attendant?.passportNumber?.vilData ||
+                attendant?.passportNumber?.aiData
+              "
+            >
+              <td></td>
+              <td>Passport No.</td>
+              <td>{{ attendant?.passportNumber?.vilData || "N/A" }}</td>
+              <td>{{ attendant?.passportNumber?.aiData || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color:
+                      statusAccordingToIcon[attendant?.passportNumber?.status]
+                        ?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[attendant?.passportNumber?.status]
+                      ?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>
+                {{ attendant?.passportNumber?.matchSuggestion || "N/A" }}
+              </td>
+            </tr>
+            <tr
+              *ngIf="
+                !attendant?.passportNumber?.vilData &&
+                !attendant?.passportNumber?.aiData
+              "
+            >
+              <td></td>
+              <td>Passport No.</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Relationship -->
+            <tr
+              *ngIf="
+                attendant?.relationshipWithPatient?.vilData ||
+                attendant?.relationshipWithPatient?.aiData
+              "
+              class="bgGrey"
+            >
+              <td></td>
+              <td>Relationship</td>
+              <td>
+                {{ attendant?.relationshipWithPatient?.vilData || "N/A" }}
+              </td>
+              <td>
+                {{ attendant?.relationshipWithPatient?.aiData || "N/A" }}
+              </td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color:
+                      statusAccordingToIcon[
+                        attendant?.relationshipWithPatient?.status
+                      ]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[
+                      attendant?.relationshipWithPatient?.status
+                    ]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>
+                {{
+                  attendant?.relationshipWithPatient?.matchSuggestion || "N/A"
+                }}
+              </td>
+            </tr>
+            <tr
+              *ngIf="
+                !attendant?.relationshipWithPatient?.vilData &&
+                !attendant?.relationshipWithPatient?.aiData
+              "
+              class="bgGrey"
+            >
+              <td></td>
+              <td>Relationship</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Address -->
+            <tr
+              *ngIf="
+                attendant?.addressNative?.vilData ||
+                attendant?.addressNative?.aiData
+              "
+            >
+              <td></td>
+              <td>Address</td>
+              <td>{{ attendant?.addressNative?.vilData || "N/A" }}</td>
+              <td>{{ attendant?.addressNative?.aiData || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color:
+                      statusAccordingToIcon[attendant?.addressNative?.status]
+                        ?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[attendant?.addressNative?.status]
+                      ?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>
+                {{ attendant?.addressNative?.matchSuggestion || "N/A" }}
+              </td>
+            </tr>
+            <tr
+              *ngIf="
+                !attendant?.addressNative?.vilData &&
+                !attendant?.addressNative?.aiData
+              "
+            >
+              <td></td>
+              <td>Address</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </ng-container>
+
+      <ng-container *ngIf="!readTotalData?.attendantDetails?.length">
+        <tbody class="tableBodyClass">
+          <tr>
+            <td>
+              <b>Attendant</b>
+            </td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+          </tr>
+        </tbody>
+      </ng-container>
+
+      <!-- for attendant details end -->
+      <!-- for donor details start -->
+      <ng-container *ngIf="readTotalData?.donorDetails?.length">
+        <tbody
+          *ngFor="let donor of readTotalData?.donorDetails; let i = index"
+          class="tableBodyClass"
+        >
+          <ng-container>
+            <!-- Given Name -->
+            <tr *ngIf="donor?.givenName?.vilData || donor?.givenName?.aiData">
+              <td>
+                <b>Donor {{ i + 1 }}</b>
+              </td>
+              <td>Given Name</td>
+              <td>{{ donor?.givenName?.vilData || "N/A" }}</td>
+              <td>{{ donor?.givenName?.aiData || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color: statusAccordingToIcon[donor?.givenName?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[donor?.givenName?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>{{ donor?.givenName?.matchSuggestion || "N/A" }}</td>
+            </tr>
+            <tr *ngIf="!donor?.givenName?.vilData && !donor?.givenName?.aiData">
+              <td>
+                <b>Donor {{ i + 1 }}</b>
+              </td>
+              <td>Given Name</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Surname -->
+            <tr
+              *ngIf="donor?.surName?.vilData || donor?.surName?.aiData"
+              class="bgGrey"
+            >
+              <td></td>
+              <td>Surname</td>
+              <td>{{ donor?.surName?.vilData || "N/A" }}</td>
+              <td>{{ donor?.surName?.aiData || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color: statusAccordingToIcon[donor?.surName?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[donor?.surName?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>{{ donor?.surName?.matchSuggestion || "N/A" }}</td>
+            </tr>
+            <tr
+              *ngIf="!donor?.surName?.vilData && !donor?.surName?.aiData"
+              class="bgGrey"
+            >
+              <td></td>
+              <td>Surname</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Gender -->
+            <tr *ngIf="donor?.gender?.vilData || donor?.gender?.aiData">
+              <td></td>
+              <td>Gender</td>
+              <td>{{ (donor?.gender?.vilData | titlecase) || "N/A" }}</td>
+              <td>{{ (donor?.gender?.aiData | titlecase) || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color: statusAccordingToIcon[donor?.gender?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[donor?.gender?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>{{ donor?.gender?.matchSuggestion || "N/A" }}</td>
+            </tr>
+            <tr *ngIf="!donor?.gender?.vilData && !donor?.gender?.aiData">
+              <td></td>
+              <td>Gender</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- DOB -->
+            <tr
+              *ngIf="donor?.dob?.vilData || donor?.dob?.aiData"
+              class="bgGrey"
+            >
+              <td></td>
+              <td>DOB</td>
+              <td>
+                {{ getCorrectDate(donor?.dob?.vilData) || "N/A" }}
+              </td>
+              <td>
+                {{ getCorrectDate(donor?.dob?.aiData) || "N/A" }}
+              </td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color: statusAccordingToIcon[donor?.dob?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[donor?.dob?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>{{ donor?.dob?.matchSuggestion || "N/A" }}</td>
+            </tr>
+            <tr
+              *ngIf="!donor?.dob?.vilData && !donor?.dob?.aiData"
+              class="bgGrey"
+            >
+              <td></td>
+              <td>DOB</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Passport Number -->
+            <tr
+              *ngIf="
+                donor?.passportNumber?.vilData || donor?.passportNumber?.aiData
+              "
+            >
+              <td></td>
+              <td>Passport No.</td>
+              <td>{{ donor?.passportNumber?.vilData || "N/A" }}</td>
+              <td>{{ donor?.passportNumber?.aiData || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color:
+                      statusAccordingToIcon[donor?.passportNumber?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[donor?.passportNumber?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>
+                {{ donor?.passportNumber?.matchSuggestion || "N/A" }}
+              </td>
+            </tr>
+            <tr
+              *ngIf="
+                !donor?.passportNumber?.vilData &&
+                !donor?.passportNumber?.aiData
+              "
+            >
+              <td></td>
+              <td>Passport No.</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Relationship -->
+            <tr
+              *ngIf="
+                donor?.relationshipWithPatient?.vilData ||
+                donor?.relationshipWithPatient?.aiData
+              "
+              class="bgGrey"
+            >
+              <td></td>
+              <td>Relationship</td>
+              <td>
+                {{ donor?.relationshipWithPatient?.vilData || "N/A" }}
+              </td>
+              <td>
+                {{ donor?.relationshipWithPatient?.aiData || "N/A" }}
+              </td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color:
+                      statusAccordingToIcon[
+                        donor?.relationshipWithPatient?.status
+                      ]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[
+                      donor?.relationshipWithPatient?.status
+                    ]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>
+                {{ donor?.relationshipWithPatient?.matchSuggestion || "N/A" }}
+              </td>
+            </tr>
+            <tr
+              *ngIf="
+                !donor?.relationshipWithPatient?.vilData &&
+                !donor?.relationshipWithPatient?.aiData
+              "
+              class="bgGrey"
+            >
+              <td></td>
+              <td>Relationship</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+
+            <!-- Address -->
+            <tr
+              *ngIf="
+                donor?.addressNative?.vilData || donor?.addressNative?.aiData
+              "
+            >
+              <td></td>
+              <td>Address</td>
+              <td>{{ donor?.addressNative?.vilData || "N/A" }}</td>
+              <td>{{ donor?.addressNative?.aiData || "N/A" }}</td>
+              <td>
+                <mat-icon
+                  [ngStyle]="{
+                    color:
+                      statusAccordingToIcon[donor?.addressNative?.status]?.bg
+                  }"
+                  >{{
+                    statusAccordingToIcon[donor?.addressNative?.status]?.icon
+                  }}</mat-icon
+                >
+              </td>
+              <td>
+                {{ donor?.addressNative?.matchSuggestion || "N/A" }}
+              </td>
+            </tr>
+            <tr
+              *ngIf="
+                !donor?.addressNative?.vilData && !donor?.addressNative?.aiData
+              "
+            >
+              <td></td>
+              <td>Address</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </ng-container>
+
+      <ng-container *ngIf="!readTotalData?.donorDetails?.length">
+        <tbody class="tableBodyClass">
+          <tr>
+            <td>
+              <b>Donor</b>
+            </td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+          </tr>
+        </tbody>
+      </ng-container>
+      <!-- for donor details end -->
+      <!-- for treatment details start -->
+      <tbody class="tableBodyClass">
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.department?.vilData ||
+            readTotalData?.department?.aiData
+          "
+        >
+          <td><b>Treatment</b></td>
+          <td>Department</td>
+          <td>{{ readTotalData?.department?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.department?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.department?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.department?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.department?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.department?.vilData &&
+            !readTotalData?.department?.aiData
+          "
+        >
+          <td><b>Treatment</b></td>
+          <td>Department</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          *ngIf="
+            readTotalData?.appointmentDate?.vilData ||
+            readTotalData?.appointmentDate?.aiData
+          "
+        >
+          <td></td>
+          <td>Appointment Date</td>
+          <td>
+            {{
+              getCorrectDateForAppointment(
+                readTotalData?.appointmentDate?.vilData
+              ) || "N/A"
+            }}
+          </td>
+          <td>
+            {{
+              getCorrectDateForAppointment(
+                readTotalData?.appointmentDate?.aiData
+              ) || "N/A"
+            }}
+          </td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.appointmentDate?.status]
+                    ?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.appointmentDate?.status]
+                  ?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>
+            {{ readTotalData?.appointmentDate?.matchSuggestion || "N/A" }}
+          </td>
+        </tr>
+
+        <tr
+          *ngIf="
+            !readTotalData?.appointmentDate?.vilData &&
+            !readTotalData?.appointmentDate?.aiData
+          "
+        >
+          <td></td>
+          <td>Appointment Date</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.doctorName?.vilData ||
+            readTotalData?.doctorName?.aiData
+          "
+        >
+          <td></td>
+          <td>Doctor Name</td>
+          <td>{{ readTotalData?.doctorName?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.doctorName?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.doctorName?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.doctorName?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.doctorName?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.doctorName?.vilData &&
+            !readTotalData?.doctorName?.aiData
+          "
+        >
+          <td></td>
+          <td>Doctor Name</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          *ngIf="
+            readTotalData?.diagnosis?.vilData ||
+            readTotalData?.diagnosis?.aiData
+          "
+        >
+          <td></td>
+          <td>Diagnosis</td>
+          <td>{{ readTotalData?.diagnosis?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.diagnosis?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.diagnosis?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.diagnosis?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.diagnosis?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          *ngIf="
+            !readTotalData?.diagnosis?.vilData &&
+            !readTotalData?.diagnosis?.aiData
+          "
+        >
+          <td></td>
+          <td>Diagnosis</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="readTotalData?.cost?.vilData || readTotalData?.cost?.aiData"
+        >
+          <td></td>
+          <td>Cost</td>
+          <td>{{ readTotalData?.cost?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.cost?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color: statusAccordingToIcon[readTotalData?.cost?.status]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.cost?.status]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>{{ readTotalData?.cost?.matchSuggestion || "N/A" }}</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="!readTotalData?.cost?.vilData && !readTotalData?.cost?.aiData"
+        >
+          <td></td>
+          <td>Cost</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          *ngIf="
+            readTotalData?.durationInHospital?.vilData ||
+            readTotalData?.durationInHospital?.aiData
+          "
+        >
+          <td></td>
+          <td>Duration in Hospital</td>
+          <td>{{ readTotalData?.durationInHospital?.vilData || "N/A" }}</td>
+          <td>
+            {{ readTotalData?.durationInHospital?.aiData || "N/A" }}
+          </td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[
+                    readTotalData?.durationInHospital?.status
+                  ]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.durationInHospital?.status]
+                  ?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>
+            {{ readTotalData?.durationInHospital?.matchSuggestion || "N/A" }}
+          </td>
+        </tr>
+
+        <tr
+          *ngIf="
+            !readTotalData?.durationInHospital?.vilData &&
+            !readTotalData?.durationInHospital?.aiData
+          "
+        >
+          <td></td>
+          <td>Duration in Hospital</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.tentativeStay?.vilData ||
+            readTotalData?.tentativeStay?.aiData
+          "
+        >
+          <td></td>
+          <td>Tentative Stay</td>
+          <td>{{ readTotalData?.tentativeStay?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.tentativeStay?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.tentativeStay?.status]
+                    ?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.tentativeStay?.status]
+                  ?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>
+            {{ readTotalData?.tentativeStay?.matchSuggestion || "N/A" }}
+          </td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.tentativeStay?.vilData &&
+            !readTotalData?.tentativeStay?.aiData
+          "
+        >
+          <td></td>
+          <td>Tentative Stay</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+      </tbody>
+      <!-- for treatment details end -->
+      <!-- for embassy details start -->
+      <tbody class="tableBodyClass">
+        <tr
+          *ngIf="
+            readTotalData?.embassy?.name?.vilData ||
+            readTotalData?.embassy?.name?.aiData
+          "
+        >
+          <td><b>Embassy</b></td>
+          <td>Embassy Name</td>
+          <td>{{ readTotalData?.embassy?.name?.vilData || "N/A" }}</td>
+          <td>{{ readTotalData?.embassy?.name?.aiData || "N/A" }}</td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[readTotalData?.embassy?.name?.status]
+                    ?.bg
+              }"
+              >{{
+                statusAccordingToIcon[readTotalData?.embassy?.name?.status]
+                  ?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>
+            {{ readTotalData?.embassy?.name?.matchSuggestion || "N/A" }}
+          </td>
+        </tr>
+
+        <tr
+          *ngIf="
+            !readTotalData?.embassy?.name?.vilData &&
+            !readTotalData?.embassy?.name?.aiData
+          "
+        >
+          <td><b>Embassy</b></td>
+          <td>Embassy Name</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            readTotalData?.embassy?.embassyAddress?.vilData ||
+            readTotalData?.embassy?.embassyAddress?.aiData
+          "
+        >
+          <td></td>
+          <td>Embassy Address</td>
+          <td>
+            <div>
+              {{ readTotalData?.embassy?.embassyAddress?.vilData || "N/A" }}
+            </div>
+          </td>
+          <td>
+            <div>
+              {{ readTotalData?.embassy?.embassyAddress?.aiData || "N/A" }}
+            </div>
+          </td>
+          <td>
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  statusAccordingToIcon[
+                    readTotalData?.embassy?.embassyAddress?.status
+                  ]?.bg
+              }"
+              >{{
+                statusAccordingToIcon[
+                  readTotalData?.embassy?.embassyAddress?.status
+                ]?.icon
+              }}</mat-icon
+            >
+          </td>
+          <td>
+            <div>
+              {{
+                readTotalData?.embassy?.embassyAddress?.matchSuggestion || "N/A"
+              }}
+            </div>
+          </td>
+        </tr>
+
+        <tr
+          class="bgGrey"
+          *ngIf="
+            !readTotalData?.embassy?.embassyAddress?.vilData &&
+            !readTotalData?.embassy?.embassyAddress?.aiData
+          "
+        >
+          <td></td>
+          <td>Embassy Address</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+      </tbody>
+      <!-- for embassy details end -->
+    </table>
+  </div>
+</div>

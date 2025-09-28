@@ -21,15 +21,15 @@ export class IpHospitalPayoutComponent implements OnInit {
     private sharedService: SharedService,
     private facilitatorService: FacilitatorService,
     private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.buildIpForm();
 
     this.formGroup = this.fb.group({
       ip: this.fb.array([]),
     });
+  }
 
+  ngOnInit(): void {
     this.getRevenueTypeMasterFinanceData();
     this.getCountryDataForIP(false);
   }

@@ -23,15 +23,15 @@ export class PackagesHospitalPayoutComponent implements OnInit {
     private sharedService: SharedService,
     private facilitatorService: FacilitatorService,
     private dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.buildPackageForm();
 
     this.formGroup = this.fb.group({
       package: this.fb.array([]),
     });
+  }
 
+  ngOnInit(): void {
     this.getRevenueTypeMasterFinanceData();
     this.getCountryDataForPackage(false);
 
@@ -80,8 +80,8 @@ export class PackagesHospitalPayoutComponent implements OnInit {
       packageCost: [null, [Validators.required]],
       currency: [null, [Validators.required]],
       country: [null, [Validators.required]],
-      payoutInPercentage: ["", [Validators.required]],
-      payoutInFixedAmount: ["", [Validators.required]],
+      payoutInPercentage: [""],
+      payoutInFixedAmount: [""],
       currencyPayout: [null, [Validators.required]],
     });
   }

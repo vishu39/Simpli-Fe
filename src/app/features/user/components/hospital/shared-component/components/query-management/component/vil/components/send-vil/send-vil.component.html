@@ -251,21 +251,21 @@
               <mat-expansion-panel-header #exPanel>
                 <mat-panel-title>
                   <div (click)="!exPanel._toggle()">
-                    <mat-radio-button
+                    <!-- <mat-radio-button
                       [value]="item?._id"
                       (change)="selectChange($event, item, false, true)"
                     >
                       <p class="mb-0">
                         {{ item?.hospitalName }}
                       </p>
-                    </mat-radio-button>
-                    <!-- <mat-checkbox
+                    </mat-radio-button> -->
+                    <mat-checkbox
                       (change)="selectChange($event, item, false, true)"
                     >
                       <p class="mb-0">
                         <b>{{ item?.hospitalName }}</b>
                       </p>
-                    </mat-checkbox> -->
+                    </mat-checkbox>
                   </div>
                 </mat-panel-title>
               </mat-expansion-panel-header>

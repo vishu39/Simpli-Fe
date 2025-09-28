@@ -28,11 +28,7 @@ export class OpPartnerPayoutComponent implements OnInit, OnChanges {
     private facilitatorService: FacilitatorService,
     private sharedService: SharedService,
     private dialog: MatDialog
-  ) {}
-
-  revenueTypeOptions: any = [];
-
-  ngOnInit(): void {
+  ) {
     this.addFormGroup = this.fb.group({
       hospital: [null, [Validators.required]],
       sourceCountry: [null, [Validators.required]],
@@ -43,7 +39,11 @@ export class OpPartnerPayoutComponent implements OnInit, OnChanges {
     this.formGroup = this.fb.group({
       op: this.fb.array([]),
     });
+  }
 
+  revenueTypeOptions: any = [];
+
+  ngOnInit(): void {
     this.getAllHospital(false);
     this.getCountryDataForSource(false);
     this.getRevenueTypeMasterFinanceData();
@@ -64,6 +64,8 @@ export class OpPartnerPayoutComponent implements OnInit, OnChanges {
       this.opArray.clear();
       this.getAllOpPartnerPayoutData();
     } else {
+      console.log(this.referralPartner);
+
       if (this.referralPartner.length) {
         this.getAllOpPartnerPayoutData();
       }

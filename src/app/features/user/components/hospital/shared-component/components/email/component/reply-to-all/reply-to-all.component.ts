@@ -177,7 +177,7 @@ export class ReplyToAllComponent implements OnInit {
           );
           let followupPayload = {
             eventName: "Opinion",
-            patient: this.choosedPatientFormControl?.value
+            patient: this.choosedPatientFormControl?.value,
           };
           this.followupPopupByEvent(followupPayload, payload);
           // this.closeOverlay();
@@ -211,7 +211,7 @@ export class ReplyToAllComponent implements OnInit {
         this.sharedService.showNotification("snackBar-success", res.message);
         let followupPayload = {
           eventName: "OPD",
-          patient: this.choosedPatientFormControl?.value
+          patient: this.choosedPatientFormControl?.value,
         };
         this.followupPopupByEvent(followupPayload, payload);
         // this.closeOverlay();
@@ -267,7 +267,7 @@ export class ReplyToAllComponent implements OnInit {
           );
           let followupPayload = {
             eventName: "Proforma Invoice",
-            patient: this.choosedPatientFormControl?.value
+            patient: this.choosedPatientFormControl?.value,
           };
           this.followupPopupByEvent(followupPayload, payload);
           // this.closeOverlay();
@@ -305,7 +305,7 @@ export class ReplyToAllComponent implements OnInit {
         this.sharedService.showNotification("snackBar-success", res.message);
         let followupPayload = {
           eventName: "VIL",
-          patient: this.choosedPatientFormControl?.value
+          patient: this.choosedPatientFormControl?.value,
         };
         this.followupPopupByEvent(followupPayload, payload);
         // this.closeOverlay();
@@ -316,21 +316,25 @@ export class ReplyToAllComponent implements OnInit {
   }
 
   followupData: any;
-  followupPopupByEvent(payload: any,values:any) {    
-    this.sharedService
-      .followUpPopup(payload)
-      .subscribe((res: any) => {
-        this.followupData = res?.data;             
-        if (this.followupData?.auto===false && this.followupData?.popup===false) {
-          this.closeOverlay();
-        } else if(this.followupData?.auto===true || this.followupData?.popup===true) {
-          this.openFollowupPopup(payload,values);
-          this.closeOverlay();
-        }
-      });
+  followupPopupByEvent(payload: any, values: any) {
+    this.sharedService.followUpPopup(payload).subscribe((res: any) => {
+      this.followupData = res?.data;
+      if (
+        this.followupData?.auto === false &&
+        this.followupData?.popup === false
+      ) {
+        this.closeOverlay();
+      } else if (
+        this.followupData?.auto === true ||
+        this.followupData?.popup === true
+      ) {
+        this.openFollowupPopup(payload, values);
+        this.closeOverlay();
+      }
+    });
   }
 
-  openFollowupPopup(payload:any,values:any) {
+  openFollowupPopup(payload: any, values: any) {
     const dialogRef = this.dialog.open(FollowupModalComponent, {
       width: "60%",
       disableClose: true,

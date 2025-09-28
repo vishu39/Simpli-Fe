@@ -493,7 +493,7 @@ export class TreatmentDocAddDetailComponent implements OnInit {
 
   getHospitalById(id: string) {
     this.dataLoading = true;
-    this.sharedService.startLoader();
+    // this.sharedService.startLoader();
     this.sharedService
       .getCmsData(`getHospital/${id}`, {})
       .subscribe((res: any) => {
@@ -545,7 +545,7 @@ export class TreatmentDocAddDetailComponent implements OnInit {
               });
             }
           }
-          this.sharedService.stopLoader();
+          // this.sharedService.stopLoader();
         }
       });
   }

@@ -216,15 +216,6 @@
                       formControlName="payoutInPercentage"
                       matInput
                     />
-                    <mat-error
-                      *ngIf="
-                        packageForm.controls['payoutInPercentage'].hasError(
-                          'required'
-                        )
-                      "
-                    >
-                      Payout In Percentage is required
-                    </mat-error>
                   </mat-form-field>
                 </div>
 
@@ -239,15 +230,6 @@
                       formControlName="payoutInFixedAmount"
                       matInput
                     />
-                    <mat-error
-                      *ngIf="
-                        packageForm.controls['payoutInFixedAmount'].hasError(
-                          'required'
-                        )
-                      "
-                    >
-                      Payout In Fixed Amount is required
-                    </mat-error>
                   </mat-form-field>
                 </div>
 

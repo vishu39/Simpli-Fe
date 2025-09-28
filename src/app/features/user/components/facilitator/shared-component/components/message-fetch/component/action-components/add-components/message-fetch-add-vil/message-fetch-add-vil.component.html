@@ -195,6 +195,8 @@
                 [filePreviewList]="filePreviewUrls"
                 [type]="'fileUploader'"
                 [remove]="false"
+                [mode]="'addVil'"
+                (onFileRead)="readFile($event)"
               ></shared-whatsapp-fetch-image-previewer>
             </div>
             <div
@@ -240,6 +242,13 @@
               </mat-form-field>
             </div>
           </div>
+        </div>
+
+        <div *ngIf="isAiVilChecker">
+          <global-shared-vil-ai-checker-table
+            [readTotalData]="readTotalData"
+            [isAiVilChecker]="isAiVilChecker"
+          ></global-shared-vil-ai-checker-table>
         </div>
       </form>
     </div>

@@ -183,10 +183,6 @@ import { DeleteUserPermissionComponent } from "./components/user-permission-reva
 import { DashboardRevampComponent } from "./components/dashboard-revamp/dashboard-revamp.component";
 import { DashboardRevampFilterModalComponent } from "./components/dashboard-revamp/component/dashboard-revamp-filter-modal/dashboard-revamp-filter-modal.component";
 import { DashboardRevampDownloadModalComponent } from "./components/dashboard-revamp/component/dashboard-revamp-download-modal/dashboard-revamp-download-modal.component";
-import { OperationEntriesComponent } from "./components/finance-module/operation-entries/operation-entries.component";
-import { OperationEntriesRightDetailsComponent } from "./components/finance-module/operation-entries-right-details/operation-entries-right-details.component";
-import { OperationEntriesDetailsTabsComponent } from "./components/finance-module/operation-entries-right-details/operation-entries-details-tabs/operation-entries-details-tabs.component";
-import { MasterDataEntriesComponent } from "./components/finance-module/master-data-entries/master-data-entries.component";
 
 @NgModule({
   declarations: [
@@ -367,11 +363,6 @@ import { MasterDataEntriesComponent } from "./components/finance-module/master-d
     DashboardRevampComponent,
     DashboardRevampFilterModalComponent,
     DashboardRevampDownloadModalComponent,
-    // finance module
-    OperationEntriesComponent,
-    OperationEntriesRightDetailsComponent,
-    OperationEntriesDetailsTabsComponent,
-    MasterDataEntriesComponent,
   ],
   imports: [
     CommonModule,
@@ -436,9 +427,7 @@ import { MasterDataEntriesComponent } from "./components/finance-module/master-d
     SharedReferralPartnerOwnZoneComponent,
     UserPermissionRevampComponent,
     DashboardRevampComponent,
-    OperationEntriesComponent,
-    MasterDataEntriesComponent,
   ],
   providers: [FormGroupDirective],
 })
-export class SharedComponentModule {}
+export class SharedComponentModule { }

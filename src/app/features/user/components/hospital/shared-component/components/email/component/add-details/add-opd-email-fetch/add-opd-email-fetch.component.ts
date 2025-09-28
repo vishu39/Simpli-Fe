@@ -253,6 +253,7 @@ export class AddOpdEmailFetchComponent implements OnInit {
               });
             }
           }
+          // this.sharedService.stopLoader()
         }
       });
   }

@@ -104,7 +104,13 @@
         </span>
 
         <div
-          *ngIf="(mode === 'addPatient' && !!file.signedUrl) || mode === 'vilRequest'"
+          *ngIf="
+            (mode === 'addPatient' && !!file.signedUrl) ||
+            mode === 'vilRequest' ||
+            (mode === 'addVil' &&
+              !file.signedUrl &&
+              !file.type.includes('image'))
+          "
           style="
             cursor: pointer;
             color: green;

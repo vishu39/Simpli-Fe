@@ -8,6 +8,7 @@ import { MasterDataViewDocsComponent } from "../../dialog/master-data-view-docs/
 import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
 import { SharedService } from "src/app/core/service/shared/shared.service";
 import { MasterSettingCompanyFilterDialogComponent } from "src/app/shared/components/finance-module/dialogs/master-setting-company-filter-dialog/master-setting-company-filter-dialog.component";
+import { Country, State, City } from "country-state-city";
 
 @Component({
   selector: "shared-master-add-company",
@@ -31,7 +32,7 @@ export class MasterAddCompanyComponent implements OnInit {
     private dialog: MatDialog,
     private facilitatorService: FacilitatorService,
     private sharedService: SharedService
-  ) { }
+  ) {}
 
   isTableExpansionOpen = true;
   isFormExpansionOpen = false;
@@ -57,28 +58,38 @@ export class MasterAddCompanyComponent implements OnInit {
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       companyName: ["", [Validators.required]],
-      gstApplicable: ["", [Validators.required]],
-      currency: ["", [Validators.required]],
-      gstNo: ["", [Validators.required]],
-      email: [
-        "",
-        [Validators.required, Validators.pattern(regexService.emailRegex)],
-      ],
-      contact: ["", [Validators.required]],
-      paymentTerms: ["", [Validators.required]],
-      registrationNo: ["", [Validators.required]],
-      companyPanNo: ["", [Validators.required]],
+      gstApplicable: [""],
+      currency: [""],
+      gstNo: [""],
+      email: ["", [Validators.pattern(regexService.emailRegex)]],
+      contact: [""],
+      paymentTerms: [""],
+      registrationNo: [""],
+      companyPanNo: [""],
+      
+      msmeApplicable: [""],
+      msmeNo: [""],
 
-      signingAuthorityName: ["", [Validators.required]],
-      signingAuthorityDesignation: ["", [Validators.required]],
+      signingAuthorityName: [""],
+      signingAuthorityDesignation: [""],
 
       gstCertificate: [""],
       registrationCertificate: [""],
       panCertificate: [""],
-      signingAuthorityImage: [""],
+      stampWithSignature: [""],
+
+      addressLine1: [""],
+      addressLine2: [""],
+      city: [""],
+      district: [""],
+      state: [""],
+      pincode: [""],
+      country: [""],
+      locality: [""],
     });
 
     this.getAllCompanyMasterData();
+    this.getCountryData();
 
     this.sortCurrencies();
     let usdCurrencyIndex = this.currencyArray?.findIndex(
@@ -296,16 +307,16 @@ export class MasterAddCompanyComponent implements OnInit {
   patchIfEdit(item: any) {
     this.selectedItemForEdit = item;
     this.formGroup.patchValue(item);
-
-    let currencyIndex = this.currencyArray?.findIndex(
-      (ca: any) => ca?.code === item?.currency
-    );
-
-    if (currencyIndex !== -1) {
-      this.formGroup.patchValue({
-        currency: this.currencyArray[currencyIndex],
-      });
-    }
+    this.formGroup.patchValue({
+      addressLine1: item?.address?.[0]?.addressLine1,
+      addressLine2: item?.address?.[0]?.addressLine2,
+      city: item?.address?.[0]?.city,
+      district: item?.address?.[0]?.district,
+      state: item?.address?.[0]?.state,
+      pincode: item?.address?.[0]?.pincode,
+      country: item?.address?.[0]?.country,
+      locality: item?.address?.[0]?.locality,
+    });
   }
 
   exportMasterDataCSV() {
@@ -352,25 +363,165 @@ export class MasterAddCompanyComponent implements OnInit {
     a.click();
   }
 
+  // Country Linking
+  countryData: any = [];
+  totalElementCountry: number;
+  countryParams = {
+    page: 1,
+    limit: 0,
+    search: "",
+  };
+  timeoutCountry = null;
+  isLoadingCountry = false;
+  searchInputCountry = "";
+
+  getCountryData() {
+    if (this.isLoadingCountry) {
+      return;
+    }
+    this.isLoadingCountry = true;
+
+    this.sharedService
+      .getCmsData("getAllCountry", this.countryParams)
+      .subscribe((res: any) => {
+        this.countryData.push(...res.data.content);
+        this.totalElementCountry = res.data.totalElement;
+        this.countryParams.page = this.countryParams.page + 1;
+        this.isLoadingCountry = false;
+      });
+  }
+
+  onInfiniteScrollCountry(): void {
+    if (this.countryData.length < this.totalElementCountry) {
+      this.getCountryData();
+    }
+  }
+
+  searchCountry(filterValue: string) {
+    clearTimeout(this.timeoutCountry);
+    this.timeoutCountry = setTimeout(() => {
+      this.countryParams.search = filterValue.trim();
+      this.countryParams.page = 1;
+      this.countryData = []; // Clear existing data when searching
+      this.isLoadingCountry = false;
+      this.searchInputCountry = filterValue.trim();
+      this.getCountryData();
+    }, 600);
+  }
+
+  onClickCountry(item: any) {
+    this.statesArray = cloneDeep(State.getStatesOfCountry(item?.isoCode));
+    this.statesFreshArray = cloneDeep(State.getStatesOfCountry(item?.isoCode));
+    this.formGroup.patchValue({
+      state: "",
+      city: "",
+    });
+  }
+
+  statesArray: any = [];
+  statesFreshArray: any = [];
+  timeoutState = null;
+  citiesArray: any = [];
+  citiesFreshArray: any = [];
+  timeoutCity = null;
+
+  searchState(filterValue: string) {
+    clearTimeout(this.timeoutState);
+    this.timeoutState = setTimeout(() => {
+      if (!!filterValue) {
+        let filterArray = cloneDeep(this.statesFreshArray);
+        this.statesArray = [];
+        let filterData = filterArray.filter((f: any) =>
+          f?.name?.toLowerCase().includes(filterValue?.toLowerCase().trim())
+        );
+        if (filterData.length) {
+          filterArray = filterData;
+        } else {
+          filterArray = [];
+        }
+        this.statesArray = filterArray;
+      } else {
+        this.statesArray = this.statesFreshArray;
+      }
+    }, 600);
+  }
+
+  onClickState(item: any) {
+    this.citiesArray = cloneDeep(
+      City.getCitiesOfState(item?.countryCode, item?.isoCode)
+    );
+    this.citiesFreshArray = cloneDeep(
+      City.getCitiesOfState(item?.countryCode, item?.isoCode)
+    );
+    this.formGroup.patchValue({
+      city: "",
+    });
+  }
+
+  onClickCity(item: any) {
+  }
+
+  searchCity(filterValue: string) {
+    clearTimeout(this.timeoutCity);
+    this.timeoutCity = setTimeout(() => {
+      if (!!filterValue) {
+        let filterArray = cloneDeep(this.citiesFreshArray);
+        this.citiesArray = [];
+        let filterData = filterArray.filter((f: any) =>
+          f?.name?.toLowerCase().includes(filterValue?.toLowerCase().trim())
+        );
+        if (filterData.length) {
+          filterArray = filterData;
+        } else {
+          filterArray = [];
+        }
+        this.citiesArray = filterArray;
+      } else {
+        this.citiesArray = this.citiesFreshArray;
+      }
+    }, 600);
+  }
+
   finalFormSubmit() {
     if (this.formGroup.valid) {
-      let payload = {
+      let values = {
         ...this.formGroup.getRawValue(),
       };
-      let currency = payload?.currency;
+      let currency = values?.currency;
 
-      delete payload["currency"];
-      delete payload["gstCertificate"];
-      delete payload["registrationCertificate"];
-      delete payload["panCertificate"];
-      delete payload["signingAuthorityImage"];
+      let addressObj = {
+        addressLine1: values?.addressLine1,
+        addressLine2: values?.addressLine2,
+        city: values?.city,
+        district: values?.district,
+        state: values?.state,
+        pincode: values?.pincode,
+        country: values?.country,
+        locality: values?.locality,
+      };
+
+      delete values["addressLine1"];
+      delete values["addressLine2"];
+      delete values["city"];
+      delete values["district"];
+      delete values["state"];
+      delete values["pincode"];
+      delete values["country"];
+      delete values["locality"];
+      delete values["currency"];
+      delete values["gstCertificate"];
+      delete values["registrationCertificate"];
+      delete values["panCertificate"];
+      delete values["stampWithSignature"];
 
       let formData = new FormData();
 
+      formData.append("address", JSON.stringify(addressObj));
+
       formData.append("currency", JSON.stringify(currency));
 
-      for (const key in payload) {
-        formData.append(key, payload[key]);
+      for (const key in values) {
+        formData.append(key, values[key]);
       }
 
       for (var i = 0; i < this.fileFirstList?.length; i++) {

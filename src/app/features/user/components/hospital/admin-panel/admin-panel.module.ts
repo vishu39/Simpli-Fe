@@ -34,7 +34,6 @@ import { TreatmentPackageComponent } from "./components/treatment-package/treatm
 import { MessageFetchComponent } from "./components/message-fetch/message-fetch.component";
 import { UserPermissionRevampComponent } from "./components/user-permission-revamp/user-permission-revamp.component";
 import { DashboardRevampComponent } from "./components/dashboard-revamp/dashboard-revamp.component";
-import { FinanceModuleRoutingModule } from "./components/finance-module/finance-module-routing.module";
 
 @NgModule({
   declarations: [
@@ -62,7 +61,7 @@ import { FinanceModuleRoutingModule } from "./components/finance-module/finance-
     TreatmentPackageComponent,
     MessageFetchComponent,
     UserPermissionRevampComponent,
-    DashboardRevampComponent,
+    DashboardRevampComponent
   ],
   imports: [
     CommonModule,
@@ -77,7 +76,6 @@ import { FinanceModuleRoutingModule } from "./components/finance-module/finance-
     SmCrudModule,
     ComponentsModule,
     SharedComponentModule,
-    FinanceModuleRoutingModule,
   ],
 })
 export class AdminPanelModule {}

@@ -4,6 +4,8 @@ import { SharedService } from "src/app/core/service/shared/shared.service";
 import { AddDetailsDialogComponent } from "../../../../dialog/add-details-dialog/add-details-dialog.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { HospitalService } from "src/app/core/service/hospital/hospital.service";
+import * as moment from "moment";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "shared-add-vil-details",
@@ -117,6 +119,7 @@ export class AddVilDetailsComponent implements OnInit {
       }
     }
     this.fileList = [file];
+    this.isAiVilChecker = false;
   }
 
   closeDialog(isBool) {
@@ -164,6 +167,88 @@ export class AddVilDetailsComponent implements OnInit {
       }
     } else {
       this.vilForm.markAsTouched();
+    }
+  }
+
+  readFileData: any;
+  readTotalData: any = {};
+
+  isAiVilChecker = false;
+  readFile(event: any) {
+    this.isAiVilChecker = false;
+    let formData = new FormData();
+
+    let file: any = [];
+
+    if (this.fileList.length) {
+      file = this.fileList[event?.i];
+    }
+
+    formData.append("file", file);
+
+    let values = this.vilForm.getRawValue();
+    let hospitalId = values?.hospitalId;
+    let patient = values?.patient;
+
+    if (hospitalId) {
+      if (file?.type?.includes("image")) {
+        // this.sharedService
+        //   .vilAICheckerByImage(formData, patient, hospitalId)
+        //   .subscribe(
+        //     (res: any) => {
+        //       if (res?.statusCode === 200 && res?.isError === false) {
+        //         this.readTotalData = res?.data;
+        //         this.vilDataFromAi = this.readTotalData?.vilData;
+        //         this.aiDataFromAi = this.readTotalData?.aiData;
+        //         this.isAiVilChecker = true;
+        //         this.sharedService.showNotification(
+        //           "snackBar-success",
+        //           res.message
+        //         );
+        //       } else {
+        //         this.readTotalData = {};
+        //         this.vilDataFromAi = {};
+        //         this.aiDataFromAi = {};
+        //         this.isAiVilChecker = false;
+        //       }
+        //     },
+        //     (err) => {
+        //       this.readTotalData = {};
+        //       this.vilDataFromAi = {};
+        //       this.aiDataFromAi = {};
+        //       this.isAiVilChecker = false;
+        //     }
+        //   );
+      } else {
+        this.sharedService
+          .vilAICheckerByFile(formData, patient, hospitalId)
+          .subscribe(
+            (res: any) => {
+              if (res?.statusCode === 200 && res?.isError === false) {
+                this.readTotalData = res?.data?.response;
+                console.log(this.readTotalData);
+
+                this.isAiVilChecker = true;
+                this.sharedService.showNotification(
+                  "snackBar-success",
+                  res.message
+                );
+              } else {
+                this.readTotalData = {};
+                this.isAiVilChecker = false;
+              }
+            },
+            (err) => {
+              this.readTotalData = {};
+              this.isAiVilChecker = false;
+            }
+          );
+      }
+    } else {
+      this.sharedService.showNotification(
+        "snackBar-danger",
+        "Please select any hospital before reading file"
+      );
     }
   }
 }

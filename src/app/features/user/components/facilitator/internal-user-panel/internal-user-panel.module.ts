@@ -31,7 +31,6 @@ import { EmailDetailsComponent } from "./components/email/component/email-detail
 import { MessageFetchComponent } from "./components/message-fetch/message-fetch.component";
 import { UserPermissionRevampComponent } from "./components/user-permission-revamp/user-permission-revamp.component";
 import { DashboardRevampComponent } from "./components/dashboard-revamp/dashboard-revamp.component";
-import { FinanceModuleRoutingModule } from "./components/finance-module/finance-module-routing.module";
 
 @NgModule({
   declarations: [
@@ -55,7 +54,7 @@ import { FinanceModuleRoutingModule } from "./components/finance-module/finance-
     EmailDetailsComponent,
     MessageFetchComponent,
     UserPermissionRevampComponent,
-    DashboardRevampComponent,
+    DashboardRevampComponent
   ],
   imports: [
     CommonModule,
@@ -70,7 +69,6 @@ import { FinanceModuleRoutingModule } from "./components/finance-module/finance-
     ComponentsModule,
     SmCrudModule,
     SharedComponentModule,
-    FinanceModuleRoutingModule,
   ],
 })
 export class InternalUserPanelModule {}

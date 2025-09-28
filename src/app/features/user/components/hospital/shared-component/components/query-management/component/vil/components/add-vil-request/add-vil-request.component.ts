@@ -99,27 +99,27 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
   ) {}
   createForm() {
     this.vilRequestForm = this.fb.group({
-      patientName: [this.patientData?.name, [Validators.required]],
-      givenName: [this.patientData?.givenName],
-      surName: [this.patientData?.surName],
-      gender: [this.patientData?.gender],
+      patientName: ["", [Validators.required]],
+      givenName: [""],
+      surName: [""],
+      gender: [""],
       dob: [""],
-      country: [this.patientData?.country || null],
+      country: [null],
       addressInIndia: [""],
       contactInIndia: [""],
       emailId: [
-        this.patientData?.emailId,
+        "",
         [Validators.pattern(regexService.emailRegex)],
       ],
       contact: [
-        this.patientData?.contact,
+        "",
         [Validators.pattern(regexService.contactRegex)],
       ],
-      address: [this.patientData?.address],
+      address: [""],
       // verifyAddress: [false],
       treatment: [null],
       department: [null],
-      passportNumber: [this.patientData?.passportNumber, [Validators.required]],
+      passportNumber: ["", [Validators.required]],
       patient: [this.patientData?._id],
       hospitalName: [, [Validators.required]],
       hospitalId: ["", [Validators.required]],
@@ -150,6 +150,7 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.createForm();
+    this.getPatientById();
     this.getAllVilRequest();
     this.getCountryData();
     this.getEmbassyByCountry(this.patientData?.country);
@@ -157,20 +158,36 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
     // if (!this.isEdit) {
     this.patchDraft();
     // }
+  }
 
-    let newDob: any = "";
-    if (
-      !!this.patientData?.dob
-    ) {
-      newDob = moment(this.patientData?.dob);
-    }
+  getPatientById() {
+    this.hospitalService
+      .getPatient(this.patientData._id)
+      .subscribe((res: any) => {
+        this.patientData = res?.data;
 
-    this.vilRequestForm.patchValue({
-      dob: newDob ? newDob?.toDate() : "",
-      contactInIndia: this.patientData?.contactInIndia || "",
-      addressInIndia: this.patientData?.addressInIndia || "",
-      treatment: this.patientData?.treatment,
-    });
+        let newDob: any = "";
+        if (!!this.patientData?.dob) {
+          newDob = moment(this.patientData?.dob);
+        }
+
+        this.vilRequestForm.patchValue({
+          patientName: this.patientData?.name,
+          givenName: this.patientData?.givenName,
+          surName: this.patientData?.surName,
+          gender: this.patientData?.gender,
+          country: this.patientData?.country || null,
+          emailId: this.patientData?.emailId,
+          contact: this.patientData?.contact,
+          address: this.patientData?.address,
+          passportNumber: this.patientData?.passportNumber,
+          patient: this.patientData?._id,
+          dob: newDob ? newDob?.toDate() : "",
+          contactInIndia: this.patientData?.contactInIndia || "",
+          addressInIndia: this.patientData?.addressInIndia || "",
+          treatment: this.patientData?.treatment,
+        });
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -364,10 +381,10 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
         this.attendantArray.clear();
         addedData?.attendantDetails?.forEach((t: any) => {
           let formObj: FormGroup = this.createAttendantArrayForm();
-        let newDob:any
-        if(!!t?.dob){
-          newDob = moment(t?.dob);
-        }
+          let newDob: any;
+          if (!!t?.dob) {
+            newDob = moment(t?.dob);
+          }
           formObj.patchValue({
             name: t?.name,
             passportNumber: t?.passportNumber,
@@ -392,10 +409,10 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
         this.donorArray.clear();
         addedData?.donorDetails?.forEach((t: any) => {
           let formObj: FormGroup = this.createDonorArrayForm();
-        let newDob:any
-        if(!!t?.dob){
-          newDob = moment(t?.dob);
-        }
+          let newDob: any;
+          if (!!t?.dob) {
+            newDob = moment(t?.dob);
+          }
           formObj.patchValue({
             name: t?.name,
             passportNumber: t?.passportNumber,
@@ -432,7 +449,6 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
         !!addedData?.country ||
         !!addedData?.dob
       ) {
-
         this.vilRequestForm.patchValue({
           ...newData,
         });
@@ -846,10 +862,10 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
       if (vilRequestDraftData?.attendantDetails?.length > 0) {
         vilRequestDraftData?.attendantDetails?.forEach((t: any) => {
           let formObj: FormGroup = this.createAttendantArrayForm();
-        let newDob:any
-        if(!!t?.dob){
-          newDob = moment(t?.dob);
-        }
+          let newDob: any;
+          if (!!t?.dob) {
+            newDob = moment(t?.dob);
+          }
           formObj.patchValue({
             name: t?.name,
             passportNumber: t?.passportNumber,
@@ -873,10 +889,10 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
       if (vilRequestDraftData?.donorDetails?.length > 0) {
         vilRequestDraftData?.donorDetails?.forEach((t: any) => {
           let formObj: FormGroup = this.createDonorArrayForm();
-        let newDob:any
-        if(!!t?.dob){
-          newDob = moment(t?.dob);
-        }
+          let newDob: any;
+          if (!!t?.dob) {
+            newDob = moment(t?.dob);
+          }
           formObj.patchValue({
             name: t?.name,
             passportNumber: t?.passportNumber,
@@ -1402,51 +1418,56 @@ export class AddVilRequestComponent implements OnInit, OnChanges {
   // }
 
   fetchDataFromAi(item: any, type: string, i: number | null = null) {
-  const isValid = (val: any) => val !== "" && val !== null && val !== undefined;
+    const isValid = (val: any) =>
+      val !== "" && val !== null && val !== undefined;
 
-  const getTargetForm = () => {
-    if (type === "patientPassport") return this.vilRequestForm;
-    if (type === "attendantPassport") return (this.attendantArray as FormArray).at(i!) as FormGroup;
-    if (type === "donorPassport") return (this.donorArray as FormArray).at(i!) as FormGroup;
-    return null;
-  };
+    const getTargetForm = () => {
+      if (type === "patientPassport") return this.vilRequestForm;
+      if (type === "attendantPassport")
+        return (this.attendantArray as FormArray).at(i!) as FormGroup;
+      if (type === "donorPassport")
+        return (this.donorArray as FormArray).at(i!) as FormGroup;
+      return null;
+    };
 
-  const patchObject: any = {};
-  const targetForm = getTargetForm();
+    const patchObject: any = {};
+    const targetForm = getTargetForm();
 
-  if (!targetForm) return;
+    if (!targetForm) return;
 
-  if (isValid(item?.address)) patchObject.address = item.address;
+    if (isValid(item?.address)) patchObject.address = item.address;
 
-  if (isValid(item?.country)) {
-    patchObject.country = GET_DIRECT_SIMILARITY_FOR_ARRAY_OF_OBJ(
-      item.country,
-      this.countryData
-    );
+    if (isValid(item?.country)) {
+      patchObject.country = GET_DIRECT_SIMILARITY_FOR_ARRAY_OF_OBJ(
+        item.country,
+        this.countryData
+      );
+    }
+
+    if (isValid(item?.dob)) {
+      patchObject.dob = item.dob ? moment(item.dob).toDate() : "";
+    }
+
+    if (isValid(item?.gender)) {
+      patchObject.gender = GET_DIRECT_SIMILARITY_FOR_ARRAY_OF_STRING(
+        item.gender,
+        this.genderData
+      );
+    }
+
+    if (isValid(item?.givenName)) patchObject.givenName = item.givenName;
+    if (isValid(item?.surName)) patchObject.surName = item.surName;
+    if (isValid(item?.passportNumber))
+      patchObject.passportNumber = item.passportNumber;
+
+    // Construct full name if both exist
+    if (patchObject.givenName && patchObject.surName) {
+      patchObject[
+        type === "patientPassport" ? "patientName" : "name"
+      ] = `${patchObject.givenName} ${patchObject.surName}`;
+    }
+
+    // Finally patch all at once
+    targetForm.patchValue(patchObject);
   }
-
-  if (isValid(item?.dob)) {
-    patchObject.dob = item.dob ? moment(item.dob).toDate() : "";
-  }
-
-  if (isValid(item?.gender)) {
-    patchObject.gender = GET_DIRECT_SIMILARITY_FOR_ARRAY_OF_STRING(
-      item.gender,
-      this.genderData
-    );
-  }
-
-  if (isValid(item?.givenName)) patchObject.givenName = item.givenName;
-  if (isValid(item?.surName)) patchObject.surName = item.surName;
-  if (isValid(item?.passportNumber)) patchObject.passportNumber = item.passportNumber;
-
-  // Construct full name if both exist
-  if (patchObject.givenName && patchObject.surName) {
-    patchObject[type === "patientPassport" ? "patientName" : "name"] =
-      `${patchObject.givenName} ${patchObject.surName}`;
-  }
-
-  // Finally patch all at once
-  targetForm.patchValue(patchObject);
-}
 }

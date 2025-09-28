@@ -23,7 +23,12 @@ export class UploadBillingDocComponent implements OnInit {
   allPatientConfirmationRequest: any;
   isPatientLoading = true;
 
-  categoriesOptions = ["Registration Bill", "OP Bill", "IP Bill"];
+  categoriesOptions = [
+    "Registration Bill",
+    "OP Bill",
+    "IP Bill",
+    "Part of Package cost",
+  ];
 
   constructor(
     public dialogRef: MatDialogRef<UploadBillingDocComponent>,
@@ -37,7 +42,9 @@ export class UploadBillingDocComponent implements OnInit {
       hospitalId: ["", [Validators.required]],
       hospitalName: ["", [Validators.required]],
       category: ["", [Validators.required]],
-      amount: ["", [Validators.required]],
+      amount: [""],
+      pharmacyAndConsumableAmount: [""],
+      doctorConsultancyAmount: [""],
       currency: ["", [Validators.required]],
       file: [],
       patient: [this.patientData?._id],
@@ -81,6 +88,8 @@ export class UploadBillingDocComponent implements OnInit {
       hospitalName: item?.hospitalName,
       category: item?.category,
       amount: item?.amount,
+      pharmacyAndConsumableAmount: item?.pharmacyAndConsumableAmount,
+      doctorConsultancyAmount: item?.doctorConsultancyAmount,
       currency: item?.currency,
       file: "",
       patient: [this.patientData?._id],

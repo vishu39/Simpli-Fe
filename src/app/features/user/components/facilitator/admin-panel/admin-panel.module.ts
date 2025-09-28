@@ -31,10 +31,8 @@ import { EmailComponent } from "./components/email/email.component";
 import { EmailDetailsComponent } from "./components/email/component/email-details/email-details.component";
 import { MessageFetchComponent } from "./components/message-fetch/message-fetch.component";
 import { UserPermissionRevampComponent } from "./components/user-permission-revamp/user-permission-revamp.component";
-import { NewDashboardComponent } from "./components/new-dashboard/new-dashboard.component";
-import { DashboardRevampComponent } from "./components/dashboard-revamp/dashboard-revamp.component";
-import { FinanceModuleRoutingModule } from "./components/finance-module/finance-module-routing.module";
-
+import { NewDashboardComponent } from './components/new-dashboard/new-dashboard.component';
+import { DashboardRevampComponent } from './components/dashboard-revamp/dashboard-revamp.component';
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -73,7 +71,6 @@ import { FinanceModuleRoutingModule } from "./components/finance-module/finance-
     ComponentsModule,
     SmCrudModule,
     SharedComponentModule,
-    FinanceModuleRoutingModule,
   ],
 })
 export class AdminPanelModule {}

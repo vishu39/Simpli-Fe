@@ -6,6 +6,7 @@ import { SharedService } from "src/app/core/service/shared/shared.service";
 import { GET_DIRECT_SIMILARITY_FOR_ARRAY_OF_OBJ } from "src/app/shared/util";
 import { cloneDeep } from "lodash";
 import { FacilitatorService } from "src/app/core/service/facilitator/facilitator.service";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-message-fetch-add-vil",
@@ -24,7 +25,8 @@ export class MessageFetchAddVilComponent implements OnInit {
   constructor(
     private facilitatorService: FacilitatorService,
     private fb: FormBuilder,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -162,11 +164,12 @@ export class MessageFetchAddVilComponent implements OnInit {
     let currentFile: any;
     if (this.messageData?.attachments?.length > 0) {
       currentFile = this.fileList?.[0];
-      if (!!currentFile) {
+      if (!!currentFile && currentFile?.signedUrl) {
         this.messageData?.attachments.push(currentFile);
       }
     }
     this.fileList = [file];
+    this.isAiVilChecker = false;
   }
 
   // image preview function
@@ -230,10 +233,95 @@ export class MessageFetchAddVilComponent implements OnInit {
         if (findIndex !== -1) {
           this.messageData?.attachments?.splice(findIndex, 1);
         }
-        if (!!currentFile) {
+        if (!!currentFile && currentFile?.signedUrl) {
           this.messageData?.attachments.push(currentFile);
         }
+
+        this.isAiVilChecker = false;
       }
+    }
+  }
+
+  readFileData: any;
+  readTotalData: any = {};
+  vilDataFromAi: any;
+  aiDataFromAi: any;
+
+  isAiVilChecker = false;
+  readFile(event: any) {
+    this.isAiVilChecker = false;
+    let formData = new FormData();
+
+    let file: any = [];
+
+    if (this.fileList.length) {
+      file = this.fileList[event?.i];
+    }
+
+    formData.append("file", file);
+
+    let values = this.vilForm.getRawValue();
+    let hospitalId = values?.hospitalId;
+
+    if (hospitalId) {
+      if (file?.type?.includes("image")) {
+        // this.sharedService
+        //   .vilAICheckerByImage(formData, this.emailFetchData?._id, hospitalId)
+        //   .subscribe(
+        //     (res: any) => {
+        //       if (res?.statusCode === 200 && res?.isError === false) {
+        //         this.readTotalData = res?.data;
+        //         this.vilDataFromAi = this.readTotalData?.vilData;
+        //         this.aiDataFromAi = this.readTotalData?.aiData;
+        //         this.isAiVilChecker = true;
+        //         this.sharedService.showNotification(
+        //           "snackBar-success",
+        //           res.message
+        //         );
+        //       } else {
+        //         this.readTotalData = {};
+        //         this.vilDataFromAi = {};
+        //         this.aiDataFromAi = {};
+        //         this.isAiVilChecker = false;
+        //       }
+        //     },
+        //     (err) => {
+        //       this.readTotalData = {};
+        //       this.vilDataFromAi = {};
+        //       this.aiDataFromAi = {};
+        //       this.isAiVilChecker = false;
+        //     }
+        //   );
+      } else {
+        this.sharedService
+          .vilAICheckerByFile(formData, this.emailFetchData?._id, hospitalId)
+          .subscribe(
+            (res: any) => {
+              if (res?.statusCode === 200 && res?.isError === false) {
+                this.readTotalData = res?.data?.response;
+                console.log(this.readTotalData);
+
+                this.isAiVilChecker = true;
+                this.sharedService.showNotification(
+                  "snackBar-success",
+                  res.message
+                );
+              } else {
+                this.readTotalData = {};
+                this.isAiVilChecker = false;
+              }
+            },
+            (err) => {
+              this.readTotalData = {};
+              this.isAiVilChecker = false;
+            }
+          );
+      }
+    } else {
+      this.sharedService.showNotification(
+        "snackBar-danger",
+        "Please select any hospital before reading file"
+      );
     }
   }
 }
